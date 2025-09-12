@@ -200,6 +200,15 @@
   </url>
   
   <url>
+    <loc>http://mornikar.github.io/2025/09/11/%E6%B5%8B%E8%AF%95/day1/</loc>
+    
+    <lastmod>2023-02-15</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://mornikar.github.io/2025/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/ndarray%E8%BF%90%E7%AE%97/</loc>
     
     <lastmod>2023-02-15</lastmod>
@@ -228,15 +237,6 @@
   
   <url>
     <loc>http://mornikar.github.io/2025/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E7%9F%A9%E9%98%B5%E8%BF%90%E7%AE%97/</loc>
-    
-    <lastmod>2023-02-15</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://mornikar.github.io/2025/09/11/%E6%B5%8B%E8%AF%95/day1/</loc>
     
     <lastmod>2023-02-15</lastmod>
     
@@ -371,25 +371,7 @@
   </url>
   
   <url>
-    <loc>http://mornikar.github.io/2025/09/11/flask/%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/</loc>
-    
-    <lastmod>2023-02-15</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://mornikar.github.io/2025/09/11/flask/%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/</loc>
-    
-    <lastmod>2023-02-15</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://mornikar.github.io/2025/09/11/flask/%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</loc>
+    <loc>http://mornikar.github.io/2025/09/11/javaScipt/JavaScript/</loc>
     
     <lastmod>2023-02-15</lastmod>
     
@@ -407,7 +389,7 @@
   </url>
   
   <url>
-    <loc>http://mornikar.github.io/2025/09/11/flask/%E9%93%BE%E6%8E%A5mysql/</loc>
+    <loc>http://mornikar.github.io/2025/09/11/flask/%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/</loc>
     
     <lastmod>2023-02-15</lastmod>
     
@@ -416,7 +398,25 @@
   </url>
   
   <url>
-    <loc>http://mornikar.github.io/2025/09/11/javaScipt/JavaScript/</loc>
+    <loc>http://mornikar.github.io/2025/09/11/flask/%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</loc>
+    
+    <lastmod>2023-02-15</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://mornikar.github.io/2025/09/11/flask/%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/</loc>
+    
+    <lastmod>2023-02-15</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://mornikar.github.io/2025/09/11/flask/%E9%93%BE%E6%8E%A5mysql/</loc>
     
     <lastmod>2023-02-15</lastmod>
     
@@ -477,14 +477,14 @@
   </url>
   
   <url>
-    <loc>http://mornikar.github.io/tags/AIGC%E5%A4%9A%E6%A8%A1%E6%80%81/</loc>
+    <loc>http://mornikar.github.io/tags/AIGC%E7%89%88%E6%9C%AC%E8%B0%83%E7%A0%94/</loc>
     <lastmod>2025-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://mornikar.github.io/tags/AIGC%E7%89%88%E6%9C%AC%E8%B0%83%E7%A0%94/</loc>
+    <loc>http://mornikar.github.io/tags/AIGC%E5%A4%9A%E6%A8%A1%E6%80%81/</loc>
     <lastmod>2025-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -498,14 +498,14 @@
   </url>
   
   <url>
-    <loc>http://mornikar.github.io/tags/Anaconda-%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%85%A5/</loc>
+    <loc>http://mornikar.github.io/tags/AIGC%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%80%BB%E7%BA%B2/</loc>
     <lastmod>2025-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://mornikar.github.io/tags/AIGC%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%80%BB%E7%BA%B2/</loc>
+    <loc>http://mornikar.github.io/tags/Anaconda-%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%85%A5/</loc>
     <lastmod>2025-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
