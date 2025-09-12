@@ -380,7 +380,7 @@
   </url>
   
   <url>
-    <loc>http://mornikar.github.io/2025/09/11/flask/%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</loc>
+    <loc>http://mornikar.github.io/2025/09/11/flask/%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/</loc>
     
     <lastmod>2023-02-15</lastmod>
     
@@ -389,7 +389,7 @@
   </url>
   
   <url>
-    <loc>http://mornikar.github.io/2025/09/11/flask/%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/</loc>
+    <loc>http://mornikar.github.io/2025/09/11/flask/%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</loc>
     
     <lastmod>2023-02-15</lastmod>
     
@@ -470,7 +470,49 @@
 
   
   <url>
+    <loc>http://mornikar.github.io/tags/AI%E6%A8%A1%E5%9E%8B%E6%8C%87%E6%A0%87%E3%80%81%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96%E6%96%B9%E5%90%91/</loc>
+    <lastmod>2025-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://mornikar.github.io/tags/AIGC%E7%89%88%E6%9C%AC%E8%B0%83%E7%A0%94/</loc>
+    <lastmod>2025-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://mornikar.github.io/tags/AIGC%E5%A4%9A%E6%A8%A1%E6%80%81/</loc>
+    <lastmod>2025-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://mornikar.github.io/tags/AIGC/</loc>
+    <lastmod>2025-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://mornikar.github.io/tags/AIGC%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%80%BB%E7%BA%B2/</loc>
+    <lastmod>2025-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>http://mornikar.github.io/tags/Anaconda-%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%85%A5/</loc>
+    <lastmod>2025-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://mornikar.github.io/tags/Anaconda-%E7%BD%91%E7%BB%9C%E7%BA%BF%E8%B7%AF/</loc>
     <lastmod>2025-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -504,49 +546,21 @@
     <priority>0.2</priority>
   </url>
   
-  <url>
-    <loc>http://mornikar.github.io/tags/Anaconda-%E7%BD%91%E7%BB%9C%E7%BA%BF%E8%B7%AF/</loc>
-    <lastmod>2025-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://mornikar.github.io/tags/AIGC%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%80%BB%E7%BA%B2/</loc>
-    <lastmod>2025-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://mornikar.github.io/tags/AI%E6%A8%A1%E5%9E%8B%E6%8C%87%E6%A0%87%E3%80%81%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96%E6%96%B9%E5%90%91/</loc>
-    <lastmod>2025-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://mornikar.github.io/tags/AIGC%E7%89%88%E6%9C%AC%E8%B0%83%E7%A0%94/</loc>
-    <lastmod>2025-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://mornikar.github.io/tags/AIGC%E5%A4%9A%E6%A8%A1%E6%80%81/</loc>
-    <lastmod>2025-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://mornikar.github.io/tags/AIGC/</loc>
-    <lastmod>2025-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
 
+  
+  <url>
+    <loc>http://mornikar.github.io/categories/AIGC/</loc>
+    <lastmod>2025-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://mornikar.github.io/categories/AIGC%E7%89%88%E6%9C%AC%E8%B0%83%E7%A0%94/</loc>
+    <lastmod>2025-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
   
   <url>
     <loc>http://mornikar.github.io/categories/Anaconda/</loc>
@@ -564,20 +578,6 @@
   
   <url>
     <loc>http://mornikar.github.io/categories/docker%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2025-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://mornikar.github.io/categories/AIGC/</loc>
-    <lastmod>2025-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://mornikar.github.io/categories/AIGC%E7%89%88%E6%9C%AC%E8%B0%83%E7%A0%94/</loc>
     <lastmod>2025-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
