@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="en" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>大模型解构 | Dr.GT_Mornikar</title><link rel="icon" type="image/x-icon" href="../../../../../favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="../../../../../font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="../../../../../font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="../../../../../font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="../../../../../css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.ttf");
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":15,"search":{"preload":false,"activeHolder":"键入以继续","blurHolder":"数据检索","noResult":"无 $0 相关数据"},"code":{"codeInfo":"$0 - $1 行","copy":"复制"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="../../../../../lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@10.5.0/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="../../../../../lib/fontawesome/css/all.min.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('../../../../../img/bk.jpg');
+ --theme-encrypt-confirm: '确认'
+}</style><script defer src="../../../../../js/arknights.js"></script><script defer src="../../../../../js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="../../../../../lib/encrypt/hbe.js"></script><script async src="../../../../../js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="atom.xml" title="Dr.GT_Mornikar" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="../../../../../"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="../../../../../archives"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="../../../../../LearningNote"><span class="navItemTitle">LearningNote</span></a></li><li class="navItem"><a class="navBlock" href="../../../../../LearningEssays"><span class="navItemTitle">LearningEssays</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>大模型解构</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2013-07-13T12:46:25.000Z" id="date"> 2013-07-13</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2025-09-12T17:42:37.927Z" id="updated"> 2025-09-13</time></div></span></div></div><hr><div id="post-content"><p>AI工作流：</p>
+<p>AIGC赋能电商公司：</p>
+<p>极睿科技：<a target="_blank" rel="noopener" href="https://www.infimind.com/">极睿科技</a></p>
+<p>AIGC赋能教育：</p>
+<p>AIGC赋能广告：HeyGen</p>
+<p>30人3个亿</p>
+<p>AIGC赋能办公场景：AIPPT</p>
+<p><a target="_blank" rel="noopener" href="https://www.aippt.cn/?utm_type=SEM&utm_source=biying_sem&utm_page=aidlz&utm_plan=ppt-02&utm_unit=aic&utm_keyword=40338&msclkid=8f2e8de0ed5010640028eafada9df5be">AiPPT - 全智能 AI 一键生成 PPT</a></p>
+<p>月收几百万人命比</p>
+<p>AIGC赋能泛娱乐行业：星野</p>
+<p>meitu美图</p>
+<p>※AIGC赋能金融：支小助</p>
+<p>南方航空、电网、烟草、咪咕、航空</p>
+<p>数据分析：</p>
+<p>外部调研、内部数据分析</p>
+<p>经营分析与商业经营</p>
+<p>重要视角：国内外大厂、小厂、创业等加大AI投入</p>
+<p>2.移动互联网没机会、只有卷AI功能</p>
+<p>3、2B需求爆发增长、比2C还快</p>
+<p>4、各部门沟通壁垒无法打通</p>
+<p>注意重点：</p>
+<p>1、AI现在速度在2010</p>
+<p>2.小米、美团、滴滴、头条等都是2010-2012阶段成立，造就大佬也造就变现员工</p>
+<p>3、现阶段企业投入AI的ROI最高，蜂拥而至的AI需求其实非常合理</p>
+<p>结合业务场景做落地：</p>
+<p>金融行业：严谨性、复杂性、实时性、准确性</p>
+<p>Prompt、Agent、Function Call、RAG</p>
+<p>什么事Prompt：</p>
+<p>提示词工程</p>
+<p>Function Call：</p>
+<p>理解语义、自主决策、机构化调用工具、询问用户、补全信息、基于返回的结构化信息，整合生成回复、</p>
+<p>Function Call的成功率非常依赖基座LLM</p>
+<p>Function Call可以让LLM变成智能中枢</p>
+<p>LLM Based Agent</p>
+<p>从无状态到特定状态的定义和识别</p>
+<p>无状态、连续：</p>
+<p>prompt：帮我点外卖，两杯可乐和，面包。送公司</p>
+<p>有状态、离散：</p>
+<p>{</p>
+<p>APP：美团</p>
+<p>irders：可乐、面包</p>
+<p>Numbers：1548324254</p>
+<p>….</p>
+<p>}</p>
+<p>用好Agent的关键，思考哪些东西值得被离散化、状态化</p>
+<p>不断测试大模型的能力，并研究如何提高状态判断的准确度。</p>
+<p>如何测试大模型。</p>
+<p>测试大模型的离散化的准确率如何</p>
+<p>多Agent协作</p>
+<p>如何提升性能：</p>
+<p>提升状态判断准确率、Function Call准确度、RAG准确度、Agent可控性</p>
+<p>最初：只会Prompt</p>
+<p>初级：Agent：反思+纠错</p>
+<p>中级：多Agent协作、RAG</p>
+<p>高级：Fine tune、Embedding定制</p>
+<p>顶级：训练垂直行业LLM</p>
+<p>以前产品经理要PMF：符合市场需求</p>
+<p>AIGC产品经理要TPF：技术产品的契合</p>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="../%E5%A4%9A%E6%A8%A1%E6%80%81/">← 下一篇 多模态</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="../../conda/conda%E5%90%AF%E5%8A%A8%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4/">Conda 环境导入 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a><a onclick="BgmControl()"><svg id="bgm-control" viewBox="0 0 30 34" fill="currentColor" style="width: 24px; transition: transform .3s;margin-top: 4px"><path d="M25.998 23.422V11.29h3.999v12.132h-3.999zM19.497 6.234h4.001v22.243h-4.001V6.234zM12.998.867h4v32.978h-4V.867zm-6.5 5.367h4.001v22.243H6.498V6.234zm-6.5 5.056h4v12.132h-4V11.29z"></path></svg><audio id="bgm" src="/audio/bgm.mp3" crossorigin="anonymous"> </audio></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">Mornikar</a></h1><div id="description"><p>It is time to get up and make efforts</p></div></div><div id="aside-block"></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr><wbr><nobr> 构建时间<script>const buildTime = new Date("2025-09-12T17:50:47.810Z");
+document.write(' ' + buildTime.toLocaleString());</script></nobr></footer></aside></main><canvas id="canvas-dust"></canvas></body></html>
