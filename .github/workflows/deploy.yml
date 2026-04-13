@@ -4,6 +4,11 @@ on:
   push:
     branches: [source]
   workflow_dispatch:
+    inputs:
+      trigger:
+        description: '手动触发构建'
+        required: false
+        default: 'manual'
 
 jobs:
   build-and-deploy:
@@ -24,21 +29,56 @@ jobs:
       - name: 安装依赖
         run: npm ci
 
+      - name: 查看 Wiki 目录
+        run: |
+          echo "=== Wiki 目录结构 ==="
+          ls -la .wiki/
+          echo ""
+          echo "=== Concepts ==="
+          ls -la .wiki/concepts/ 2>/dev/null || echo "空目录"
+          echo ""
+          echo "=== Entities ==="
+          ls -la .wiki/entities/ 2>/dev/null || echo "空目录"
+
       - name: 转换 Wiki 到 Hexo
         run: node scripts/wiki-to-hexo.js
 
+      - name: 查看转换结果
+        run: |
+          echo "=== 转换后的 _posts 目录 ==="
+          ls -la source/_posts/
+          echo ""
+          echo "=== LearningNote ==="
+          ls -la source/_posts/LearningNote/ 2>/dev/null || echo "空目录"
+          echo ""
+          echo "=== LearningEssays ==="
+          ls -la source/_posts/LearningEssays/ 2>/dev/null || echo "空目录"
+
       - name: 生成静态文件
         run: npx hexo generate
+
+      - name: 查看生成的 public 目录
+        run: |
+          echo "=== Public 目录 ==="
+          ls -la public/
+          echo ""
+          echo "=== LearningNote 页面 ==="
+          ls -la public/LearningNote/ 2>/dev/null || echo "空目录"
 
       - name: 索引搜索
         run: |
           npm install pagefind
           npx pagefind --site public --output-path public/pagefind
+          echo "=== Pagefind 索引 ==="
+          ls -la public/pagefind/ 2>/dev/null || echo "索引生成失败"
 
       - name: 部署到 GitHub Pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo "=== 部署配置 ==="
+          cat _config.yml | grep -A5 "deploy:"
+          echo ""
           npm install hexo-deployer-git --save-dev
           npx hexo deploy
 
