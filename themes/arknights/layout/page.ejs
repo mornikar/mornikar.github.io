@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= page.title %> | <%= config.title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/lib/fontawesome/css/all.min.css">
+    <% if (theme.pagefind) { %>
+    <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+    <% } %>
+</head>
+<body>
+    <%- partial('common/header') %>
+
+    <main class="app-content">
+        <article class="post">
+            <header class="post-header">
+                <h1 class="post-title"><%= page.title %></h1>
+            </header>
+
+            <div class="post-content">
+                <% if (page.path === 'search/index.html') { %>
+                <!-- Pagefind 搜索界面 -->
+                <style>
+                    #search {
+                        max-width: 600px;
+                        margin: 2rem auto;
+                    }
+                    .pagefind-ui__search-input {
+                        background: rgba(0, 0, 0, 0.5) !important;
+                        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+                        color: #fff !important;
+                        border-radius: 4px !important;
+                        padding: 0.75rem 1rem !important;
+                    }
+                    .pagefind-ui__result {
+                        background: rgba(0, 0, 0, 0.6) !important;
+                        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                        border-radius: 4px !important;
+                        margin-bottom: 1rem !important;
+                        padding: 1rem !important;
+                    }
+                    .pagefind-ui__result-title {
+                        color: #00bfff !important;
+                    }
+                    .pagefind-ui__result-excerpt {
+                        color: rgba(255, 255, 255, 0.8) !important;
+                    }
+                </style>
+                <div id="search"></div>
+                <script>
+                    window.addEventListener('DOMContentLoaded', function() {
+                        if (typeof PagefindUI === 'undefined') {
+                            document.getElementById('search').innerHTML = '<p style="text-align:center;color:#888;">搜索索引正在生成中，请稍后再试...</p>';
+                            return;
+                        }
+                        new PagefindUI({
+                            element: "#search",
+                            showSubResults: true,
+                            showImages: false,
+                            resetStyles: false
+                        });
+                    });
+                </script>
+                <script src="/pagefind/pagefind-ui.js" defer></script>
+                <% } else { %>
+                <%- page.content %>
+                <% } %>
+            </div>
+        </article>
+    </main>
+
+    <%- partial('common/footer') %>
+    <script src="/js/arknights.js"></script>
+</body>
+</html>
