@@ -1,0 +1,133 @@
+# Hexo Configuration
+# https://hexo.io/docs/configuration.html
+
+# Site
+title: Mornikar's Blog
+subtitle: AI产品经理的学习笔记
+description: 记录AI产品、技术学习与成长
+keywords:
+  - AI产品经理
+  - 大模型
+  - AIGC
+  - 学习笔记
+author: Mornikar
+language: zh-CN
+timezone: Asia/Shanghai
+
+# URL
+url: https://mornikar.github.io
+root: /
+permalink: :year/:month/:day/:title/
+permalink_defaults:
+  category: uncategorized
+
+# Directory
+source_dir: source
+public_dir: ../mornikar.github.io
+tag_dir: tags
+archive_dir: archives
+category_dir: categories
+code_dir: downloads/code
+i18n_dir: :lang
+skip_render:
+  - wiki/**
+  - scripts/**
+
+# Writing
+new_post_name: :title.md
+default_layout: post
+titlecase: false
+external_link:
+  enable: true
+  field: site
+  exclude: ''
+filename_case: 0
+render_drafts: false
+post_asset_folder: false
+relative_link: false
+future: true
+highlight:
+  enable: true
+  line_number: true
+  auto_detect: false
+  tab_replace: ''
+  wrap: true
+  hljs: false
+prismjs:
+  enable: false
+  preprocess: true
+  line_number: true
+  tab_replace: ''
+
+# Category & Tag
+default_category: uncategorized
+category_map:
+  LearningNote: 笔记
+  LearningEssays: 随笔
+  docker: Docker
+  Ubuntu: Ubuntu
+  flask: Flask
+  javaScipt: JavaScript
+  mysql: MySQL
+  python复习: Python复习
+  云环境: 云环境
+  基础复习: 基础复习
+  机器学习: 机器学习
+  测试: 测试
+  随笔未整理: 随笔
+  AIGC笔记随笔: AIGC
+  conda: Anaconda
+tag_map:
+  AIGC: AIGC
+  Docker: Docker
+  Python: Python
+  Flask: Flask
+  JavaScript: JavaScript
+  MySQL: MySQL
+  机器学习: 机器学习
+  Ubuntu: Ubuntu
+
+# Date / Time format
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+date_suffix: sunday,monday,tuesday,wednesday,thursday,friday,saturday
+
+# Pagination
+per_page: 10
+pagination_dir: page
+
+# Include / Exclude file(s)
+include:
+exclude:
+ignore:
+
+# Metadata elements
+meta_generator_tag: true
+
+# Extensions
+theme: arknights
+
+# Deployment
+deploy:
+  type: git
+  repo: https://github.com/mornikar/mornikar.github.io.git
+  branch: main
+  token: ${GITHUB_TOKEN}
+
+# RSS
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
+  hub:
+  content:
+  content_limit: 140
+  content_limit_delim: ' '
+
+# Sitemap
+sitemap:
+  path: sitemap.xml
+  template: ./scripts/sitemap.xml
+  rel: false
+  tags: true
+  categories: true

@@ -2,10 +2,8 @@ name: Wiki-Hexo 自动部署
 
 on:
   push:
-    branches: [main]
+    branches: [source]
   workflow_dispatch:
-  schedule:
-    - cron: '0 2 * * *'
 
 jobs:
   build-and-deploy:
