@@ -76,24 +76,13 @@ jobs:
 
       - name: 构建 Pagefind 搜索索引
         run: |
-          # hexo outputs to Hexo/public/ (checkout expands repo contents into Hexo/)
-          # copy to ./public_find_source for pagefind, output to ./public/pagefind
-          if [ -d "public" ]; then
-            cp -r public ./public_find_source
-            npm install --save-dev pagefind
-            npx pagefind --site public_find_source --output-path public/pagefind
-            rm -rf public_find_source
-          else
-            npm install --save-dev pagefind
-            npx pagefind --site public --output-path public/pagefind
-          fi
+          npm install --save-dev pagefind
+          npx pagefind --site public --output-path public/pagefind
           echo "=== Pagefind 索引 ==="
           ls public/pagefind/ 2>/dev/null | head -5 || echo "(索引生成失败)"
 
       - name: 查看生成的页面
         run: |
-          echo "=== 当前目录 ===" && pwd
-          echo "=== 目录列表 ===" && ls -la
           echo "=== LearningNote 页面 ==="
           ls public/LearningNote/ 2>/dev/null | head -10 || echo "(空)"
           echo ""
