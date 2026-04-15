@@ -3,6 +3,9 @@
 > Append-only。每次 wiki-to-hexo.js 成功运行后自动追加记录。
 
 ## 2026
+- 2026-04-15 20:25:46 | concepts | [[AI模型优化训练方向]](concepts\AI模型优化训练方向.md) → LearningNote/
+- 2026-04-15 20:25:46 | concepts | [[RAG检索增强生成]](concepts\RAG检索增强生成.md) → LearningNote/
+- 2026-04-15 20:25:46 | entities | [[Hexo博客升级记录]](entities\Hexo博客升级记录.md) → LearningEssays/
 - 2026-04-15 18:40:33 | concepts | [[AI模型优化训练方向]](concepts\AI模型优化训练方向.md) → LearningNote/
 - 2026-04-15 18:40:33 | concepts | [[RAG检索增强生成]](concepts\RAG检索增强生成.md) → LearningNote/
 - 2026-04-15 18:40:33 | entities | [[Hexo博客升级记录]](entities\Hexo博客升级记录.md) → LearningEssays/

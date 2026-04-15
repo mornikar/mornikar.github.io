@@ -1,16 +1,17 @@
 /**
- * Wiki → Hexo 转换脚本 v3.0 (增强版)
- * 功能：
- *   - [[WikiLink]] 自动转换为 Hexo 链接
- *   - 增量转换（mtime 对比，跳过未变更文件）
- *   - --dry-run 预览模式
- *   - 自动维护 index.md 和 log.md
- *   - 支持 aliases / related / summary 字段
+ * Wiki → Hexo 转换脚本 v4.0 (Phase 2 增强版)
+ *
+ * Phase 2 新增功能：
+ *   - 冲突检测：检测同名文件不同内容的覆盖风险
+ *   - frontmatter 增强：支持 wikiAliases / wikiTags / wikiCategory 字段
+ *   - 详细错误处理与警告
+ *   - 内置单元测试框架
  *
  * 用法：
- *   node wiki-to-hexo.js           # 全量/增量转换
- *   node wiki-to-hexo.js --dry-run  # 预览，不写入文件
- *   node wiki-to-hexo.js --force     # 强制全量转换
+ *   node wiki-to-hexo.js              # 全量/增量转换
+ *   node wiki-to-hexo.js --dry-run    # 预览，不写入文件
+ *   node wiki-to-hexo.js --force      # 强制全量转换
+ *   node wiki-to-hexo.js --test       # 运行内置单元测试
  */
 
 'use strict';
@@ -24,7 +25,7 @@ const WIKI_DIR    = path.join(__dirname, '..', '.wiki');
 const POSTS_DIR   = path.join(__dirname, '..', 'source', '_posts');
 const INDEX_FILE  = path.join(WIKI_DIR, 'index.md');
 const LOG_FILE    = path.join(WIKI_DIR, 'log.md');
-const META_FILE   = path.join(__dirname, '.wiki-meta.json'); // 记录上次转换状态
+const META_FILE   = path.join(__dirname, '.wiki-meta.json');
 
 // 目录 → Hexo 分类映射
 const CATEGORY_MAP = {
@@ -39,18 +40,33 @@ const LAYER_DIRS = ['concepts', 'entities', 'comparisons', 'queries'];
 
 // ============ 参数解析 ============
 const args = process.argv.slice(2);
-const DRY_RUN   = args.includes('--dry-run');
-const FORCE     = args.includes('--force');
+const DRY_RUN  = args.includes('--dry-run');
+const FORCE    = args.includes('--force');
+const RUN_TEST = args.includes('--test');
+
+// ============ 错误收集 ============
+const warnings = [];
+const errors = [];
+
+/** 添加警告 */
+function warn(msg) {
+    warnings.push(msg);
+    console.log(`  ⚠️  ${msg}`);
+}
+
+/** 添加错误 */
+function fail(msg) {
+    errors.push(msg);
+    console.log(`  ❌ ${msg}`);
+}
 
 // ============ 工具函数 ============
 
-/** 计算文件 MD5（用于判断内容是否变化） */
 function md5File(filePath) {
     const content = fs.readFileSync(filePath, 'utf-8');
     return crypto.createHash('md5').update(content).digest('hex');
 }
 
-/** 读取上次转换状态 */
 function loadMeta() {
     try {
         return JSON.parse(fs.readFileSync(META_FILE, 'utf-8'));
@@ -59,12 +75,11 @@ function loadMeta() {
     }
 }
 
-/** 保存转换状态 */
 function saveMeta(meta) {
     if (!DRY_RUN) fs.writeFileSync(META_FILE, JSON.stringify(meta, null, 2), 'utf-8');
 }
 
-/** 解析 YAML frontmatter */
+/** 解析 YAML frontmatter（支持中文键名） */
 function parseFrontmatter(content) {
     const trimmed = content.trimStart();
     const firstDash = trimmed.indexOf('---');
@@ -89,7 +104,7 @@ function parseFrontmatter(content) {
             const key = line.slice(0, colonIndex).trim();
             let value = line.slice(colonIndex + 1).trim();
             if (value.startsWith('[') && value.endsWith(']')) {
-                value = value.slice(1, -1).split(',').map(v => v.trim());
+                value = value.slice(1, -1).split(',').map(v => v.trim()).filter(v => v);
             }
             frontmatter[key] = value;
         }
@@ -99,15 +114,9 @@ function parseFrontmatter(content) {
 }
 
 /**
- * 将 [[WikiLink]] 转换为 Hexo Markdown 链接
+ * WikiLink 转换
  * [[RAG检索增强]] → [RAG检索增强](/2025/09/12/RAG检索增强生成/)
  * [[另一个页面|显示文字]] → [显示文字](/2025/09/12/另一个页面/)
- *
- * 匹配策略（按优先级）：
- *   1. 精确匹配 title
- *   2. 忽略大小写匹配
- *   3. 模糊匹配：WikiLink 是 title 的前缀（如 [[RAG]] 匹配 "RAG检索增强生成"）
- *   4. 最后降级为相对路径
  */
 function convertWikiLinks(body, wikiMeta) {
     return body.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (match, target, label) => {
@@ -116,13 +125,13 @@ function convertWikiLinks(body, wikiMeta) {
 
         let meta = wikiMeta[slug];
 
-        // 2. 忽略大小写
+        // 忽略大小写
         if (!meta) {
             const lower = slug.toLowerCase();
             meta = Object.values(wikiMeta).find(m => m.titleLower === lower);
         }
 
-        // 3. 模糊匹配：WikiLink 是 title 的前缀
+        // 模糊匹配：WikiLink 是 title 的前缀
         if (!meta) {
             const lower = slug.toLowerCase();
             meta = Object.values(wikiMeta).find(m => m.titleLower.startsWith(lower));
@@ -133,20 +142,19 @@ function convertWikiLinks(body, wikiMeta) {
             return `[${display}](/${hexoPath}/)`;
         }
 
-        // 4. 找不到时降级为相对路径
+        // 找不到时降级为相对路径
+        warn(`WikiLink 未匹配: [[${slug}]]`);
         return `[${display}](/${slug}/)`;
     });
 }
 
-/** 生成 Hexo 友好的 slug */
 function slugify(title) {
     return title
-        .replace(/[\\/:*?"<>|]/g, '-')  // 去除非法字符
+        .replace(/[\\/:*?"<>|]/g, '-')
         .replace(/\s+/g, '-')
         .trim();
 }
 
-/** 加载所有 wiki 页面元数据（用于 WikiLink 转换） */
 function loadWikiMeta() {
     const meta = {};
     function scan(dir) {
@@ -179,17 +187,112 @@ function loadWikiMeta() {
     return meta;
 }
 
+// ============ Phase 2 新增：冲突检测 ============
+
+/** 检测 hexoPath 冲突：同名文件但内容不同 */
+function detectConflicts(converted, prevMeta) {
+    const conflicts = [];
+
+    for (const item of converted) {
+        const prev = prevMeta[item.wikiPath];
+
+        // 检查 hexoPath 是否有其他 wiki 文件正在写入
+        const existingFile = Object.entries(prevMeta).find(
+            ([wp, meta]) => meta.hexoPath === item.hexoPath && wp !== item.wikiPath
+        );
+
+        if (existingFile) {
+            const [existingWikiPath] = existingFile;
+            conflicts.push({
+                type: 'path_collision',
+                wikiPath: item.wikiPath,
+                existingWikiPath,
+                hexoPath: item.hexoPath,
+                title: item.title,
+            });
+        }
+
+        // 检查目标文件是否已存在且内容不同
+        if (fs.existsSync(item.hexoPath)) {
+            const existingContent = fs.readFileSync(item.hexoPath, 'utf-8');
+            const newContent = generateHexoContent(item, prev?.wikiMeta);
+
+            if (existingContent !== newContent && prev?.hexoMd5 !== md5File(item.wikiPath)) {
+                // 内容变更且不是来自同一个 wiki 文件
+                if (existingWikiPath !== item.wikiPath) {
+                    conflicts.push({
+                        type: 'content_overwrite',
+                        wikiPath: item.wikiPath,
+                        existingWikiPath,
+                        hexoPath: item.hexoPath,
+                        title: item.title,
+                    });
+                }
+            }
+        }
+    }
+
+    return conflicts;
+}
+
+// ============ Phase 2 新增：frontmatter 增强 ============
+
+/**
+ * Phase 2 frontmatter 增强支持：
+ * - wikiAliases: 额外的别名（逗号分隔）
+ * - wikiTags: 额外的标签（逗号分隔），会追加到 tags
+ * - wikiCategory: 覆盖默认分类映射
+ */
+function processFrontmatterEnhancements(frontmatter, layer, wikiMeta) {
+    // 标签处理
+    let tags = frontmatter.tags || [];
+    if (!Array.isArray(tags)) tags = [tags];
+
+    // Phase 2: 支持 wikiTags 字段
+    if (frontmatter.wikiTags) {
+        const extraTags = Array.isArray(frontmatter.wikiTags)
+            ? frontmatter.wikiTags
+            : frontmatter.wikiTags.split(',').map(t => t.trim());
+        extraTags.forEach(t => {
+            if (!tags.includes(t)) tags.push(t);
+        });
+    }
+
+    if (!tags.includes('wiki')) tags.unshift('wiki');
+
+    // 分类处理
+    // Phase 2: 支持 wikiCategory 覆盖
+    let category = CATEGORY_MAP[layer] || 'LearningNote';
+    if (frontmatter.wikiCategory && ['LearningNote', 'LearningEssays'].includes(frontmatter.wikiCategory)) {
+        category = frontmatter.wikiCategory;
+    }
+
+    // 别名处理
+    // Phase 2: 支持 wikiAliases 追加
+    let aliases = frontmatter.aliases || [];
+    if (!Array.isArray(aliases)) aliases = [aliases];
+    if (frontmatter.wikiAliases) {
+        const extraAliases = Array.isArray(frontmatter.wikiAliases)
+            ? frontmatter.wikiAliases
+            : frontmatter.wikiAliases.split(',').map(a => a.trim());
+        extraAliases.forEach(a => {
+            if (!aliases.includes(a)) aliases.push(a);
+        });
+    }
+
+    return { tags, category, aliases };
+}
+
 // ============ 主逻辑 ============
 
 function main() {
-    console.log('\n🚀 Wiki → Hexo 转换脚本 v3.0\n');
+    console.log('\n🚀 Wiki → Hexo 转换脚本 v4.0 (Phase 2)\n');
     if (DRY_RUN) console.log('🔍 [Dry-run 模式] 仅预览，不写入文件\n');
 
-    // 加载上次状态
     const prevMeta = loadMeta();
     const wikiMeta = loadWikiMeta();
 
-    // 确保输出目录存在
+    // 确保分类目录存在
     Object.values(CATEGORY_MAP).forEach(cat => {
         const catPath = path.join(POSTS_DIR, cat);
         if (!fs.existsSync(catPath)) {
@@ -199,8 +302,7 @@ function main() {
     });
 
     const stats = { concepts: 0, entities: 0, comparisons: 0, queries: 0, skipped: 0 };
-    const converted = []; // 本次转换的页面列表
-    const now = new Date().toISOString();
+    const converted = [];
 
     function scanWiki(dir) {
         const items = fs.readdirSync(dir);
@@ -216,12 +318,8 @@ function main() {
                 const relativePath = path.relative(WIKI_DIR, fullPath);
                 const layer = relativePath.split(path.sep)[0];
 
-                if (layer !== 'concepts' && layer !== 'entities' &&
-                    layer !== 'comparisons' && layer !== 'queries') {
-                    continue;
-                }
+                if (!LAYER_DIRS.includes(layer)) continue;
 
-                // 增量判断
                 const contentMd5 = md5File(fullPath);
                 const prev = prevMeta[fullPath];
                 const isNewOrChanged = FORCE || !prev || prev.md5 !== contentMd5;
@@ -236,12 +334,10 @@ function main() {
                 if (result) {
                     converted.push(result);
                     stats[layer] = (stats[layer] || 0) + 1;
-
-                    // 更新状态
                     prevMeta[fullPath] = {
                         md5: contentMd5,
                         hexoPath: result.hexoPath,
-                        convertedAt: now,
+                        convertedAt: new Date().toISOString(),
                     };
                 }
             }
@@ -249,6 +345,21 @@ function main() {
     }
 
     scanWiki(WIKI_DIR);
+
+    // Phase 2: 冲突检测
+    if (converted.length > 0) {
+        const conflicts = detectConflicts(converted, prevMeta);
+        if (conflicts.length > 0) {
+            console.log('\n⚠️  检测到潜在冲突：');
+            conflicts.forEach(c => {
+                if (c.type === 'path_collision') {
+                    warn(`路径冲突: [[${path.basename(c.wikiPath, '.md')}]] 与 [[${path.basename(c.existingWikiPath, '.md')}]] 生成相同路径`);
+                } else {
+                    warn(`内容覆盖风险: [[${path.basename(c.wikiPath, '.md')}]] 将覆盖已存在的文件`);
+                }
+            });
+        }
+    }
 
     // 打印统计
     console.log('\n========================================');
@@ -259,6 +370,12 @@ function main() {
     });
     console.log(`  总计新增/更新: ${converted.length}`);
     console.log(`  跳过(未变): ${stats.skipped}`);
+    if (warnings.length > 0) {
+        console.log(`  警告: ${warnings.length}`);
+    }
+    if (errors.length > 0) {
+        console.log(`  错误: ${errors.length}`);
+    }
 
     if (!DRY_RUN) {
         saveMeta(prevMeta);
@@ -269,7 +386,7 @@ function main() {
     } else {
         if (converted.length > 0) {
             console.log('\n🔍 预览 — 以下文件将被写入：');
-            converted.forEach(r => console.log(`  → ${r.hexoPath}`));
+            converted.forEach(r => console.log(`  → ${path.relative(POSTS_DIR, r.hexoPath)}`));
         } else {
             console.log('\n✅ 没有需要更新的文件');
         }
@@ -281,48 +398,61 @@ function main() {
     }
 }
 
+function generateHexoContent(result, prevWikiMeta) {
+    const { frontmatter, body } = parseFrontmatter(
+        fs.readFileSync(result.wikiPath, 'utf-8')
+    );
+    const { tags, category, aliases } = processFrontmatterEnhancements(frontmatter, result.layer, null);
+    const bodyConverted = convertWikiLinks(body, prevWikiMeta || loadWikiMeta());
+
+    const created = frontmatter.created || new Date().toISOString().split('T')[0];
+    const hexoDate = created.replace(/\//g, '-');
+    const related = frontmatter.related;
+    const summary = frontmatter.summary || '';
+
+    let hexoFrontmatter = `---\ntitle : ${frontmatter.title || result.title}\ndate: ${hexoDate} 08:00:00\nupdated: ${hexoDate} 08:00:00\ntags: ${tags.join(', ')}\ncategory : ${category}\nsource: LLM Wiki\nsource_path: ${result.relativePath.replace(/\\/g, '\\\\')}\n`;
+
+    if (aliases.length > 0) {
+        hexoFrontmatter += `aliases: ${aliases.join(', ')}\n`;
+    }
+    if (related) {
+        hexoFrontmatter += `related_posts: ${Array.isArray(related) ? related.join(', ') : related}\n`;
+    }
+    if (summary) {
+        hexoFrontmatter += `description: ${summary}\n`;
+    }
+
+    hexoFrontmatter += `---\n\n<!-- 此文章来自 LLM Wiki: ${result.relativePath} -->\n\n${bodyConverted}`;
+
+    return hexoFrontmatter;
+}
+
 function convertSingle(wikiPath, relativePath, wikiMeta) {
     const content = fs.readFileSync(wikiPath, 'utf-8');
     const { frontmatter, body } = parseFrontmatter(content);
 
     const layer = relativePath.split(path.sep)[0];
-    const category = CATEGORY_MAP[layer] || 'LearningNote';
+    const { tags, category, aliases } = processFrontmatterEnhancements(frontmatter, layer, wikiMeta);
 
-    // 日期
     const created = frontmatter.created || new Date().toISOString().split('T')[0];
-
-    // 标题
     const title = frontmatter.title || path.basename(wikiPath, '.md');
-
-    // 标签
-    let tags = frontmatter.tags || [];
-    if (!Array.isArray(tags)) tags = [tags];
-    if (!tags.includes('wiki')) tags.unshift('wiki');
-
-    // WikiLink 转换
-    const bodyConverted = convertWikiLinks(body, wikiMeta);
-
-    // 生成 Hexo frontmatter
-    const aliases = frontmatter.aliases;
-    const related = frontmatter.related;
-    const summary = frontmatter.summary || '';
-
-    // Hexo 要求 YYYY-MM-DD HH:mm:ss 格式（不是 YYYY/MM/DD）
     const hexoDate = created.replace(/\//g, '-');
-
-    // 文件名
     const filename = `${hexoDate}-${title}.md`;
     const hexoPath = path.join(POSTS_DIR, category, filename);
 
     if (DRY_RUN) {
         console.log(`  📝 ${title} → ${category}/${filename}`);
-        return { title, category, layer, hexoPath, wikiPath };
+        return { title, category, layer, hexoPath, wikiPath, relativePath };
     }
+
+    const bodyConverted = convertWikiLinks(body, wikiMeta);
+    const related = frontmatter.related;
+    const summary = frontmatter.summary || '';
 
     let hexoFrontmatter = `---\ntitle : ${title}\ndate: ${hexoDate} 08:00:00\nupdated: ${hexoDate} 08:00:00\ntags: ${tags.join(', ')}\ncategory : ${category}\nsource: LLM Wiki\nsource_path: ${relativePath.replace(/\\/g, '\\\\')}\n`;
 
-    if (aliases) {
-        hexoFrontmatter += `aliases: ${Array.isArray(aliases) ? aliases.join(', ') : aliases}\n`;
+    if (aliases.length > 0) {
+        hexoFrontmatter += `aliases: ${aliases.join(', ')}\n`;
     }
     if (related) {
         hexoFrontmatter += `related_posts: ${Array.isArray(related) ? related.join(', ') : related}\n`;
@@ -336,18 +466,16 @@ function convertSingle(wikiPath, relativePath, wikiMeta) {
     fs.writeFileSync(hexoPath, hexoFrontmatter, 'utf-8');
     console.log(`  ✅ ${title}`);
 
-    return { title, category, layer, hexoPath, wikiPath };
+    return { title, category, layer, hexoPath, wikiPath, relativePath };
 }
 
-/** 更新 log.md */
 function updateLog(converted) {
     const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19);
-    const entries = converted.map(r => `- ${timestamp} | ${r.layer} | [[${r.title}]](${path.relative(WIKI_DIR, r.wikiPath)}) → ${r.category}/`).join('\n');
+    const entries = converted.map(r => `- ${timestamp} | ${r.layer} | [[${r.title}]](${r.relativePath}) → ${r.category}/`).join('\n');
 
     let logContent = '';
     if (fs.existsSync(LOG_FILE)) {
         logContent = fs.readFileSync(LOG_FILE, 'utf-8');
-        // 找到最后一个 ## 标题，在其下追加
         const lastHeader = logContent.lastIndexOf('\n## ');
         if (lastHeader !== -1) {
             const insertPos = logContent.indexOf('\n', lastHeader + 5);
@@ -366,14 +494,12 @@ function updateLog(converted) {
     fs.writeFileSync(LOG_FILE, logContent, 'utf-8');
 }
 
-/** 更新 index.md */
 function updateIndex() {
     if (!fs.existsSync(INDEX_FILE)) return;
 
     let content = fs.readFileSync(INDEX_FILE, 'utf-8');
     const { frontmatter, body } = parseFrontmatter(content);
 
-    // 统计各层数量
     const counts = {};
     LAYER_DIRS.forEach(dir => {
         const dirPath = path.join(WIKI_DIR, dir);
@@ -385,7 +511,6 @@ function updateIndex() {
 
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
 
-    // 更新统计行
     const lines = body.split('\n');
     const newLines = [];
     let inStats = false;
@@ -396,7 +521,6 @@ function updateIndex() {
             if (line.trim() === '' || line.startsWith('#') || LAYER_DIRS.some(d => line.includes(d))) {
                 inStats = false;
             } else {
-                // 跳过旧统计行
                 continue;
             }
         }
@@ -412,7 +536,6 @@ function updateIndex() {
         ''
     ].join('\n');
 
-    // 重新组装
     const bodyWithoutOldStats = newLines.join('\n').replace(/\n{3,}/g, '\n\n');
     const newBody = bodyWithoutOldStats.trimEnd() + '\n' + statsBlock;
 
@@ -421,4 +544,121 @@ function updateIndex() {
     fs.writeFileSync(INDEX_FILE, newContent, 'utf-8');
 }
 
-main();
+// ============ Phase 2 新增：单元测试 ============
+
+function runTests() {
+    console.log('\n🧪 Wiki → Hexo 单元测试\n');
+    console.log('========================================');
+
+    let passed = 0;
+    let failed = 0;
+
+    function test(name, fn) {
+        try {
+            fn();
+            console.log(`  ✅ ${name}`);
+            passed++;
+        } catch (e) {
+            console.log(`  ❌ ${name}`);
+            console.log(`     错误: ${e.message}`);
+            failed++;
+        }
+    }
+
+    function assertEqual(actual, expected, msg = '') {
+        if (actual !== expected) {
+            throw new Error(`${msg} 期望: ${expected}, 实际: ${actual}`);
+        }
+    }
+
+    // 测试 1: slugify
+    test('slugify: 去除非法字符', () => {
+        assertEqual(slugify('AI/模型*测试?'), 'AI-模型-测试-', 'slugify');
+    });
+
+    test('slugify: 空格转横线', () => {
+        assertEqual(slugify('Hello World'), 'Hello-World', 'slugify');
+    });
+
+    // 测试 2: frontmatter 解析
+    test('parseFrontmatter: 基础解析', () => {
+        const result = parseFrontmatter(`---
+title: Test
+tags: [a, b]
+---
+body content`);
+        assertEqual(result.frontmatter.title, 'Test');
+        assertEqual(result.body, 'body content');
+    });
+
+    test('parseFrontmatter: tags 数组解析', () => {
+        const result = parseFrontmatter(`---
+title: Test
+tags: [ai, ml]
+---
+`);
+        assertEqual(Array.isArray(result.frontmatter.tags), true);
+        assertEqual(result.frontmatter.tags[0], 'ai');
+        assertEqual(result.frontmatter.tags[1], 'ml');
+    });
+
+    // 测试 3: frontmatter 增强
+    test('processFrontmatterEnhancements: wikiTags 追加', () => {
+        const fm = { tags: ['base'], wikiTags: 'extra1, extra2' };
+        const { tags } = processFrontmatterEnhancements(fm, 'concepts', {});
+        assertEqual(tags.includes('extra1'), true);
+        assertEqual(tags.includes('base'), true);
+        assertEqual(tags[0], 'wiki');
+    });
+
+    test('processFrontmatterEnhancements: wikiCategory 覆盖', () => {
+        const fm = { wikiCategory: 'LearningEssays' };
+        const { category } = processFrontmatterEnhancements(fm, 'concepts', {});
+        assertEqual(category, 'LearningEssays');
+    });
+
+    test('processFrontmatterEnhancements: wikiAliases 追加', () => {
+        const fm = { aliases: ['old'], wikiAliases: 'new1, new2' };
+        const { aliases } = processFrontmatterEnhancements(fm, 'concepts', {});
+        assertEqual(aliases.includes('old'), true);
+        assertEqual(aliases.includes('new1'), true);
+    });
+
+    // 测试 4: WikiLink 转换
+    test('WikiLink: 精确匹配', () => {
+        const wikiMeta = {
+            'Test': { hexoDate: '2025/01/01', title: 'Test' }
+        };
+        const result = convertWikiLinks('[[Test]]', wikiMeta);
+        assertEqual(result, '[Test](/2025/01/01/Test/)');
+    });
+
+    test('WikiLink: 别名显示文字', () => {
+        const wikiMeta = {
+            'Target': { hexoDate: '2025/01/01', title: 'Target' }
+        };
+        const result = convertWikiLinks('[[Target|显示文字]]', wikiMeta);
+        assertEqual(result, '[显示文字](/2025/01/01/Target/)');
+    });
+
+    test('WikiLink: 大小写不敏感', () => {
+        const wikiMeta = {
+            'Test': { titleLower: 'test', hexoDate: '2025/01/01', title: 'Test' }
+        };
+        const result = convertWikiLinks('[[test]]', wikiMeta);
+        assertEqual(result.includes('[test]'), true);
+    });
+
+    console.log('========================================');
+    console.log(`结果: ${passed} 通过, ${failed} 失败\n`);
+    return failed === 0;
+}
+
+// ============ 启动 ============
+
+if (RUN_TEST) {
+    const success = runTests();
+    process.exit(success ? 0 : 1);
+} else {
+    main();
+}

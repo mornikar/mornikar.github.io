@@ -52,3 +52,11 @@
 - comparisons: 0
 - queries: 0
 - 总计: 3
+
+## 统计
+
+- concepts: 2
+- entities: 1
+- comparisons: 0
+- queries: 0
+- 总计: 3
