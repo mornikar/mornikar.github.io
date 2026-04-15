@@ -76,8 +76,16 @@ jobs:
 
       - name: 构建 Pagefind 搜索索引
         run: |
-          npm install --save-dev pagefind
-          npx pagefind --site public --output-path public/pagefind
+          # hexo public_dir=.. outputs to repo root; copy to public/ for pagefind
+          if [ -d "../public" ]; then
+            cp -r ../public ./public_find_source
+            npm install --save-dev pagefind
+            npx pagefind --site public_find_source --output-path public/pagefind
+            rm -rf public_find_source
+          else
+            npm install --save-dev pagefind
+            npx pagefind --site public --output-path public/pagefind
+          fi
           echo "=== Pagefind 索引 ==="
           ls public/pagefind/ 2>/dev/null | head -5 || echo "(索引生成失败)"
 
