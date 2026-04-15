@@ -1,3 +1,7 @@
+---
+
+---
+
 # LLM Wiki 索引
 
 > Dr.GT_Mornikar 的知识库
@@ -24,3 +28,19 @@
 ## 最近更新
 
 - 2025-09-12: 初始化 Wiki，完成首批文档
+
+## 统计
+
+- concepts: 2
+- entities: 1
+- comparisons: 0
+- queries: 0
+- 总计: 3
+
+## 统计
+
+- concepts: 2
+- entities: 1
+- comparisons: 0
+- queries: 0
+- 总计: 3

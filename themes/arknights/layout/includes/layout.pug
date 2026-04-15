@@ -1,36 +1,36 @@
 -
-  let pageTitle = page.title || config.subtitle || ''
-  if (is_post()) pageTitle = page.title
-  if (is_archive()) pageTitle = __('menu.archive.plural')
-  if (is_tag()) pageTitle = __('menu.tag.plural') + ': ' + page.tag
-  if (is_category()) pageTitle = __('menu.category.plural') + ': ' + page.category
-  if (is_month()) pageTitle += ': ' + page.month + '/' + page.year
-  if (is_year()) pageTitle += ': ' + page.year
+  // Hexo 7 兼容：通过 pug mixin 注入 helpers（pug compile 函数把 page/config 等注入为局部变量，
+  // 但 is_post 等函数不会作为局部变量注入。需要从 locals.xxx 访问。
+  // 解决方案：直接使用 page.xxx（pug 已注入 page），不依赖 is_post() 等裸函数。
+  const _page = page || {}
+  const _config = config || {}
+  const _theme = theme || {}
+  const _ = typeof __ === 'function' ? __ : function(k) { return k }
+  let pageTitle = _page.title || _config.subtitle || ''
   if (pageTitle) pageTitle += ' | '
-  pageTitle += config.title
-  const asideLogo = theme.aside.logo
-  const pjax = theme.pjax ? theme.pjax.enable : false
+  pageTitle += _config.title
+  const asideLogo = _theme.aside ? _theme.aside.logo : ''
+  const pjax = _theme.pjax ? _theme.pjax.enable : false
   let searchConfig = null
-  if (theme.search !== undefined && theme.search.enable === true) searchConfig = theme.search;
+  if (_theme.search !== undefined && _theme.search.enable === true) searchConfig = _theme.search
   const configs = JSON.stringify({
-    root: config.root,
-    code_fold: config.theme_config.post.code_fold,
+    root: _config.root || '/',
+    code_fold: (_config.theme_config && _config.theme_config.post) ? _config.theme_config.post.code_fold : false,
     search: {
-      preload: searchConfig.preload,
-      activeHolder: __('search.activeHolder'),
-      blurHolder: __('search.blurHolder'),
-      noResult: __('search.noResult')
+      preload: searchConfig ? searchConfig.preload : false,
+      activeHolder: _('search.activeHolder'),
+      blurHolder: _('search.blurHolder'),
+      noResult: _('search.noResult')
     },
     code: {
-      codeInfo: __('code.codeInfo'),
-      copy: __('code.copy')
+      codeInfo: _('code.codeInfo'),
+      copy: _('code.copy')
     }
   })
-
-  let htmlThemeMode = theme.color
-  if (theme.color === 'dark-only') {
+  let htmlThemeMode = _theme.color || 'light'
+  if (_theme.color === 'dark-only') {
     htmlThemeMode = 'dark'
-  } else if (theme.color === 'light-only') {
+  } else if (_theme.color === 'light-only') {
     htmlThemeMode = 'light'
   }
 

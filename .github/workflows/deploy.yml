@@ -2,91 +2,117 @@ name: Wiki-Hexo 自动部署
 
 on:
   push:
-    branches: [source]
+    branches:
+      - source
+    paths:
+      - '.wiki/**'
+      - 'scripts/wiki-to-hexo.js'
+      - '_config.yml'
+      - 'themes/**'
   workflow_dispatch:
     inputs:
-      trigger:
-        description: '手动触发构建'
+      mode:
+        description: '构建模式'
         required: false
-        default: 'manual'
+        default: 'normal'
+        type: choice
+        options:
+          - normal
+          - force
+          - dry-run
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 检出代码
+      - name: 检出代码（包含完整历史）
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: 设置 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: Hexo/package-lock.json
 
       - name: 安装依赖
+        working-directory: Hexo
         run: npm ci
 
-      - name: 查看 Wiki 目录
+      - name: 确定构建模式
+        id: mode
         run: |
-          echo "=== Wiki 目录结构 ==="
-          ls -la .wiki/
-          echo ""
-          echo "=== Concepts ==="
-          ls -la .wiki/concepts/ 2>/dev/null || echo "空目录"
-          echo ""
-          echo "=== Entities ==="
-          ls -la .wiki/entities/ 2>/dev/null || echo "空目录"
+          MODE="${{ github.event.inputs.mode || 'normal' }}"
+          echo "mode=$MODE" >> $GITHUB_OUTPUT
+          echo "当前模式: $MODE"
 
       - name: 转换 Wiki 到 Hexo
-        run: node scripts/wiki-to-hexo.js
+        working-directory: Hexo
+        run: |
+          MODE=${{ steps.mode.outputs.mode }}
+          if [ "$MODE" = "dry-run" ]; then
+            node scripts/wiki-to-hexo.js --dry-run
+          elif [ "$MODE" = "force" ]; then
+            node scripts/wiki-to-hexo.js --force
+          else
+            node scripts/wiki-to-hexo.js
+          fi
 
       - name: 查看转换结果
         run: |
           echo "=== 转换后的 _posts 目录 ==="
-          ls -la source/_posts/
+          ls -la Hexo/source/_posts/ 2>/dev/null || echo "(空)"
           echo ""
           echo "=== LearningNote ==="
-          ls -la source/_posts/LearningNote/ 2>/dev/null || echo "空目录"
+          ls Hexo/source/_posts/LearningNote/ 2>/dev/null | wc -l
+          echo "篇文章"
           echo ""
           echo "=== LearningEssays ==="
-          ls -la source/_posts/LearningEssays/ 2>/dev/null || echo "空目录"
+          ls Hexo/source/_posts/LearningEssays/ 2>/dev/null | wc -l
+          echo "篇文章"
 
       - name: 生成静态文件
+        working-directory: Hexo
         run: npx hexo generate
 
-      - name: 查看生成的 public 目录
+      - name: 构建 Pagefind 搜索索引
+        working-directory: Hexo
         run: |
-          echo "=== Public 目录 ==="
-          ls -la public/
-          echo ""
-          echo "=== LearningNote 页面 ==="
-          ls -la public/LearningNote/ 2>/dev/null || echo "空目录"
-
-      - name: 索引搜索
-        run: |
-          npm install pagefind
-          npx pagefind --site public --output-path public/pagefind
+          npm install --save-dev pagefind
+          npx pagefind --site public --output-path public/pagefind --no-build-dir
           echo "=== Pagefind 索引 ==="
-          ls -la public/pagefind/ 2>/dev/null || echo "索引生成失败"
+          ls public/pagefind/ 2>/dev/null | head -5 || echo "(索引生成失败)"
+
+      - name: 查看生成的页面
+        run: |
+          echo "=== LearningNote 页面 ==="
+          ls Hexo/public/LearningNote/ 2>/dev/null | head -10 || echo "(空)"
+          echo ""
+          echo "=== LearningEssays 页面 ==="
+          ls Hexo/public/LearningEssays/ 2>/dev/null | head -10 || echo "(空)"
+
+      - name: 提交 Wiki 转换结果（仅 source 分支）
+        if: github.ref == 'refs/heads/source'
+        working-directory: Hexo
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add source/_posts/ .wiki/index.md .wiki/log.md .wiki/.wiki-meta.json 2>/dev/null
+          if git diff --cached --quiet; then
+            echo "没有新的转换结果需要提交"
+          else
+            echo "提交转换结果..."
+            git commit -m "chore: sync wiki posts $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+            git push
+          fi
 
       - name: 部署到 GitHub Pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: Hexo
         run: |
-          echo "=== 部署配置 ==="
-          cat _config.yml | grep -A5 "deploy:"
-          echo ""
           npm install hexo-deployer-git --save-dev
           npx hexo deploy
-
-      - name: 提交 Wiki 转换结果
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add source/_posts/
-          git diff --cached --quiet || git commit -m "chore: sync wiki posts $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-          git push
-        continue-on-error: true
