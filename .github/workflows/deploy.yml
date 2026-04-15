@@ -38,7 +38,6 @@ jobs:
           node-version: '20'
 
       - name: 安装依赖
-        working-directory: Hexo
         run: npm ci
 
       - name: 确定构建模式
@@ -49,7 +48,6 @@ jobs:
           echo "当前模式: $MODE"
 
       - name: 转换 Wiki 到 Hexo
-        working-directory: Hexo
         run: |
           MODE=${{ steps.mode.outputs.mode }}
           if [ "$MODE" = "dry-run" ]; then
@@ -63,22 +61,20 @@ jobs:
       - name: 查看转换结果
         run: |
           echo "=== 转换后的 _posts 目录 ==="
-          ls -la Hexo/source/_posts/ 2>/dev/null || echo "(空)"
+          ls -la source/_posts/ 2>/dev/null || echo "(空)"
           echo ""
           echo "=== LearningNote ==="
-          ls Hexo/source/_posts/LearningNote/ 2>/dev/null | wc -l
+          ls source/_posts/LearningNote/ 2>/dev/null | wc -l
           echo "篇文章"
           echo ""
           echo "=== LearningEssays ==="
-          ls Hexo/source/_posts/LearningEssays/ 2>/dev/null | wc -l
+          ls source/_posts/LearningEssays/ 2>/dev/null | wc -l
           echo "篇文章"
 
       - name: 生成静态文件
-        working-directory: Hexo
         run: npx hexo generate
 
       - name: 构建 Pagefind 搜索索引
-        working-directory: Hexo
         run: |
           npm install --save-dev pagefind
           npx pagefind --site public --output-path public/pagefind --no-build-dir
@@ -88,14 +84,13 @@ jobs:
       - name: 查看生成的页面
         run: |
           echo "=== LearningNote 页面 ==="
-          ls Hexo/public/LearningNote/ 2>/dev/null | head -10 || echo "(空)"
+          ls public/LearningNote/ 2>/dev/null | head -10 || echo "(空)"
           echo ""
           echo "=== LearningEssays 页面 ==="
-          ls Hexo/public/LearningEssays/ 2>/dev/null | head -10 || echo "(空)"
+          ls public/LearningEssays/ 2>/dev/null | head -10 || echo "(空)"
 
       - name: 提交 Wiki 转换结果（仅 source 分支）
         if: github.ref == 'refs/heads/source'
-        working-directory: Hexo
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
@@ -111,7 +106,6 @@ jobs:
       - name: 部署到 GitHub Pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: Hexo
         run: |
           npm install hexo-deployer-git --save-dev
           npx hexo deploy
