@@ -9,6 +9,7 @@ on:
       - 'scripts/wiki-to-hexo.js'
       - '_config.yml'
       - 'themes/**'
+      - '.github/workflows/**'
   workflow_dispatch:
     inputs:
       mode:
