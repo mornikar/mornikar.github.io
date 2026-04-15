@@ -110,9 +110,8 @@ theme: arknights
 # Deployment
 deploy:
   type: git
-  repo: https://github.com/mornikar/mornikar.github.io.git
+  repo: https://x-access-token:${GITHUB_TOKEN}@github.com/mornikar/mornikar.github.io.git
   branch: main
-  token: ${GITHUB_TOKEN}
 
 # RSS
 feed:
