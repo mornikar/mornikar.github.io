@@ -17,6 +17,9 @@ block content
   #post-bg
     #post-title
       h1= page.title
+        // Phase 3: Wiki 来源标记
+        if page.source === 'LLM Wiki'
+          span.wiki-badge Wiki
       if (dateConf || updatedConf || countWord || countTime || vercount) && page.title && page['post-info'] !== false
         #post-info
           - var first = true
@@ -52,7 +55,12 @@ block content
             span#vercount_container_page_pv #{__('vercount.pageView')}
               span#vercount_value_page_pv(class='control') #{__('vercount.loading')}
             - first = false
-    hr
+      hr
+      // Phase 3: Wiki 来源信息
+      if page.source === 'LLM Wiki' && page.source_path
+        .wiki-source-info
+          |📚 来自 LLM Wiki: 
+          = page.source_path
     #post-content
       if excerptConf || encrypted
         != page.content
