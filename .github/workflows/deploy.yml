@@ -95,12 +95,13 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add source/_posts/ .wiki/index.md .wiki/log.md .wiki/.wiki-meta.json 2>/dev/null
-          if git diff --cached --quiet; then
-            echo "没有新的转换结果需要提交"
-          else
-            echo "提交转换结果..."
+          CHANGES=$(git diff --cached --name-only 2>/dev/null || echo "")
+          if [ -n "$CHANGES" ]; then
+            echo "提交转换结果... ($CHANGES)"
             git commit -m "chore: sync wiki posts $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
             git push
+          else
+            echo "没有新的转换结果需要提交"
           fi
 
       - name: 部署到 GitHub Pages
