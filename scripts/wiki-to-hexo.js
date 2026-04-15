@@ -290,7 +290,6 @@ function convertSingle(wikiPath, relativePath, wikiMeta) {
 
     // 日期
     const created = frontmatter.created || new Date().toISOString().split('T')[0];
-    const dateStr = created.replace(/-/g, '/');
 
     // 标题
     const title = frontmatter.title || path.basename(wikiPath, '.md');
@@ -303,8 +302,16 @@ function convertSingle(wikiPath, relativePath, wikiMeta) {
     // WikiLink 转换
     const bodyConverted = convertWikiLinks(body, wikiMeta);
 
+    // 生成 Hexo frontmatter
+    const aliases = frontmatter.aliases;
+    const related = frontmatter.related;
+    const summary = frontmatter.summary || '';
+
+    // Hexo 要求 YYYY-MM-DD HH:mm:ss 格式（不是 YYYY/MM/DD）
+    const hexoDate = created.replace(/\//g, '-');
+
     // 文件名
-    const filename = `${created.replace(/-/g, '-')}-${title}.md`;
+    const filename = `${hexoDate}-${title}.md`;
     const hexoPath = path.join(POSTS_DIR, category, filename);
 
     if (DRY_RUN) {
@@ -312,12 +319,7 @@ function convertSingle(wikiPath, relativePath, wikiMeta) {
         return { title, category, layer, hexoPath, wikiPath };
     }
 
-    // 生成 Hexo frontmatter
-    const aliases = frontmatter.aliases;
-    const related = frontmatter.related;
-    const summary = frontmatter.summary || '';
-
-    let hexoFrontmatter = `---\ntitle : ${title}\ndate: ${dateStr} 08:00:00\nupdated: ${dateStr} 08:00:00\ntags: ${tags.join(', ')}\ncategory : ${category}\nsource: LLM Wiki\nsource_path: ${relativePath.replace(/\\/g, '\\\\')}\n`;
+    let hexoFrontmatter = `---\ntitle : ${title}\ndate: ${hexoDate} 08:00:00\nupdated: ${hexoDate} 08:00:00\ntags: ${tags.join(', ')}\ncategory : ${category}\nsource: LLM Wiki\nsource_path: ${relativePath.replace(/\\/g, '\\\\')}\n`;
 
     if (aliases) {
         hexoFrontmatter += `aliases: ${Array.isArray(aliases) ? aliases.join(', ') : aliases}\n`;
