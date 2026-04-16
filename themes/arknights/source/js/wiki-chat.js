@@ -7,22 +7,33 @@
  *   2. 兜底：Pagefind 关键词搜索（精确匹配页面）
  *
  * API 地址自动切换：
- *   - 本地开发（localhost / 127.0.0.1）→ 直接访问 http://localhost/v1
- *   - 公网访问 → 显示"仅本地可用"提示（或配置代理后修改 DIFY_API_BASE）
+ *   - 本地开发（localhost / 127.0.0.1）→ http://localhost/v1
+ *   - 公网访问 → DIFY_PUBLIC_BASE（内网穿透后的公网地址）
+ *
+ * 配置说明：
+ *   - DIFY_PUBLIC_BASE: 填入你的内网穿透公网地址（如 localtunnel / frp / ngrok 输出地址）
+ *     示例：https://abc123.loca.lt  或  https://your-vps.com/dify
+ *     注意：末尾不要加 /v1，代码会自动拼接
  */
 
 ;(function () {
   'use strict'
 
   // ─── 配置 ────────────────────────────────────────────────
-  const DIFY_API_BASE = 'http://localhost/v1'
-  const DIFY_API_KEY  = 'app-JznEvGv3JlWWISRmNdjRO7yE'
+  const DIFY_API_BASE    = 'http://localhost/v1'
+  const DIFY_PUBLIC_BASE = ''  // ★ 填入公网穿透地址，如：https://abc123.loca.lt
+  const DIFY_API_KEY     = 'app-JznEvGv3JlWWISRmNdjRO7yE'
   const CHAT_TITLE    = 'Wiki AI 助手'
   const CHAT_PLACEHOLDER = '问我关于 LLM Wiki 的任何问题…'
   const WELCOME_MSG   = '你好！我是基于 Wiki 知识库的 AI 助手。可以问我关于 LLM 相关知识、模型对比、RAG 等问题。'
 
   // 判断是否本地环境（可直连 Dify）
   const isLocal = ['localhost', '127.0.0.1', '::1'].includes(location.hostname)
+
+  // 动态选择 API 地址
+  const difyBase = (isLocal || !DIFY_PUBLIC_BASE)
+    ? DIFY_API_BASE
+    : DIFY_PUBLIC_BASE.replace(/\/$/, '') + '/v1'
 
   // Pagefind 搜索引擎（懒加载）
   let pagefindInstance = null
@@ -76,7 +87,8 @@
           </svg>
         </button>
       </div>
-      ${!isLocal ? `<div id="wiki-chat-offline-tip">⚠ AI 回答需在本地运行博客时使用，当前为公网访问，仅支持关键词搜索。</div>` : ''}
+      ${!isLocal && !DIFY_PUBLIC_BASE ? `<div id="wiki-chat-offline-tip">⚠ AI 助手需配置公网穿透地址（DIFY_PUBLIC_BASE）后才能在公网使用。</div>` : ''}
+      ${!isLocal && DIFY_PUBLIC_BASE ? `<div id="wiki-chat-offline-tip">🌐 公网模式 · AI 助手已连接</div>` : ''}
     `
 
     document.body.appendChild(fab)
@@ -118,7 +130,7 @@
       user: 'wiki-visitor'
     }
 
-    const resp = await fetch(`${DIFY_API_BASE}/chat-messages`, {
+    const resp = await fetch(`${difyBase}/chat-messages`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${DIFY_API_KEY}`,
@@ -222,8 +234,8 @@
     // 同步触发 Pagefind 搜索（不等 AI，立即展示页面链接）
     searchPagefind(query).then(results => renderSearchResults(results, searchContainer))
 
-    // AI 回答
-    if (isLocal) {
+    // AI 回答（需要本地 Dify 或已配置公网穿透地址）
+    if (isLocal || DIFY_PUBLIC_BASE) {
       const typingDiv = document.createElement('div')
       typingDiv.className = 'wiki-chat-msg wiki-chat-msg--bot wiki-chat-typing'
       typingDiv.innerHTML = '<div class="wiki-chat-bubble"><span class="wiki-typing-dot"></span><span class="wiki-typing-dot"></span><span class="wiki-typing-dot"></span></div>'
