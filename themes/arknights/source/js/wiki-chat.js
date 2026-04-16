@@ -21,7 +21,7 @@
 
   // ─── 配置 ────────────────────────────────────────────────
   const DIFY_API_BASE    = 'http://localhost/v1'
-  const DIFY_PUBLIC_BASE = ''  // ★ 填入公网穿透地址，如：https://abc123.loca.lt
+  const DIFY_PUBLIC_BASE = 'https://thick-seas-bathe.loca.lt'
   const DIFY_API_KEY     = 'app-JznEvGv3JlWWISRmNdjRO7yE'
   const CHAT_TITLE    = 'Wiki AI 助手'
   const CHAT_PLACEHOLDER = '问我关于 LLM Wiki 的任何问题…'
