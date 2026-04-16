@@ -21,8 +21,14 @@
 
   // ─── 配置 ────────────────────────────────────────────────
   const DIFY_API_BASE    = 'http://localhost/v1'
+  // ★ 内网穿透地址：填入 localtunnel/frp/ngrok 输出地址即可
+  // 也可通过 URL 参数注入，访问时加 ?dify= 后面跟地址，如：?dify=https://xxx.loca.lt
   const DIFY_PUBLIC_BASE = 'https://thick-seas-bathe.loca.lt'
   const DIFY_API_KEY     = 'app-JznEvGv3JlWWISRmNdjRO7yE'
+
+  // 从 URL 参数覆盖公网地址，格式：?dify=https://xxx.loca.lt
+  const urlParamDify = new URLSearchParams(location.search).get('dify')
+  const difyPublicAddr = urlParamDify || DIFY_PUBLIC_BASE
   const CHAT_TITLE    = 'Wiki AI 助手'
   const CHAT_PLACEHOLDER = '问我关于 LLM Wiki 的任何问题…'
   const WELCOME_MSG   = '你好！我是基于 Wiki 知识库的 AI 助手。可以问我关于 LLM 相关知识、模型对比、RAG 等问题。'
@@ -31,9 +37,9 @@
   const isLocal = ['localhost', '127.0.0.1', '::1'].includes(location.hostname)
 
   // 动态选择 API 地址
-  const difyBase = (isLocal || !DIFY_PUBLIC_BASE)
+  const difyBase = (isLocal || !difyPublicAddr)
     ? DIFY_API_BASE
-    : DIFY_PUBLIC_BASE.replace(/\/$/, '') + '/v1'
+    : difyPublicAddr.replace(/\/$/, '') + '/v1'
 
   // Pagefind 搜索引擎（懒加载）
   let pagefindInstance = null
@@ -87,8 +93,8 @@
           </svg>
         </button>
       </div>
-      ${!isLocal && !DIFY_PUBLIC_BASE ? `<div id="wiki-chat-offline-tip">⚠ AI 助手需配置公网穿透地址（DIFY_PUBLIC_BASE）后才能在公网使用。</div>` : ''}
-      ${!isLocal && DIFY_PUBLIC_BASE ? `<div id="wiki-chat-offline-tip">🌐 公网模式 · AI 助手已连接</div>` : ''}
+      ${!isLocal && !difyPublicAddr ? `<div id="wiki-chat-offline-tip">⚠ AI 助手需配置公网穿透地址后才能在公网使用。</div>` : ''}
+      ${!isLocal && difyPublicAddr ? `<div id="wiki-chat-offline-tip">🌐 公网模式 · AI 助手已连接</div>` : ''}
     `
 
     document.body.appendChild(fab)
