@@ -1,0 +1,266 @@
+// ─── Phase 6: Wiki AI 对话侧边栏 ─────────────────────────────
+
+// ── 悬浮按钮 ─────────────────────────────────────────────────
+#wiki-chat-fab
+  position fixed
+  bottom 80px
+  right 24px
+  z-index 9998
+  width 52px
+  height 52px
+  border-radius 50%
+  border none
+  cursor pointer
+  display flex
+  align-items center
+  justify-content center
+  background var(--theme-highlight)
+  color var(--theme-background)
+  box-shadow 0 4px 14px rgba(0,0,0,0.25)
+  transition transform .2s ease, box-shadow .2s ease, background .2s ease
+  svg
+    width 24px
+    height 24px
+  &:hover
+    transform translateY(-2px)
+    box-shadow 0 6px 18px rgba(0,0,0,0.35)
+  &.wiki-chat-fab--active
+    background var(--theme-stress)
+
+// ── 侧边栏面板 ───────────────────────────────────────────────
+#wiki-chat-panel
+  position fixed
+  bottom 0
+  right 0
+  z-index 9999
+  width 360px
+  height 100vh
+  max-height 100vh
+  display flex
+  flex-direction column
+  background var(--theme-bg-trans0)
+  backdrop-filter blur(12px)
+  -webkit-backdrop-filter blur(12px)
+  border-left 2px solid var(--theme-border)
+  transform translateX(100%)
+  transition transform .3s cubic-bezier(.4,0,.2,1)
+  font-family BenderLight, sans-serif
+  // 移动端适配
+  @media (max-width: 480px)
+    width 100vw
+    border-left none
+    border-top 2px solid var(--theme-border)
+
+  &.wiki-chat-panel--open
+    transform translateX(0)
+
+// ── 头部 ──────────────────────────────────────────────────────
+#wiki-chat-header
+  display flex
+  align-items center
+  justify-content space-between
+  padding 12px 16px
+  background var(--theme-btn-bg)
+  border-bottom 1px solid var(--theme-border)
+  flex-shrink 0
+
+#wiki-chat-title
+  display flex
+  align-items center
+  gap 8px
+  color var(--theme-highlight)
+  font-size 1em
+  font-weight bold
+  letter-spacing 0.05em
+  svg
+    stroke var(--theme-highlight)
+
+#wiki-chat-header-actions
+  display flex
+  align-items center
+  gap 8px
+  button
+    background none
+    border none
+    cursor pointer
+    padding 4px
+    color var(--theme-unimportant-2)
+    border-radius 4px
+    display flex
+    align-items center
+    justify-content center
+    transition color .15s ease
+    &:hover
+      color var(--theme-highlight)
+
+// ── 消息列表 ──────────────────────────────────────────────────
+#wiki-chat-messages
+  flex 1
+  overflow-y auto
+  padding 12px 16px
+  display flex
+  flex-direction column
+  gap 10px
+  scrollbar-width thin
+  scrollbar-color var(--theme-border) transparent
+
+.wiki-chat-msg
+  display flex
+  &--user
+    justify-content flex-end
+    .wiki-chat-bubble
+      background var(--theme-highlight)
+      color var(--theme-background)
+      border-radius 16px 4px 16px 16px
+  &--bot
+    justify-content flex-start
+    .wiki-chat-bubble
+      background var(--theme-bg-soft)
+      color var(--theme-text)
+      border 1px solid var(--theme-border-soft)
+      border-radius 4px 16px 16px 16px
+
+.wiki-chat-bubble
+  max-width 88%
+  padding 10px 14px
+  font-size 0.9em
+  line-height 1.6
+  word-break break-word
+  code
+    background var(--theme-unimportant-trans)
+    padding 1px 5px
+    border-radius 3px
+    font-size 0.85em
+
+// ── 打字动画 ──────────────────────────────────────────────────
+.wiki-chat-typing .wiki-chat-bubble
+  display flex
+  align-items center
+  gap 5px
+  padding 12px 16px
+
+.wiki-typing-dot
+  display inline-block
+  width 7px
+  height 7px
+  border-radius 50%
+  background var(--theme-highlight)
+  opacity 0.4
+  animation wiki-typing-blink 1.2s infinite
+  &:nth-child(2)
+    animation-delay 0.2s
+  &:nth-child(3)
+    animation-delay 0.4s
+
+@keyframes wiki-typing-blink
+  0%, 80%, 100%
+    opacity 0.4
+    transform scale(1)
+  40%
+    opacity 1
+    transform scale(1.2)
+
+// ── Pagefind 搜索结果 ─────────────────────────────────────────
+#wiki-chat-search-results
+  margin 0 16px
+  padding 10px 12px
+  background var(--theme-bg-trans1)
+  border 1px solid var(--theme-border)
+  border-left 3px solid var(--theme-subcolor)
+  border-radius 4px
+  flex-shrink 0
+  max-height 160px
+  overflow-y auto
+  scrollbar-width thin
+
+.wiki-search-label
+  font-size 0.78em
+  color var(--theme-unimportant)
+  margin-bottom 6px
+  letter-spacing 0.05em
+
+.wiki-search-list
+  margin 0
+  padding 0
+  list-style none
+  li
+    margin-bottom 6px
+    a
+      color var(--theme-highlight)
+      font-size 0.88em
+      text-decoration none
+      &:hover
+        color var(--theme-subcolor)
+        text-decoration underline
+    p
+      margin 2px 0 0 0
+      font-size 0.78em
+      color var(--theme-unimportant)
+      white-space nowrap
+      overflow hidden
+      text-overflow ellipsis
+
+// ── 输入区域 ──────────────────────────────────────────────────
+#wiki-chat-input-area
+  display flex
+  align-items flex-end
+  gap 8px
+  padding 12px 16px
+  border-top 1px solid var(--theme-border-soft)
+  flex-shrink 0
+
+#wiki-chat-input
+  flex 1
+  resize none
+  border 1px solid var(--theme-border)
+  border-radius 8px
+  padding 8px 12px
+  font-size 0.9em
+  font-family inherit
+  background var(--theme-bg-soft)
+  color var(--theme-text)
+  line-height 1.5
+  max-height 120px
+  outline none
+  transition border-color .2s ease
+  &:focus
+    border-color var(--theme-highlight)
+  &::placeholder
+    color var(--theme-unimportant)
+
+#wiki-chat-send
+  width 38px
+  height 38px
+  border-radius 50%
+  border none
+  background var(--theme-highlight)
+  color var(--theme-background)
+  cursor pointer
+  display flex
+  align-items center
+  justify-content center
+  flex-shrink 0
+  transition background .2s ease, transform .1s ease
+  &:hover
+    background var(--theme-subcolor)
+  &:active
+    transform scale(0.92)
+  &:disabled
+    opacity 0.5
+    cursor not-allowed
+
+// ── 公网提示 ──────────────────────────────────────────────────
+#wiki-chat-offline-tip
+  padding 6px 16px 10px
+  font-size 0.78em
+  color var(--theme-unimportant)
+  text-align center
+  flex-shrink 0
+
+// ── 深色主题适配 ─────────────────────────────────────────────
+[theme-mode=dark]
+  #wiki-chat-panel
+    border-left-color var(--theme-border)
+  .wiki-chat-msg--bot .wiki-chat-bubble
+    background var(--theme-bg-soft)
+    border-color rgba(255,255,255,0.08)

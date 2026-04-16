@@ -1,8 +1,9 @@
 @echo off
 chcp 65001 >nul 2>&1
 REM ================================================
-REM   Wiki-Hexo 同步脚本 v3.0
-REM   功能：Wiki → Hexo 转换 → 构建 → Pagefind → 部署
+REM   Wiki-Hexo 同步脚本 v4.0
+REM   功能：Wiki → Dify 同步 → Hexo 转换 → 构建 → Pagefind → 部署
+REM   Phase 6: 新增 Dify 知识库同步（步骤 2）
 REM ================================================
 
 set "HEXO_DIR=%~dp0"
@@ -38,7 +39,7 @@ shift
 goto :parse_args
 :args_done
 
-echo [1/6] 清理旧构建文件...
+echo [1/7] 清理旧构建文件...
 call npx hexo clean
 if errorlevel 1 (
     echo [错误] hexo clean 失败
@@ -47,7 +48,19 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/6] 转换 Wiki 到 Hexo...
+echo [2/7] 同步 Wiki 到 Dify 知识库...
+if not defined DRY_RUN (
+    REM 检查 Dify 是否配置（跳过未配置的情况）
+    node tools\sync-wiki-to-dify.js
+    if errorlevel 1 (
+        echo [警告] Dify 同步失败（可能 Key 未配置），继续后续步骤
+    )
+) else (
+    node tools\sync-wiki-to-dify.js --dry-run
+)
+
+echo.
+echo [3/7] 转换 Wiki 到 Hexo...
 if defined DRY_RUN (
     call node scripts\wiki-to-hexo.js --dry-run
 ) else if defined FORCE (
@@ -62,7 +75,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/6] 生成静态文件...
+echo [4/7] 生成静态文件...
 call npx hexo generate
 if errorlevel 1 (
     echo [错误] hexo generate 失败
@@ -71,7 +84,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [4/6] 构建 Pagefind 搜索索引...
+echo [5/7] 构建 Pagefind 搜索索引...
 if not exist "public" (
     echo [警告] public 目录不存在，跳过 Pagefind
 ) else (
@@ -82,7 +95,7 @@ if not exist "public" (
 )
 
 echo.
-echo [5/6] 提交转换结果到 Git...
+echo [6/7] 提交转换结果到 Git...
 git add source/_posts/ .wiki/index.md .wiki/log.md 2>nul
 git diff --cached --quiet --exit-code
 if errorlevel 1 (
@@ -102,7 +115,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [6/6] 部署到 GitHub Pages...
+echo [7/7] 部署到 GitHub Pages...
 call npx hexo deploy
 if errorlevel 1 (
     echo [错误] hexo deploy 失败
