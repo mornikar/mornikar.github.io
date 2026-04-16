@@ -1,0 +1,83 @@
+// Phase 3: WikiLink 高亮样式
+// 为 wiki 来源的文章中的内部链接添加特殊样式
+
+// Wiki 来源标记的文章中的链接
+.post-source-wiki
+  #post-content
+    a
+      // 普通链接样式
+      color var(--theme-highlight)
+      text-decoration none
+      border-bottom 1px solid transparent
+      transition all .2s ease
+      &:hover
+        color var(--theme-subcolor)
+        border-bottom-color var(--theme-subcolor)
+
+// WikiLink 样式：带有 📚 图标标记的内部链接
+.wiki-link
+  position relative
+  padding-left 18px
+  &:before
+    content '📚'
+    position absolute
+    left 0
+    top 50%
+    transform translateY(-50%)
+    font-size 0.75em
+    opacity 0.7
+
+// Wiki 来源标记
+.wiki-badge
+  display inline-flex
+  align-items center
+  gap 4px
+  background-color var(--theme-unimportant-2)
+  color var(--theme-text-light)
+  padding 2px 8px
+  border-radius 3px
+  font-size 0.85em
+  font-family BenderLight, sans-serif
+  margin-left 10px
+  vertical-align middle
+  &:before
+    content '📖'
+    font-size 0.9em
+
+// Wiki 来源信息行样式
+.wiki-source-info
+  margin-top 5px
+  font-size 0.85em
+  color var(--theme-unimportant)
+
+// 反向链接区块样式
+.wiki-backlinks
+  margin-top 30px
+  padding 15px
+  background-color var(--theme-bg-trans1)
+  border 1px solid var(--theme-border)
+  border-left 3px solid var(--theme-highlight)
+  h4
+    margin 0 0 10px 0
+    color var(--theme-text-light)
+    font-size 1em
+  ul
+    margin 0
+    padding-left 20px
+    list-style-type disc
+    li
+      margin 5px 0
+      a
+        color var(--theme-highlight)
+        &:hover
+          color var(--theme-subcolor)
+          text-decoration underline
+
+// 深色/浅色主题适配
+if hexo-config('darkmode.enable') is not false
+  [data-theme='dark']
+    .wiki-link
+      &:before
+        opacity 0.9
+    .wiki-badge
+      background-color var(--theme-unimportant)

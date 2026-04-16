@@ -76,6 +76,31 @@ jobs:
       - name: 生成静态文件
         run: npx hexo generate
 
+      # 手动编译主题 CSS：hexo-renderer-stylus 在 CI 中无法解析多级 @import
+      # 直接用 Node.js + stylus 编译，绕过 hexo 的 CSS 处理
+      - name: 编译完整 CSS（含 wiki-chat 样式）
+        run: |
+          node -e "
+          const stylus = require('stylus');
+          const fs = require('fs');
+          const path = require('path');
+          const cssDir = path.join(process.cwd(), 'themes/arknights/source/css');
+          const src = fs.readFileSync(path.join(cssDir, 'arknights.styl'), 'utf8');
+          stylus(src)
+            .set('filename', path.join(cssDir, 'arknights.styl'))
+            .set('paths', [
+              path.join(process.cwd(), 'themes/arknights/source/css/_modules'),
+              path.join(process.cwd(), 'themes/arknights/source/css/_core'),
+              path.join(process.cwd(), 'themes/arknights/source/css/_custom'),
+              path.join(process.cwd(), 'themes/arknights/source/css/_page'),
+            ])
+            .render(function(err, css) {
+              if (err) { console.error(err.message); process.exit(1); }
+              fs.writeFileSync(path.join(process.cwd(), 'public/css/arknights.css'), css);
+              console.log('CSS compiled:', css.length, 'bytes');
+            });
+          "
+
       - name: 构建 Pagefind 搜索索引
         run: |
           npm install --save-dev pagefind
