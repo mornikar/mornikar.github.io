@@ -21,9 +21,8 @@
 
   // ─── 配置 ────────────────────────────────────────────────
   const DIFY_API_BASE    = 'http://localhost/v1'
-  // ★ 公网 API 地址：优先使用 Tailscale 固定域名（需手机也安装并连接 Tailscale）
-  // 备用：可通过 URL 参数注入，如：?dify=http://100.73.236.115
-  const DIFY_PUBLIC_BASE = 'http://mornikar.tail7ee4f8.ts.net'
+  // ★ 公网 API 地址：Cloudflare Workers 代理（HTTPS）
+  const DIFY_PUBLIC_BASE = 'https://dify-proxy.1548324254.workers.dev'
   const DIFY_API_KEY     = 'app-JznEvGv3JlWWISRmNdjRO7yE'
 
   // 从 URL 参数覆盖公网地址，格式：?dify=https://xxx.loca.lt
