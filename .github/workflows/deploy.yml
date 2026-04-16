@@ -76,10 +76,6 @@ jobs:
       - name: 生成静态文件
         run: npx hexo generate
 
-      # 修复 hexo-renderer-stylus 多级 import bug，手动编译完整 CSS
-      - name: 编译完整 CSS（含 wiki-chat 样式）
-        run: node scripts/compile_css.js
-
       - name: 构建 Pagefind 搜索索引
         run: |
           npm install --save-dev pagefind
