@@ -1,20 +1,17 @@
 const DIFY_IP = '59.41.69.9'
 const DIFY_PORT = '8088'
-// 简单验证：如果请求带了正确的 key 才转发
-const VALID_KEY = 'mornikar-wiki-secret-2026'
 
 export default {
   async fetch(request) {
     const url = new URL(request.url)
 
-    // 预检请求（CORS）
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-wiki-key',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         }
       })
     }
@@ -25,15 +22,6 @@ export default {
 
     if (request.method !== 'POST') {
       return new Response('Method Not Allowed', { status: 405 })
-    }
-
-    // 验证 x-wiki-key header
-    const wikiKey = request.headers.get('x-wiki-key')
-    if (wikiKey !== VALID_KEY) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-      })
     }
 
     try {
@@ -60,7 +48,7 @@ export default {
             'Connection': 'keep-alive',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-wiki-key',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
             'X-Accel-Buffering': 'no',
           }
         })
