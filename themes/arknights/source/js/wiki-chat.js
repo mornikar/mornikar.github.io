@@ -24,6 +24,7 @@
   // ★ 公网 API 地址：Cloudflare Workers 代理（HTTPS）
   const DIFY_PUBLIC_BASE = 'https://dify-proxy.1548324254.workers.dev'
   const DIFY_API_KEY     = 'app-JznEvGv3JlWWISRmNdjRO7yE'
+  const WIKI_KEY         = 'mornikar-wiki-secret-2026'
 
   // 从 URL 参数覆盖公网地址，格式：?dify=https://xxx.loca.lt
   const urlParamDify = new URLSearchParams(location.search).get('dify')
@@ -141,7 +142,8 @@
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${DIFY_API_KEY}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-wiki-key': WIKI_KEY
       },
       body: JSON.stringify(body)
     })
