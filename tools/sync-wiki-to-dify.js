@@ -32,8 +32,8 @@ const http  = require('http')
 // ─── 配置 ─────────────────────────────────────────────────
 const CONFIG = {
   apiBase:      process.env.DIFY_API_BASE      || 'http://localhost/v1',
-  datasetApiKey: process.env.DIFY_DATASET_API_KEY || 'dataset-REPLACE_ME',
-  datasetId:    process.env.DIFY_DATASET_ID    || 'REPLACE_ME',
+  datasetApiKey: process.env.DIFY_DATASET_API_KEY || 'dataset-qfr0cZc2dnjftg5tVTraWRWf',
+  datasetId:    process.env.DIFY_DATASET_ID    || '29362489-8750-4915-8cf6-05198f234721',
   wikiDir:      path.resolve(__dirname, '../.wiki'),
   // 同步的子目录（留空则同步全部 .md 文件）
   syncDirs:     ['concepts', 'entities', 'comparisons', 'queries'],
