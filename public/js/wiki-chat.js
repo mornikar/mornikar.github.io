@@ -135,6 +135,8 @@
       user: 'wiki-visitor'
     }
 
+    console.log('[WikiChat] 发送请求到:', `${difyBase}/chat-messages`)
+    
     const resp = await fetch(`${difyBase}/chat-messages`, {
       method: 'POST',
       headers: {
@@ -144,7 +146,14 @@
       body: JSON.stringify(body)
     })
 
-    if (!resp.ok) throw new Error(`Dify API 错误 ${resp.status}`)
+    console.log('[WikiChat] 响应状态:', resp.status)
+    console.log('[WikiChat] Content-Type:', resp.headers.get('content-type'))
+
+    if (!resp.ok) {
+      const text = await resp.text()
+      console.error('[WikiChat] API 错误:', text)
+      throw new Error(`Dify API 错误 ${resp.status}: ${text}`)
+    }
 
     const bubble = appendMessage('bot', '', true)
     let fullText = ''
@@ -153,30 +162,39 @@
     const decoder = new TextDecoder()
     let buffer = ''
 
-    while (true) {
-      const { done, value } = await reader.read()
-      if (done) break
-      buffer += decoder.decode(value, { stream: true })
+    try {
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        const chunk = decoder.decode(value, { stream: true })
+        buffer += chunk
 
-      const lines = buffer.split('\n')
-      buffer = lines.pop() // 保留不完整的行
+        const lines = buffer.split('\n')
+        buffer = lines.pop() // 保留不完整的行
 
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue
-        const data = line.slice(6).trim()
-        if (data === '[DONE]') break
-        try {
-          const json = JSON.parse(data)
-          if (json.event === 'message') {
-            fullText += json.answer || ''
-            bubble.innerHTML = renderMarkdown(fullText)
-            bubble.closest('.wiki-chat-msg').scrollIntoView({ block: 'end', behavior: 'smooth' })
-          }
-          if (json.event === 'message_end') {
-            conversationId = json.conversation_id || conversationId
-          }
-        } catch (_) { /* 跳过非 JSON 行 */ }
+        for (const line of lines) {
+          if (!line.trim()) continue
+          console.log('[WikiChat] 收到数据:', line.substring(0, 100))
+          
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6).trim()
+          if (data === '[DONE]') break
+          try {
+            const json = JSON.parse(data)
+            if (json.event === 'message') {
+              fullText += json.answer || ''
+              bubble.innerHTML = renderMarkdown(fullText)
+              bubble.closest('.wiki-chat-msg').scrollIntoView({ block: 'end', behavior: 'smooth' })
+            }
+            if (json.event === 'message_end') {
+              conversationId = json.conversation_id || conversationId
+              console.log('[WikiChat] 对话结束, conversationId:', conversationId)
+            }
+          } catch (_) { /* 跳过非 JSON 行 */ }
+        }
       }
+    } catch (e) {
+      console.error('[WikiChat] 读取流错误:', e)
     }
 
     bubble.closest('.wiki-chat-msg').removeAttribute('data-streaming')
