@@ -1,51 +1,31 @@
-// =============================================
-// Custom styles for Arknights theme
-// =============================================
-
-// Footer credit: 三行垂直排列，水平居中
+// 自定义样式 - footer-credit 链接样式
 .footer-credit {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 6px;
-  margin-top: auto;
-  padding-top: 16px;
+  align-items: center;
+  text-align: center;
 
   .footer-line {
-    // mornikar / の / OpenClaw... 各占一行
-  }
-
-  a {
-    text-decoration: none;
-    color: #22bbff;
-    font-family: BenderLight, sans-serif;
-    font-size: 24px;
-    padding: 6px 0;
-    border-radius: 3px;
     text-align: center;
-    display: block;
     width: 100%;
-    &:hover {
-      color: #fff;
-      background: #22bbff;
+
+    a {
+      font-family: BenderLight, sans-serif;
+      font-size: 24px;
+      color: #22bbff;
+      text-decoration: none;
+      padding: 6px 0;
+      display: inline-block;
+
+      &:hover {
+        color: #fff;
+        background: #22bbff;
+      }
+    }
+
+    span {
+      font-size: 24px;
     }
   }
-
-  span {
-    color: var(--text-color);
-    font-family: BenderLight, sans-serif;
-    font-size: 24px;
-  }
-}
-
-// Post-info: 对齐到 sidebar 右边
-#post-title {
-  position: relative;
-}
-
-#post-info {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
 }
