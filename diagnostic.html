@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wiki AI 连接诊断</title>
+<style>
+  body { font-family: -apple-system, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+  h1 { font-size: 20px; }
+  .test { margin: 16px 0; padding: 12px; border-radius: 8px; }
+  .test-ok { background: #d4edda; color: #155724; }
+  .test-err { background: #f8d7da; color: #721c24; }
+  .test-wait { background: #fff3cd; color: #856404; }
+  .test-run { background: #cce5ff; color: #004085; }
+  pre { background: #f4f4f4; padding: 10px; border-radius: 4px; font-size: 12px; overflow-x: auto; }
+  button { padding: 10px 20px; font-size: 16px; border: none; border-radius: 6px; cursor: pointer; margin: 4px; }
+  .btn-primary { background: #007bff; color: white; }
+  .btn-secondary { background: #6c757d; color: white; }
+</style>
+</head>
+<body>
+<h1>🔧 Wiki AI 连接诊断</h1>
+
+<div id="results"></div>
+
+<div style="margin-top:20px">
+  <button class="btn-primary" onclick="runAllTests()">▶ 运行全部测试</button>
+  <button class="btn-secondary" onclick="location.reload()">🔄 重置</button>
+</div>
+
+<div id="log" style="margin-top:20px">
+  <h3>📋 详细日志</h3>
+  <pre id="logContent">点击「运行全部测试」开始…</pre>
+</div>
+
+<script>
+const WORKER_URL = 'https://dify-proxy.1548324254.workers.dev';
+const API_KEY = 'app-JznEvGv3JlWWISRmNdjRO7yE';
+let logLines = [];
+
+function log(msg) {
+  const ts = new Date().toLocaleTimeString();
+  logLines.push(`[${ts}] ${msg}`);
+  document.getElementById('logContent').textContent = logLines.join('\n');
+}
+
+function result(id, status, text, detail) {
+  const el = document.getElementById(id);
+  el.className = 'test test-' + status;
+  el.innerHTML = `<strong>${text}</strong>${detail ? '<br><small>' + detail + '</small>' : ''}`;
+}
+
+function addResult(id) {
+  const el = document.createElement('div');
+  el.id = id;
+  el.className = 'test test-wait';
+  el.innerHTML = '⏳ 测试中…';
+  document.getElementById('results').appendChild(el);
+  return el;
+}
+
+async function testWorkerReachability() {
+  addResult('t1-wifi');
+  addResult('t1-mobile');
+  log('测试 1: Worker 可达性检测…');
+  
+  const start = Date.now();
+  try {
+    const controller = new AbortController();
+    const tid = setTimeout(() => controller.abort(), 15000);
+    const resp = await fetch(WORKER_URL + '/v1/chat-messages', {
+      method: 'OPTIONS',
+      headers: { 'Access-Control-Request-Method': 'POST' },
+      signal: controller.signal
+    });
+    clearTimeout(tid);
+    const ms = Date.now() - start;
+    if (resp.ok) {
+      result('t1-wifi', 'ok', '✅ Worker 可达（OPTIONS）', `响应 ${ms}ms，状态 ${resp.status}`);
+      log(`Worker OPTIONS 成功: ${ms}ms`);
+    } else {
+      result('t1-wifi', 'err', '⚠️ Worker 返回异常', `HTTP ${resp.status}，${ms}ms`);
+      log(`Worker OPTIONS 异常: HTTP ${resp.status}`);
+    }
+  } catch (e) {
+    const ms = Date.now() - start;
+    result('t1-wifi', 'err', '❌ Worker 无法连接', e.message + ` (${ms}ms)`);
+    log(`Worker OPTIONS 失败: ${e.message}`);
+  }
+}
+
+async function testDifyStream() {
+  addResult('t2-stream');
+  log('测试 2: Dify 流式响应测试（30秒超时）…');
+  
+  const start = Date.now();
+  const body = {
+    inputs: {},
+    query: '你好',
+    response_mode: 'streaming',
+    conversation_id: '',
+    user: 'diagnostic-' + Date.now()
+  };
+  
+  try {
+    const controller = new AbortController();
+    const tid = setTimeout(() => controller.abort(), 30000);
+    const resp = await fetch(WORKER_URL + '/v1/chat-messages', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal
+    });
+    clearTimeout(tid);
+    const ms = Date.now() - start;
+    
+    if (!resp.ok) {
+      const text = await resp.text().catch(() => '');
+      result('t2-stream', 'err', '❌ Dify API 错误', `HTTP ${resp.status}: ${text.substring(0, 100)}`);
+      log(`Dify 流式请求失败: HTTP ${resp.status} - ${text}`);
+      return;
+    }
+    
+    // 读取部分流数据
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let eventCount = 0;
+    let firstTokenMs = null;
+    let buffer = '';
+    
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value, { stream: true });
+      buffer += chunk;
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+      for (const line of lines) {
+        if (line.trim().startsWith('data: ')) {
+          eventCount++;
+          if (!firstTokenMs && eventCount === 2) firstTokenMs = Date.now() - start;
+        }
+        if (line.trim() === 'data: [DONE]') break;
+      }
+      if (eventCount >= 3) break; // 只读前3条数据就停
+    }
+    reader.cancel();
+    
+    const totalMs = Date.now() - start;
+    result('t2-stream', 'ok', `✅ Dify 流正常（首字 ${firstTokenMs}ms，共${eventCount}条）`, `总耗时 ${totalMs}ms`);
+    log(`Dify 流测试成功: 首字${firstTokenMs}ms，共${eventCount}个事件`);
+  } catch (e) {
+    const ms = Date.now() - start;
+    if (e.name === 'AbortError') {
+      result('t2-stream', 'err', '⏳ Dify 超时（>30秒）', '模型可能还在加载，或服务器响应太慢');
+    } else {
+      result('t2-stream', 'err', '❌ Dify 请求失败', e.message);
+    }
+    log(`Dify 流测试失败: ${e.name} - ${e.message}`);
+  }
+}
+
+async function testDifyBlocking() {
+  addResult('t3-block');
+  log('测试 3: Dify 阻塞响应测试（45秒超时）…');
+  
+  const start = Date.now();
+  const body = {
+    inputs: {},
+    query: '今天天气好吗？',
+    response_mode: 'blocking',
+    conversation_id: '',
+    user: 'diagnostic-block-' + Date.now()
+  };
+  
+  try {
+    const controller = new AbortController();
+    const tid = setTimeout(() => controller.abort(), 45000);
+    const resp = await fetch(WORKER_URL + '/v1/chat-messages', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal
+    });
+    clearTimeout(tid);
+    const ms = Date.now() - start;
+    
+    if (resp.ok) {
+      const text = await resp.text();
+      result('t3-block', 'ok', '✅ blocking 响应正常', `耗时 ${ms}ms，返回 ${text.length} 字符`);
+      log(`Dify blocking 成功: ${ms}ms`);
+    } else {
+      result('t3-block', 'err', '⚠️ blocking 返回异常', `HTTP ${resp.status}`);
+      log(`Dify blocking 异常: HTTP ${resp.status}`);
+    }
+  } catch (e) {
+    const ms = Date.now() - start;
+    if (e.name === 'AbortError') {
+      result('t3-block', 'err', '⏳ blocking 超时（>45秒）', '建议使用 streaming 模式');
+    } else {
+      result('t3-block', 'err', '❌ blocking 请求失败', e.message);
+    }
+    log(`Dify blocking 失败: ${e.name}`);
+  }
+}
+
+async function runAllTests() {
+  logLines = [];
+  document.getElementById('results').innerHTML = '';
+  document.getElementById('logContent').textContent = '';
+  log('=== 诊断开始 ===');
+  log('UA: ' + navigator.userAgent);
+  log('网络: ' + (navigator.connection?.effectiveType || '未知'));
+  log('');
+  
+  await testWorkerReachability();
+  await testDifyStream();
+  await testDifyBlocking();
+  
+  log('');
+  log('=== 诊断完成 ===');
+}
+
+// 自动运行
+runAllTests();
+</script>
+</body>
+</html>
