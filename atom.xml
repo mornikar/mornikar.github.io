@@ -17,33 +17,6 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hexo博客升级记录</title>
-    <link href="https://mornikar.github.io/2025/09/12/LearningEssays/2025-09-12-Hexo%E5%8D%9A%E5%AE%A2%E5%8D%87%E7%BA%A7%E8%AE%B0%E5%BD%95/"/>
-    <id>https://mornikar.github.io/2025/09/12/LearningEssays/2025-09-12-Hexo%E5%8D%9A%E5%AE%A2%E5%8D%87%E7%BA%A7%E8%AE%B0%E5%BD%95/</id>
-    <published>2025-09-12T00:00:00.000Z</published>
-    <updated>2025-09-12T00:00:00.000Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: entities/Hexo博客升级记录.md --&gt;
-
-&lt;h1 id=&quot;Hexo博客升级记录&quot;&gt;&lt;a href=&quot;#Hexo博客升级记录&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="LearningEssays" scheme="https://mornikar.github.io/categories/%E9%9A%8F%E7%AC%94/"/>
-    
-    
-    <category term="wiki, Hexo, 博客, 开发" scheme="https://mornikar.github.io/tags/wiki-Hexo-%E5%8D%9A%E5%AE%A2-%E5%BC%80%E5%8F%91/"/>
-    
-  </entry>
-  
-  <entry>
     <title>AI模型优化训练方向</title>
     <link href="https://mornikar.github.io/2025/09/12/LearningNote/2025-09-12-AI%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96%E8%AE%AD%E7%BB%83%E6%96%B9%E5%90%91/"/>
     <id>https://mornikar.github.io/2025/09/12/LearningNote/2025-09-12-AI%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96%E8%AE%AD%E7%BB%83%E6%96%B9%E5%90%91/</id>
@@ -67,6 +40,33 @@
     
     
     <category term="wiki, AI, 大模型, 训练优化, LLM" scheme="https://mornikar.github.io/tags/wiki-AI-%E5%A4%A7%E6%A8%A1%E5%9E%8B-%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96-LLM/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hexo博客升级记录</title>
+    <link href="https://mornikar.github.io/2025/09/12/LearningEssays/2025-09-12-Hexo%E5%8D%9A%E5%AE%A2%E5%8D%87%E7%BA%A7%E8%AE%B0%E5%BD%95/"/>
+    <id>https://mornikar.github.io/2025/09/12/LearningEssays/2025-09-12-Hexo%E5%8D%9A%E5%AE%A2%E5%8D%87%E7%BA%A7%E8%AE%B0%E5%BD%95/</id>
+    <published>2025-09-12T00:00:00.000Z</published>
+    <updated>2025-09-12T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: entities/Hexo博客升级记录.md --&gt;
+
+&lt;h1 id=&quot;Hexo博客升级记录&quot;&gt;&lt;a href=&quot;#Hexo博客升级记录&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="LearningEssays" scheme="https://mornikar.github.io/categories/%E9%9A%8F%E7%AC%94/"/>
+    
+    
+    <category term="wiki, Hexo, 博客, 开发" scheme="https://mornikar.github.io/tags/wiki-Hexo-%E5%8D%9A%E5%AE%A2-%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
