@@ -2,11 +2,18 @@
 // Custom styles for Arknights theme
 // =============================================
 
-// Footer credit: 仅调整文字对齐，不改变 footer 布局
+// #aside-block: 变为 flex 列，撑满剩余空间
+#aside-block {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+// Footer credit: 水平居中，margin-top:auto 推到 #aside-block 最底部
 .footer-credit {
   text-align: center;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin-top: auto;
+  padding-top: 16px;
 
   .footer-title {
     a {

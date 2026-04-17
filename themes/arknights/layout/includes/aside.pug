@@ -45,6 +45,12 @@ aside
             if theme.vercount.siteUV
               span#vercount_container_site_uv(class='total-title') #{__('vercount.siteVisitor')}
                 span#vercount_value_site_uv(class='total-number') #{__('vercount.loading')}
+      .footer-credit
+        .footer-title
+          a(href='https://github.com/mornikar') mornikar
+          |  の
+        .footer-sub
+          | OpenClaw_Launcher_LobsterLauncher
   footer(style= footerStyle)
     if theme.aside.icp !== null
       nobr
@@ -61,13 +67,6 @@ aside
             each href, name in content
               a(href=href).icp-content= name
         br
-    .footer-credit-wrapper
-      .footer-credit
-        .footer-title
-          a(href='https://github.com/mornikar') mornikar
-          |  の
-        .footer-sub
-          | OpenClaw_Launcher_LobsterLauncher
     if config.build_time
       wbr
       nobr  #{__('footer.build_time')}
