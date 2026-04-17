@@ -97,7 +97,8 @@ source/
 │  ├─ pagefind                        │
 │  ├─ build_docs_html.js              │  ← .docs-src/*.md → HTML
 │  ├─ cp README.md                    │
-│  └─ upload-pages-artifact            │  ← Actions 原生 Pages 部署
+│  ├─ upload-pages-artifact            │
+│  └─ deploy-pages                    │  ← Actions 原生 Pages 部署
 └──────────────┬───────────────────────┘
                │
                ▼

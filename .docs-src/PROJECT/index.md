@@ -95,7 +95,8 @@ push to source
 │  ⑥ npx pagefind                │
 │  ⑦ node build_docs_html.js      │  ← .docs-src/*.md → HTML
 │  ⑧ cp README.md public/        │
-│  ⑨ upload-pages-artifact       │  ← Actions 原生 Pages 部署 |
+│  ⑨ upload-pages-artifact         │
+│  ⑩ deploy-pages                 │  ← Actions 原生 Pages 部署 |
 └─────────────────────────────────┘
        │
        ▼
