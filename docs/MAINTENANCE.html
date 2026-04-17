@@ -1,0 +1,113 @@
+<!DOCTYPE html><html lang="zh-CN" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>维护指南 | Mornikar's Blog</title><meta name="keywords" content="AI产品经理,大模型,AIGC,学习笔记"><meta name="description" content="维护指南日常使用流程1. 编辑 Wiki 文章在 .wiki&#x2F; 目录下编辑或新建 .md 文件： 12345678910---title: 我的新笔记type: conceptstags: [AI, 学习]created: 2026-04-17updated: 2026-04-17summary: 简短描述---正文内容，使用 [[WikiLink]] 语法链接其他页面。  2. 一键同步部署1w">
+<meta property="og:type" content="website">
+<meta property="og:title" content="维护指南">
+<meta property="og:url" content="https://mornikar.github.io/docs/MAINTENANCE.html">
+<meta property="og:site_name" content="Mornikar&#39;s Blog">
+<meta property="og:description" content="维护指南日常使用流程1. 编辑 Wiki 文章在 .wiki&#x2F; 目录下编辑或新建 .md 文件： 12345678910---title: 我的新笔记type: conceptstags: [AI, 学习]created: 2026-04-17updated: 2026-04-17summary: 简短描述---正文内容，使用 [[WikiLink]] 语法链接其他页面。  2. 一键同步部署1w">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-17T06:52:20.910Z">
+<meta property="article:modified_time" content="2026-04-17T06:52:20.910Z">
+<meta property="article:author" content="Mornikar">
+<meta property="article:tag" content="AI产品经理">
+<meta property="article:tag" content="大模型">
+<meta property="article:tag" content="AIGC">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary"><link rel="canonical" href="https://mornikar.github.io/docs/MAINTENANCE"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":false,"search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@11.12.2/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: 'confirm'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@11.12.2/dist/mermaid.esm.min.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Mornikar's Blog" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>维护指南<!-- Phase 3: Wiki 来源标记--></h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2026-04-17T06:52:20.910Z" id="date"> 2026-04-17</time></div></span><br><span>Last Update: <div class="control"><time datetime="2026-04-17T06:52:20.910Z" id="updated"> 2026-04-17</time></div></span></div><hr><!-- Phase 3: Wiki 来源信息--></div><div id="post-content"><h1 id="维护指南"><a href="#维护指南" class="headerlink" title="维护指南"></a>维护指南</h1><h2 id="日常使用流程"><a href="#日常使用流程" class="headerlink" title="日常使用流程"></a>日常使用流程</h2><h3 id="1-编辑-Wiki-文章"><a href="#1-编辑-Wiki-文章" class="headerlink" title="1. 编辑 Wiki 文章"></a>1. 编辑 Wiki 文章</h3><p>在 <code>.wiki/</code> 目录下编辑或新建 <code>.md</code> 文件：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 我的新笔记</span><br><span class="line">type: concepts</span><br><span class="line">tags: [AI, 学习]</span><br><span class="line">created: 2026-04-17</span><br><span class="line">updated: 2026-04-17</span><br><span class="line"><span class="section">summary: 简短描述</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line">正文内容，使用 [[WikiLink]] 语法链接其他页面。</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-一键同步部署"><a href="#2-一键同步部署" class="headerlink" title="2. 一键同步部署"></a>2. 一键同步部署</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wiki<span class="literal">-sync</span>.bat</span><br></pre></td></tr></table></figure>
+
+<p>自动执行：清理 → Wiki 转换 → Hexo 生成 → Pagefind → Git 提交 → 推送</p>
+<h3 id="3-仅预览不部署"><a href="#3-仅预览不部署" class="headerlink" title="3. 仅预览不部署"></a>3. 仅预览不部署</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wiki<span class="literal">-sync</span>.bat <span class="literal">--dry-run</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Dify-知识库管理"><a href="#Dify-知识库管理" class="headerlink" title="Dify 知识库管理"></a>Dify 知识库管理</h2><h3 id="同步-Wiki-到-Dify"><a href="#同步-Wiki-到-Dify" class="headerlink" title="同步 Wiki 到 Dify"></a>同步 Wiki 到 Dify</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node tools/sync-wiki-to-dify.js</span><br></pre></td></tr></table></figure>
+
+<h3 id="手动同步到-Dify"><a href="#手动同步到-Dify" class="headerlink" title="手动同步到 Dify"></a>手动同步到 Dify</h3><ol>
+<li>打开 Dify（<a target="_blank" rel="noopener" href="http://localhost/v1%EF%BC%89">http://localhost/v1）</a></li>
+<li>进入知识库 <code>mmo的知识库</code></li>
+<li>手动上传或重新同步</li>
+</ol>
+<h2 id="Pagefind-搜索索引"><a href="#Pagefind-搜索索引" class="headerlink" title="Pagefind 搜索索引"></a>Pagefind 搜索索引</h2><p>CI 中自动构建，无需手动操作。本地构建：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev pagefind</span><br><span class="line">npx pagefind --site public --output-path public/pagefind</span><br></pre></td></tr></table></figure>
+
+<h2 id="GitHub-Pages-部署状态"><a href="#GitHub-Pages-部署状态" class="headerlink" title="GitHub Pages 部署状态"></a>GitHub Pages 部署状态</h2><ul>
+<li>CI 触发条件：push 到 <code>source</code> 分支</li>
+<li>部署目标：<code>gh-pages</code> 分支</li>
+<li>网站地址：<a href="https://mornikar.github.io/">https://mornikar.github.io</a></li>
+</ul>
+<p>手动触发 CI：在 GitHub Actions 页面点击 “Wiki-Hexo 自动部署” → Run workflow</p>
+<div id="paginator"></div></div><div id="post-footer"></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" onClick="tocControl.change()" title="To Catalog"><span class="tocBtnIconBar"></span><span class="tocBtnIconBar"></span><span class="tocBtnIconBar"></span></a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="Change Theme"></a><a onclick="BgmControl()"><svg id="bgm-control" viewBox="0 0 30 34" fill="currentColor" style="width: 24px; transition: transform .3s;margin-top: 4px"><path d="M25.998 23.422V11.29h3.999v12.132h-3.999zM19.497 6.234h4.001v22.243h-4.001V6.234zM12.998.867h4v32.978h-4V.867zm-6.5 5.367h4.001v22.243H6.498V6.234zm-6.5 5.056h4v12.132h-4V11.29z"></path></svg><audio id="bgm" src="/audio/bgm.mp3" loop crossorigin="anonymous"> </audio></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Mornikar's Blog" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">Mornikar</a></h1><div id="description"><p>记录AI产品、技术学习与成长</p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%B4%E6%8A%A4%E6%8C%87%E5%8D%97"><span class="toc-number">1.</span> <span class="toc-text">维护指南</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">日常使用流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%BC%96%E8%BE%91-Wiki-%E6%96%87%E7%AB%A0"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 编辑 Wiki 文章</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%80%E9%94%AE%E5%90%8C%E6%AD%A5%E9%83%A8%E7%BD%B2"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 一键同步部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BB%85%E9%A2%84%E8%A7%88%E4%B8%8D%E9%83%A8%E7%BD%B2"><span class="toc-number">1.1.3.</span> <span class="toc-text">3. 仅预览不部署</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dify-%E7%9F%A5%E8%AF%86%E5%BA%93%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">Dify 知识库管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5-Wiki-%E5%88%B0-Dify"><span class="toc-number">1.2.1.</span> <span class="toc-text">同步 Wiki 到 Dify</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E5%90%8C%E6%AD%A5%E5%88%B0-Dify"><span class="toc-number">1.2.2.</span> <span class="toc-text">手动同步到 Dify</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pagefind-%E6%90%9C%E7%B4%A2%E7%B4%A2%E5%BC%95"><span class="toc-number">1.3.</span> <span class="toc-text">Pagefind 搜索索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GitHub-Pages-%E9%83%A8%E7%BD%B2%E7%8A%B6%E6%80%81"><span class="toc-number">1.4.</span> <span class="toc-text">GitHub Pages 部署状态</span></a></li></ol></li></ol></div></div><footer></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="/js/wiki-chat.js"></script></body></html>
