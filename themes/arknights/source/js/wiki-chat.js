@@ -45,6 +45,9 @@
 
   // Dify 会话 ID（多轮对话保持上下文）
   let conversationId = null
+  // 对话轮数计数（防止历史累积撑爆 LM 8K context）
+  let turnCount = 0
+  const MAX_TURNS = 4  // 超过4轮自动重置 conversation，避免 token 溢出
 
   // ─── DOM 创建 ────────────────────────────────────────────
   function createWidget() {
@@ -242,8 +245,16 @@
               bubble.closest('.wiki-chat-msg').scrollIntoView({ block: 'end', behavior: 'smooth' })
             }
             if (json.event === 'message_end') {
-              conversationId = json.conversation_id || conversationId
-              console.log('[WikiChat] 对话结束, conversationId:', conversationId)
+              turnCount++
+              if (turnCount >= MAX_TURNS) {
+                // 轮数超限，下次自动开新对话，防止 token 爆炸
+                conversationId = null
+                turnCount = 0
+                console.log('[WikiChat] 已达到最大轮数，自动重置对话')
+              } else {
+                conversationId = json.conversation_id || conversationId
+              }
+              console.log('[WikiChat] 对话结束, turnCount:', turnCount, 'conversationId:', conversationId)
             }
           } catch (_) { /* 跳过非 JSON 行 */ }
         }
@@ -367,9 +378,10 @@
 
     document.getElementById('wiki-chat-close').addEventListener('click', closePanel)
 
-    // 清空对话
+    // 清空对话（同时重置轮数）
     document.getElementById('wiki-chat-clear').addEventListener('click', () => {
       conversationId = null
+      turnCount = 0
       const messages = document.getElementById('wiki-chat-messages')
       messages.innerHTML = ''
       appendMessage('bot', WELCOME_MSG)
@@ -378,13 +390,6 @@
 
     // 页面加载时预热 Dify（静默 ping，不展示结果）
     warmUp()
-    document.getElementById('wiki-chat-clear').addEventListener('click', () => {
-      conversationId = null
-      const messages = document.getElementById('wiki-chat-messages')
-      messages.innerHTML = ''
-      appendMessage('bot', WELCOME_MSG)
-      document.getElementById('wiki-chat-search-results').style.display = 'none'
-    })
 
     // 发送
     document.getElementById('wiki-chat-send').addEventListener('click', handleSend)
