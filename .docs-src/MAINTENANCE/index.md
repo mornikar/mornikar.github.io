@@ -215,6 +215,7 @@ Pagefind 在 `public/` 目录中建立静态全文索引，支持模糊搜索、
 | 项目 | 值 |
 |------|-----|
 | 部署源分支 | `main` |
+| 部署方式 | `build_type=workflow`（Actions 原生，无 Jekyll） |
 | CI 触发条件 | push 到 `source` 分支 |
 | 网站地址 | https://mornikar.github.io |
 | 文档地址 | https://mornikar.github.io/docs/ |

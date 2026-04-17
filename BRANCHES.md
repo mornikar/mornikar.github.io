@@ -9,9 +9,8 @@
 
 | 分支 | 用途 | 保护 | 日常操作 |
 |------|------|------|----------|
-| **`main`** | 🏠 **主分支 / GitHub Pages 部署源** | 否 | CI 自动同步；不手动推送 |
 | **`source`** | 🔧 **开发分支** | 否 | 所有开发在此完成 |
-| **`gh-pages`** | 📦 旧部署分支（已废弃） | 否 | 保留作备份 |
+| **`main`** | 🏠 **GitHub Pages 部署源**（Actions 原生） | 否 | CI 自动同步；不手动推送 |
 
 > ⚠️ **核心原则**：永远在 `source` 开发。**不要**直接推送内容到 `main`。
 
@@ -24,12 +23,12 @@
 | 属性 | 值 |
 |------|-----|
 | **职责** | GitHub Pages 托管的静态文件来源 |
-| **读取方式** | Settings → Pages → Source = `main` / `(root)` |
+| **读取方式** | Settings → Pages → Build type = `GitHub Actions` |
 | **访问地址** | https://mornikar.github.io/ |
-| **更新方式** | GitHub Actions CI 自动同步 |
+| **更新方式** | GitHub Actions CI 自动同步（upload-pages-artifact） |
 | **禁止** | 不手动推送；不在此分支开发 |
 
-> 💡 `main` 分支包含 Hexo 生成的静态文件（`index.html`、`css/`、`js/`、`docs/` 等），以及根目录的 `README.md`、`_config.yml`、`package.json`。
+> 💡 `main` 分支由 CI 通过 `actions/upload-pages-artifact@v3` 自动更新，绕过 Jekyll 直接服务静态文件（解决 legacy Jekyll 的 docs 子目录 404 问题）。
 
 ### source（开发分支）
 
@@ -43,34 +42,35 @@
 
 ```
 source/
-├── source/_posts/     ← Hexo 文章（由 wiki-to-hexo.js 生成）
+├── source/_posts/       ← Hexo 文章（由 wiki-to-hexo.js 生成）
 │   ├── LearningNote/
 │   └── LearningEssays/
-├── source/docs/       ← 项目文档（部署到 /docs/）
-│   ├── index.md
-│   ├── PROJECT.md
-│   ├── MAINTENANCE.md
-│   ├── TROUBLESHOOTING.md
-│   └── MIGRATION.md
-├── themes/            ← 主题代码
+├── themes/              ← 主题代码
 │   └── arknights/
-├── scripts/           ← 自动化脚本
+├── scripts/             ← 自动化脚本
 │   ├── wiki-to-hexo.js
+│   ├── build_docs_html.js  ← .docs-src/ → HTML
 │   └── compile_css.js
-├── .wiki/             ← Wiki 源文档
+├── .wiki/               ← Wiki 源文档
 │   ├── concepts/
 │   ├── entities/
 │   └── ...
-├── .github/workflows/ ← CI 工作流
-└── _config.yml        ← Hexo 配置
+├── .docs-src/           ← 项目文档（由 build_docs_html.js 转 HTML）
+│   ├── index.md
+│   ├── PROJECT/index.md
+│   ├── MAINTENANCE/index.md
+│   ├── TROUBLESHOOTING/index.md
+│   └── MIGRATION/index.md
+├── .github/workflows/   ← CI 工作流
+└── _config.yml          ← Hexo 配置
 ```
 
 ### gh-pages（旧部署分支，已废弃）
 
 | 属性 | 值 |
 |------|-----|
-| **历史** | 早期 GitHub Pages 从 `gh-pages` 读取 |
-| **现状** | 已切换到 `main`，此分支保留作备份 |
+| **历史** | legacy GitHub Pages 从 `gh-pages` 读取（peaceiris/actions-gh-pages） |
+| **现状** | 已切换到 `main` + `build_type=workflow`，此分支保留作备份 |
 | **操作** | 可保留，无需删除 |
 
 ---
@@ -82,7 +82,7 @@ source/
 │     本地开发（source 分支）           │
 │                                      │
 │  themes/   .wiki/   scripts/         │
-│  source/   _config.yml   docs/       │
+│  .docs-src/  _config.yml             │
 └──────────────┬───────────────────────┘
                │ git push
                ▼
@@ -95,23 +95,24 @@ source/
 │  ├─ hexo generate                   │
 │  ├─ compile_css.js                  │
 │  ├─ pagefind                        │
-│  ├─ 复制 docs/ 和 README.md          │
-│  └─ 推送到 main                     │
+│  ├─ build_docs_html.js              │  ← .docs-src/*.md → HTML
+│  ├─ cp README.md                    │
+│  └─ upload-pages-artifact            │  ← Actions 原生 Pages 部署
 └──────────────┬───────────────────────┘
                │
                ▼
 ┌──────────────────────────────────────┐
-│  GitHub main 分支                    │
+│  GitHub Pages（build_type=workflow） │
 │                                      │
-│  public/ 内容（自动同步）              │
+│  直接服务 artifact，无 Jekyll 处理     │
 └──────────────┬───────────────────────┘
-               │ GitHub Pages 读取
+               │
                ▼
 ┌──────────────────────────────────────┐
 │  https://mornikar.github.io          │
 │                                      │
 │  🌐 网站首页                          │
-│  📄 /docs/ 项目文档                   │
+│  📄 /docs/ 项目文档（HTML）           │
 │  🔍 /pagefind/ 全文搜索               │
 └──────────────────────────────────────┘
 ```
@@ -126,12 +127,13 @@ source/
 |------|------|
 | `.wiki/**` | Wiki 源文档变更 |
 | `scripts/wiki-to-hexo.js` | 转换脚本更新 |
+| `scripts/build_docs_html.js` | 文档构建脚本 |
 | `scripts/sync-wiki-to-dify.js` | Dify 同步脚本 |
 | `_config.yml` | Hexo 配置 |
 | `themes/**` | 主题代码 |
 | `.github/workflows/**` | CI 工作流 |
 | `*.md` | 项目文档（根目录） |
-| `source/docs/**` | 文档源文件 |
+| `.docs-src/**` | 项目文档源文件 |
 
 ---
 
@@ -141,7 +143,7 @@ source/
 
 ```
 1. git pull origin source          # 拉取最新代码
-2. 本地编辑（.wiki/ 或 source/docs/）
+2. 本地编辑（.wiki/ 或 .docs-src/）
 3. wiki-sync.bat                   # 本地预览
 4. git add . && git commit -m "..." # 提交
 5. git push origin source           # 推送触发 CI

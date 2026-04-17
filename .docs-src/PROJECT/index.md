@@ -18,7 +18,7 @@ mornikar.github.io/
 │   ├── queries/                   #   查询结果 → LearningNote
 │   └── raw/                       #   原始材料（不发布）
 │
-├── .docs-src/                      # 📄 项目文档（CI 直接复制到 /docs/）
+├── .docs-src/                      # 📄 项目文档（CI 用 build_docs_html.js 转 HTML 到 /docs/）
 │   ├── index.md                   #   文档首页 → /docs/
 │   ├── PROJECT/index.md           #   系统架构 → /docs/PROJECT/
 │   ├── MAINTENANCE/index.md       #   维护指南 → /docs/MAINTENANCE/
@@ -26,10 +26,9 @@ mornikar.github.io/
 │   └── MIGRATION/index.md        #   迁移规范 → /docs/MIGRATION/
 │
 ├── source/                         # Hexo 源文件
-│   ├── _posts/                    #   博客文章（由 wiki-to-hexo.js 生成）
-│   │   ├── LearningNote/
-│   │   └── LearningEssays/
-│   └── docs/                      #   （空目录，CI 不再使用）
+│   └── _posts/                    #   博客文章（由 wiki-to-hexo.js 生成）
+│       ├── LearningNote/
+│       └── LearningEssays/
 │
 ├── themes/arknights/               # 明日方舟风格主题（fork）
 │   ├── layout/                    #   Pug 模板
@@ -49,6 +48,7 @@ mornikar.github.io/
 │
 ├── scripts/                        # 自动化脚本
 │   ├── wiki-to-hexo.js           #   v4.0 Wiki → Hexo 转换
+│   ├── build_docs_html.js         #   CI 中将 .docs-src/ markdown 转 HTML
 │   ├── compile_css.js             #   CI 中手动编译 Stylus
 │   ├── sync-wiki-to-dify.js       #   Wiki → Dify 知识库同步
 │   └── wiki-to-hexo.test.js       #   单元测试
@@ -71,9 +71,8 @@ mornikar.github.io/
 
 | 分支 | 用途 | 保护状态 | 日常操作 |
 |------|------|----------|----------|
-| **`main`** | 🏠 **GitHub Pages 部署源** | 否 | CI 自动同步；不手动推送 |
 | **`source`** | 🔧 **开发分支** | 否 | 所有开发在此完成 |
-| **`gh-pages`** | 📦 旧部署分支（已废弃） | 否 | 保留作备份 |
+| **`main`** | 🏠 **GitHub Pages 部署源**（Actions 原生，build_type=workflow） | 否 | CI 自动同步；不手动推送 |
 
 > ⚠️ **重要规则**：所有开发在 `source` 分支进行。**不要**直接推送内容到 `main`，CI 会自动同步最新构建产物。
 
@@ -94,13 +93,14 @@ push to source
 │  ④ hexo generate               │
 │  ⑤ node compile_css.js         │  ← 处理多级 @import
 │  ⑥ npx pagefind                │
-│  ⑦ cp source/docs/* public/docs/│  ← 项目文档
+│  ⑦ node build_docs_html.js      │  ← .docs-src/*.md → HTML
 │  ⑧ cp README.md public/        │
-│  ⑨ actions-gh-pages → main    │
+│  ⑨ upload-pages-artifact       │  ← Actions 原生 Pages 部署 |
 └─────────────────────────────────┘
        │
        ▼
-GitHub Pages 读取 main 分支
+GitHub Pages（build_type=workflow）
+直接从 artifact 部署，无需 Jekyll
        │
        ▼
 https://mornikar.github.io
@@ -112,12 +112,13 @@ https://mornikar.github.io
 |------|------|
 | `.wiki/**` | Wiki 源文档变更 |
 | `scripts/wiki-to-hexo.js` | 转换脚本更新 |
+| `scripts/build_docs_html.js` | 文档构建脚本 |
 | `scripts/sync-wiki-to-dify.js` | Dify 同步脚本 |
 | `_config.yml` | Hexo 配置 |
 | `themes/**` | 主题代码 |
 | `.github/workflows/**` | CI 工作流 |
 | `*.md` | 项目文档（根目录） |
-| `source/docs/**` | 文档源文件 |
+| `.docs-src/**` | 项目文档源文件 |
 
 ---
 
