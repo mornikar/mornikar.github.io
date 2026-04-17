@@ -61,11 +61,13 @@ aside
             each href, name in content
               a(href=href).icp-content= name
         br
-    nobr
-      a(href='https://github.com/mornikar') mornikar の
-      | （
-      a(href='https://github.com/mornikar/OpenClaw_Launcher_LobsterLauncher') OpenClaw_Launcher_LobsterLauncher
-      |）
+    .footer-credit
+      .footer-title
+        a(href='https://github.com/mornikar') mornikar
+        |  
+        span の
+      .footer-sub
+        | OpenClaw_Launcher_LobsterLauncher
     if config.build_time
       wbr
       nobr  #{__('footer.build_time')}
