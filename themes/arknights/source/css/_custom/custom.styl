@@ -4,11 +4,17 @@
   flex-direction: column;
   gap: 6px;
   align-items: center;
-  text-align: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 10px;
 
   .footer-line {
     text-align: center;
     width: 100%;
+    display: flex;
+    justify-content: center;
 
     a {
       font-family: BenderLight, sans-serif;
@@ -17,6 +23,8 @@
       text-decoration: none;
       padding: 6px 0;
       display: inline-block;
+      text-align: center;
+      line-height: 1.3;
 
       &:hover {
         color: #fff;
