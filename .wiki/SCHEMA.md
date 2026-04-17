@@ -88,10 +88,10 @@ summary: 一句话描述                 # 可选，用于 index 和 meta
 6. **raw/ 不可修改** — 原始资料保持不变，修正放 wiki 页面
 7. **冲突处理** — 脚本检测到冲突时自动生成 `.conflict.backup.md`
 
-## 转换流程
+## 同步流程
 
 ```
-Wiki 编辑（Obsidian 或直接 .md）
+Wiki 编辑（.wiki/ 目录下的 .md 文件）
         ↓
   wiki-to-hexo.js（增量检测）
         ↓
@@ -115,10 +115,33 @@ node scripts/wiki-to-hexo.js --force
 node scripts/wiki-to-hexo.js --dry-run
 ```
 
-## 本地同步脚本
+## Dify 知识库同步
+
+Wiki 内容同时同步到 Dify 知识库，支持 AI 对话功能：
 
 ```bash
-scripts\wiki-sync.bat        # 完整流程：转换 → 构建 → 部署
-scripts\wiki-sync.bat --dry-run   # 仅预览，不写入
-scripts\wiki-sync.bat --force     # 强制全量
+# 同步 Wiki 到 Dify 知识库
+node tools/sync-wiki-to-dify.js
+
+# 仅预览（不实际修改）
+node tools/sync-wiki-to-dify.js --dry-run
+```
+
+**配置**（`tools/sync-wiki-to-dify.js` 顶部）：
+
+| 配置项 | 说明 |
+|--------|------|
+| `apiBase` | Dify API 地址，默认 `http://localhost/v1` |
+| `datasetApiKey` | Dataset API Key（Settings → API Keys → Dataset API） |
+| `datasetId` | 知识库 ID（从 Dify URL 获取） |
+| `syncDirs` | 同步的子目录列表 |
+
+同步策略：**全量替换** — 每次同步先删除远程所有文档，再上传本地全部文件。
+
+## 一键同步脚本
+
+```bash
+wiki-sync.bat        # 完整流程：转换 → 构建 → 部署
+wiki-sync.bat --dry-run   # 仅预览，不写入
+wiki-sync.bat --force     # 强制全量
 ```
