@@ -32,7 +32,7 @@
 
 ## 项目文档
 
-- [[PROJECT|../PROJECT.md]] — 系统架构总览
-- [[MAINTENANCE|../MAINTENANCE.md]] — 日常使用与维护
-- [[TROUBLESHOOTING|../TROUBLESHOOTING.md]] — 问题与解决方案
-- [[MIGRATION|../MIGRATION.md]] — Wiki 格式规范
+- [项目总览](/PROJECT/) — 系统架构、组件关系、快速启动
+- [维护指南](/MAINTENANCE/) — 日常使用流程、Dify 管理、故障排查
+- [问题解决](/TROUBLESHOOTING/) — 20+ 踩坑经验，含根因分析与修复代码
+- [迁移规范](/MIGRATION/) — Wiki 格式规范、CI 部署说明

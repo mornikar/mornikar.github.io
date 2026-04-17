@@ -1,3 +1,9 @@
+---
+title: 问题与解决方案
+date: 2026-04-17 11:00:00
+type: docs
+---
+
 # 问题与解决方案手册
 
 > 记录 LLM Wiki + Hexo 项目 Phase 1-6 中遇到的所有问题、解决思路和最终方案。
@@ -305,7 +311,7 @@ Copy-Item "D:\Auxiliary_means\Docker\app-original-4.68.0.asar" `
 
 **解决：** 手动创建命令入口：
 ```cmd
-:: 在 C:\Users\Q\AppData\Roaming\npm\openclaw.cmd
+::: 在 C:\Users\Q\AppData\Roaming\npm\openclaw.cmd
 @echo off
 node "C:\Users\Q\AppData\Roaming\npm\node_modules\openclaw\openclaw.mjs" %*
 ```

@@ -7,9 +7,12 @@ on:
     paths:
       - '.wiki/**'
       - 'scripts/wiki-to-hexo.js'
+      - 'tools/sync-wiki-to-dify.js'
       - '_config.yml'
       - 'themes/**'
       - '.github/workflows/**'
+      - '*.md'
+      - 'source/docs/**'
   workflow_dispatch:
     inputs:
       mode:

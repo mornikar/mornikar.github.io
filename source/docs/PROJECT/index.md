@@ -1,3 +1,9 @@
+---
+title: 项目总览
+date: 2026-04-17 11:00:00
+type: docs
+---
+
 # LLM Wiki + Hexo 项目总览
 
 > **Mornikar's Blog** — AI + 开发者知识库 + Arknights 主题博客
@@ -28,7 +34,7 @@
 │         │                                        ▼            │
 │         ▼                              ┌──────────────────┐    │
 │  ┌─────────────┐                       │   public/        │    │
-│  │ Dify        │◀──────────────────────│   CSS (stylus)  │    │
+│  │ Dify        │◀─────────────────────│   CSS (stylus)  │    │
 │  │ 知识库       │                       │   Pagefind       │    │
 │  │ (本地 Docker)│                       └────────┬─────────┘    │
 │  └─────────────┘                                │            │
@@ -154,9 +160,9 @@ Pagefind                              wiki-chat.js
 
 ## 相关文档
 
-- [SCHEMA.md](.wiki/SCHEMA.md) — Wiki 格式规范
-- [MIGRATION.md](MIGRATION.md) — 内容迁移指南
-- [MAINTENANCE.md](MAINTENANCE.md) — 长期维护指南
+- [Wiki 格式规范](https://github.com/mornikar/mornikar.github.io/tree/source/.wiki/SCHEMA.md) — GitHub 查看
+- [内容迁移指南](/docs/MIGRATION/) — Wiki 格式规范、CI 部署说明
+- [长期维护指南](/docs/MAINTENANCE/) — 日常使用流程、Dify 管理
 
 ---
 
