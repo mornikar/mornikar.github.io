@@ -1,0 +1,340 @@
+---
+title: 故障排查
+---
+# 🔍 故障排查
+
+> 遇到问题时，先确认错误类型，再按对应章节排查。常见问题一般可在 5 分钟内解决。
+
+---
+
+## 按症状分类
+
+| 症状 | 可能原因 | 快速跳转 |
+|------|----------|----------|
+| 网站显示旧样式 | 浏览器/CDN 缓存 | [§1](#1-网站样式不更新) |
+| Wiki 文章没出现在博客 | 转换/编译问题 | [§2](#2-wiki-文章没出现在博客) |
+| CI 构建失败 | 依赖/脚本错误 | [§3](#3-ci-构建失败) |
+| wiki-chat-侧边栏没生效 | JS 未加载/路径错误 | [§4](#4-wiki-chat-侧边栏没生效) |
+| CSS 编译失败 | Stylus @import 问题 | [§5](#5-css-编译失败) |
+| Pug 渲染错误 | hexo7-pug-fix 未生效 | [§6](#6-pug-渲染错误) |
+| GitHub Pages 404 | 分支/路径配置错误 | [§7](#7-github-pages-404) |
+| Dify 无法访问 | Docker 未启动/端口占用 | [§8](#8-dify-无法访问) |
+
+---
+
+## 1. 网站样式不更新
+
+**症状**：推送了新 CSS/JS，但网站显示旧样式。
+
+### 排查步骤（按顺序）
+
+**Step 1**：强制刷新浏览器
+
+| 操作 | 快捷键 |
+|------|--------|
+| Windows Chrome | `Ctrl + Shift + R` |
+| Windows Edge | `Ctrl + Shift + R` |
+| 手机 Safari | 长按刷新 → 「硬性重新加载」 |
+
+**Step 2**：禁用浏览器缓存（DevTools）
+
+1. 按 `F12` 打开 DevTools
+2. `Network` 面板 → 勾选 **Disable cache**
+3. 保持 DevTools 打开状态下刷新页面
+
+**Step 3**：确认 CDN 缓存
+
+访问 https://www.gifgit.com/（或清缓存工具）清除 CDN 缓存。
+
+**Step 4**：检查 GitHub Pages 最新 commit
+
+打开 https://github.com/mornikar/mornikar.github.io/commits/main，确认最新 commit 是你的推送。
+
+---
+
+## 2. Wiki 文章没出现在博客
+
+**症状**：编辑了 `.wiki/` 文件，但博客上没有这篇文章。
+
+### 排查步骤
+
+**Step 1**：检查 frontmatter 是否完整
+
+```yaml
+---
+title: 文章标题          # ✅ 必须有
+type: concepts            # ✅ 必须与目录名一致
+tags: [AI, 学习]         # ✅ 至少一个标签
+created: 2025-09-12      # ✅ 必须是 YYYY-MM-DD
+updated: 2025-09-12      # ✅ 必须是 YYYY-MM-DD
+---
+```
+
+> ⚠️ **常见错误**：`date: 2025/09/12` — 斜杠格式会导致 Hexo 无法生成文章！
+
+**Step 2**：预览转换结果（不修改文件）
+
+```powershell
+wiki-sync.bat --dry-run
+```
+
+检查输出中是否包含目标文件。
+
+**Step 3**：检查 `source/_posts/` 是否生成了文件
+
+```powershell
+# Windows
+dir /s /b "source/_posts/*.md" | findstr "关键词"
+
+# 或者直接查看目录
+explorer source/_posts/
+```
+
+**Step 4**：检查 Hexo 编译是否有错误
+
+```powershell
+hexo generate 2>&1
+```
+
+观察输出中是否有 `[error]` 字样。
+
+**Step 5**：检查文章路径
+
+生成的 URL 应为 `/YYYY/MM/DD/标题/` 格式，如：
+`https://mornikar.github.io/2025/09/12/RAG检索增强生成/`
+
+---
+
+## 3. CI 构建失败
+
+**症状**：GitHub Actions 显示红色 ❌。
+
+### 排查步骤
+
+**Step 1**：查看 CI 日志
+
+1. 打开 https://github.com/mornikar/mornikar.github.io/actions
+2. 点击失败的 workflow
+3. 点击失败的步骤，查看报错信息
+
+**Step 2**：常见错误及解决方案
+
+| 错误信息 | 原因 | 解决方案 |
+|----------|------|----------|
+| `npm ERR!` | 依赖安装失败 | 检查 `package.json`；本地 `npm install` 复现 |
+| `Error: Cannot find module` | 缺少依赖 | `npm install <模块名>` |
+| `hexo-renderer-pug error` | Pug 编译失败 | 检查 `layout.pug` 语法；确认 `hexo7-pug-fix` 已安装 |
+| `ENOENT: no such file` | 文件路径错误 | 检查 `scripts/` 下的 `require` 路径 |
+| `stylus render error` | CSS 编译失败 | 见 [§5 CSS 编译失败](#5-css-编译失败) |
+
+**Step 3**：手动触发 CI 重试
+
+1. 进入 Actions 页面
+2. 点击「Wiki-Hexo 自动部署」
+3. 点击右侧「...」→「Re-run all jobs」
+
+**Step 4**：本地复现 CI 环境
+
+```powershell
+# 清理后重新构建
+hexo clean
+npm install
+node scripts/wiki-to-hexo.js
+hexo generate
+```
+
+---
+
+## 4. wiki-chat 侧边栏没生效
+
+**症状**：页面右下角没有出现 🔵 AI 对话按钮。
+
+### 排查步骤
+
+**Step 1**：检查 JS 是否加载
+
+在浏览器 Console 中执行：
+
+```javascript
+document.querySelector('.footer-credit a')?.innerHTML
+```
+
+- 返回 `<span>...</span>` → JS 正常 ✅
+- 返回带 `<br>` 或普通文本 → JS 未生效 ❌
+
+**Step 2**：检查 JS 文件是否存在
+
+访问以下 URL，确认返回 200：
+- `https://mornikar.github.io/js/wiki-chat.js`
+- `https://mornikar.github.io/js/wikilink.js`
+
+**Step 3**：检查 GitHub Pages 上的 JS 内容
+
+```javascript
+// 在 Console 中执行
+fetch('/js/wiki-chat.js')
+  .then(r => r.text())
+  .then(t => console.log(t.substring(0, 200)))
+```
+
+确认文件内容是最新的（不是旧版本）。
+
+**Step 4**：检查 CSS 文件
+
+访问 `https://mornikar.github.io/css/arknights.css`，确认包含 wiki-chat 相关样式。
+
+---
+
+## 5. CSS 编译失败
+
+**症状**：`hexo generate` 报错 `Error: ENOENT` 或 Stylus 语法错误。
+
+### 原因
+
+`hexo-renderer-stylus` 无法处理多级 `@import`，导致 `wikilink.styl` 等文件未被编译进 `arknights.css`。
+
+### 解决方案
+
+**Step 1**：本地修复
+
+```powershell
+# 方式一：使用编译脚本
+node scripts/compile_css.js
+
+# 方式二：手动编译
+node -e "const stylus=require('stylus'),fs=require('fs');stylus(fs.readFileSync('themes/arknights/source/css/arknights.styl','utf8')).set('paths',['themes/arknights/source/css/_modules','themes/arknights/source/css/_core','themes/arknights/source/css/_custom','themes/arknights/source/css/_page']).render((e,c)=>{if(e)console.error(e);else fs.writeFileSync('public/css/arknights.css',c)})"
+```
+
+**Step 2**：验证编译结果
+
+```powershell
+# 检查文件是否存在
+dir public/css/arknights.css
+
+# 检查文件大小（应有数十 KB）
+dir public/css/arknights.css | findstr "bytes"
+```
+
+**Step 3**：推送并确认 CI 使用了编译脚本
+
+CI 日志中应看到 `compile_css.js` 执行记录。
+
+---
+
+## 6. Pug 渲染错误
+
+**症状**：页面空白或显示 `500 Internal Server Error`。
+
+### 排查步骤
+
+**Step 1**：检查 `hexo7-pug-fix` 是否生效
+
+```powershell
+# 检查 patch 文件是否存在
+dir themes/arknights/scripts/
+
+# 检查 node_modules 中是否被 patch
+findstr /s "page" node_modules/hexo-renderer-pug/lib/pug.js | findstr "compile"
+```
+
+**Step 2**：检查 `layout.pug` 语法
+
+```pug
+// 正确写法：使用 page 局部变量
+- const _page = page || {}
+if _page.title
+  title= _page.title + ' | ' + config.title
+
+// 错误写法：直接调用 is_post()
+// 原因：pug 的 extends 链里 helpers 变量注入有作用域限制
+//- title= is_post() ? page.title + ' | ' + config.title : config.title
+```
+
+**Step 3**：本地测试
+
+```powershell
+hexo clean
+hexo generate
+hexo server
+# 访问 http://localhost:4000 确认页面正常
+```
+
+---
+
+## 7. GitHub Pages 404
+
+**症状**：访问 `mornikar.github.io` 或 `/docs/` 返回 404。
+
+### 排查步骤
+
+**Step 1**：确认 GitHub Pages 配置
+
+```bash
+gh api repos/mornikar/mornikar.github.io/pages
+```
+
+确认返回：
+```json
+{
+  "source": { "branch": "main", "path": "/" }
+}
+```
+
+如果显示 `gh-pages` 或其他分支，需要切换（见 [BRANCHES.md](/docs/BRANCHES/)）。
+
+**Step 2**：确认 CI 已成功推送
+
+1. 打开 https://github.com/mornikar/mornikar.github.io/actions
+2. 确认最新的 workflow 显示 ✅
+3. 打开 https://github.com/mornikar/mornikar.github.io/tree/main，确认文件存在
+
+**Step 3**：检查 Pages 构建状态
+
+GitHub Settings → Pages页面显示 `built` 即为正常。如果显示 `deploying`，等待 2-3 分钟。
+
+---
+
+## 8. Dify 无法访问
+
+**症状**：http://localhost/v1 无法打开。
+
+### 排查步骤
+
+**Step 1**：检查 Docker Desktop 是否运行
+
+1. 打开 Docker Desktop 应用
+2. 确认状态显示「Running」
+3. 确认 Dify 容器在运行：`docker ps | findstr dify`
+
+**Step 2**：重启 Dify 容器
+
+```powershell
+docker restart $(docker ps -q --filter "name=dify")
+# 或
+docker-compose -f D:\path\to\dify\docker-compose.yml restart
+```
+
+**Step 3**：检查端口占用
+
+```powershell
+netstat -ano | findstr ":80 "
+```
+
+确认没有其他程序占用 80 端口。
+
+**Step 4**：检查容器日志
+
+```powershell
+docker logs $(docker ps -q --filter "name=dify" | head -1) --tail 50
+```
+
+---
+
+## 9. 联系方式
+
+如果以上方法都无法解决问题：
+
+1. **查看 CI 日志**：https://github.com/mornikar/mornikar.github.io/actions
+2. **查看 Wiki 日志**：`.wiki/log.md`
+3. **搜索已知问题**：检查本文档其他章节是否已有记录
+4. **联系维护者**：通过 GitHub Issue 反馈
