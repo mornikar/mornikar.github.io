@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>维护指南 - LLM Wiki 文档</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.7;
+    color: #e0e0e0;
+    background: #1a1a2e;
+    min-height: 100vh;
+  }
+  a { color: #4fc3f7; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .topbar {
+    background: #16213e;
+    border-bottom: 1px solid #0f3460;
+    padding: 0.8rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .topbar .brand { font-weight: 700; font-size: 1.1rem; color: #e94560; }
+  .topbar .brand:hover { text-decoration: none; }
+  .breadcrumb { color: #888; font-size: 0.9rem; }
+  .breadcrumb span { color: #ccc; }
+  .layout { display: flex; max-width: 1200px; margin: 0 auto; padding: 2rem; gap: 2rem; }
+  .sidebar { width: 200px; flex-shrink: 0; }
+  .sidebar h3 { color: #e94560; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+  .sidebar nav a {
+    display: block;
+    padding: 0.3rem 0.5rem;
+    color: #a0a0a0;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    margin-bottom: 2px;
+  }
+  .sidebar nav a:hover { color: #4fc3f7; background: rgba(79,195,247,0.1); text-decoration: none; }
+  .sidebar nav a.active { color: #e94560; background: rgba(233,69,96,0.1); }
+  .main { flex: 1; min-width: 0; }
+  .main h1 { color: #e94560; font-size: 1.8rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #333; }
+  .main h2 { color: #4fc3f7; font-size: 1.3rem; margin: 1.8rem 0 0.8rem; }
+  .main h3 { color: #80cbc4; font-size: 1.1rem; margin: 1.5rem 0 0.6rem; }
+  .main h4 { color: #fff; font-size: 1rem; margin: 1.2rem 0 0.5rem; }
+  .main p { margin: 0.8rem 0; color: #d0d0d0; }
+  .main ul, .main ol { margin: 0.8rem 0; padding-left: 1.5rem; }
+  .main li { margin: 0.3rem 0; color: #d0d0d0; }
+  .main code {
+    background: #0f3460;
+    color: #e94560;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-family: "Fira Code", "Consolas", monospace;
+    font-size: 0.88em;
+  }
+  .main pre {
+    background: #0f3460;
+    border: 1px solid #1a4a7a;
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+  }
+  .main pre code { background: none; color: #e0e0e0; padding: 0; font-size: 0.85rem; }
+  .main blockquote {
+    border-left: 3px solid #e94560;
+    padding: 0.5rem 1rem;
+    margin: 1rem 0;
+    background: rgba(233,69,96,0.05);
+    color: #a0a0a0;
+  }
+  .main table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  .main th { background: #0f3460; color: #4fc3f7; padding: 0.6rem 1rem; text-align: left; }
+  .main td { padding: 0.5rem 1rem; border-bottom: 1px solid #2a2a4a; color: #d0d0d0; }
+  .main tr:hover td { background: rgba(79,195,247,0.05); }
+  .main hr { border: none; border-top: 1px solid #333; margin: 2rem 0; }
+  .main img { max-width: 100%; border-radius: 4px; }
+  .main a { color: #4fc3f7; }
+  .main strong { color: #fff; }
+  .main em { color: #a0a0a0; }
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: #555;
+    font-size: 0.8rem;
+    border-top: 1px solid #222;
+    margin-top: 3rem;
+  }
+  @media (max-width: 768px) {
+    .layout { flex-direction: column; padding: 1rem; }
+    .sidebar { width: 100%; }
+    .topbar { padding: 0.8rem 1rem; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/">🌸 LLM Wiki</a>
+  <span class="breadcrumb">&raquo; <a href="/docs/">文档</a> &raquo; <a href="/docs/MAINTENANCE/">维护指南</a></span>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <h3>📄 文档导航</h3>
+    <nav>
+      <a href="/docs/">文档首页</a>
+      <a href="/docs/PROJECT/">系统架构</a>
+      <a href="/docs/MAINTENANCE/" class="active">维护指南</a>
+      <a href="/docs/TROUBLESHOOTING/">故障排查</a>
+      <a href="/docs/MIGRATION/">迁移规范</a>
+    </nav>
+  </aside>
+  <main class="main">
+    <h1 id="🔧-维护指南">🔧 维护指南</h1>
+    <h2 id="一、系统要求">一、系统要求</h2>
+    <table>
+    <thead>
+    <tr>
+    <th>环境</th>
+    <th>版本</th>
+    <th>安装方式</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>Node.js</td>
+    <td>≥ 18.x</td>
+    <td><a href="https://github.com/coreybutler/nvm-windows">nvm-windows</a></td>
+    </tr>
+    <tr>
+    <td>npm</td>
+    <td>内置</td>
+    <td>—</td>
+    </tr>
+    <tr>
+    <td>Git</td>
+    <td>≥ 2.30</td>
+    <td><a href="https://git-scm.com/">git-scm.com</a></td>
+    </tr>
+    <tr>
+    <td>Docker Desktop</td>
+    <td>≥ 4.28</td>
+    <td><a href="https://www.docker.com/products/docker-desktop/">docker.com</a></td>
+    </tr>
+    <tr>
+    <td>Tailscale</td>
+    <td>最新版</td>
+    <td><a href="https://tailscale.com/download">tailscale.com/download</a></td>
+    </tr>
+    </tbody></table>
+    <blockquote>
+    <p>💡 <strong>推荐</strong>：使用 <code>nvm install 18 &amp;&amp; nvm use 18</code> 安装 Node.js，避免全局污染。</p>
+    </blockquote>
+    <hr>
+    <h2 id="二、日常使用流程">二、日常使用流程</h2>
+    <h3 id="21-完整开发流程（推荐）">2.1 完整开发流程（推荐）</h3>
+    <pre><code class="language-powershell"># 1. 拉取最新代码
+    git pull origin source
+    
+    # 2. 编辑 Wiki 文件
+    #    - 编辑 .wiki/concepts/xxx.md
+    #    - 或新建文件
+    
+    # 3. 一键同步 + 预览
+    wiki-sync.bat
+    
+    # 4. 访问 http://localhost:4000 确认效果
+    
+    # 5. 推送（CI 自动部署）
+    git add -A
+    git commit -m &quot;feat: 更新 xxx&quot;
+    git push origin source
+    </code></pre>
+    <h3 id="22-仅预览（不修改文件）">2.2 仅预览（不修改文件）</h3>
+    <pre><code class="language-powershell">wiki-sync.bat --dry-run
+    </code></pre>
+    <h3 id="23-仅本地构建">2.3 仅本地构建</h3>
+    <pre><code class="language-powershell"># 不执行 git 操作
+    node scripts/wiki-to-hexo.js
+    hexo generate
+    hexo server
+    </code></pre>
+    <hr>
+    <h2 id="三、wiki-编辑规范">三、Wiki 编辑规范</h2>
+    <h3 id="31-新建-wiki-文章">3.1 新建 Wiki 文章</h3>
+    <p><strong>Step 1</strong>：在 <code>.wiki/</code> 对应目录下创建文件</p>
+    <pre><code>.wiki/
+    ├── concepts/       ← 技术概念
+    ├── entities/       ← 实体随笔
+    ├── comparisons/     ← 对比分析
+    ├── queries/        ← 查询结果
+    └── raw/            ← 原始存档（不发布）
+    </code></pre>
+    <p><strong>Step 2</strong>：填写 frontmatter（必须完整）</p>
+    <pre><code class="language-yaml">---
+    title: RAG检索增强生成        # 页面标题（必填）
+    type: concepts                # 固定为所在目录名（必填）
+    tags: [AI, LLM, RAG]         # 标签（必填）
+    created: 2025-09-12          # 创建日期（必填，YYYY-MM-DD）
+    updated: 2025-09-12          # 更新日期（必填，YYYY-MM-DD）
+    summary: 一句话描述           # 摘要（可选）
+    aliases: [别名1, 别名2]      # 别名（可选）
+    related: [相关页面1, 相关页面2] # 关联页面（可选）
+    ---
+    </code></pre>
+    <blockquote>
+    <p>⚠️ **日期格式必须为 <code>YYYY-MM-DD</code>**，不能写成 <code>YYYY/MM/DD</code>，否则 hexo generate 无法生成文章！</p>
+    </blockquote>
+    <p><strong>Step 3</strong>：使用 WikiLink 链接相关内容</p>
+    <pre><code class="language-markdown">## RAG 简介
+    
+    RAG（检索增强生成）结合了 [[信息检索]] 和 [[大语言模型]] 的优势...
+    
+    ## 相关技术
+    
+    - [[向量数据库]]
+    - [[Embedding模型]]
+    </code></pre>
+    <h3 id="32-wikilink-语法">3.2 WikiLink 语法</h3>
+    <table>
+    <thead>
+    <tr>
+    <th>语法</th>
+    <th>示例</th>
+    <th>输出</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>直接链接</td>
+    <td><code>[[RAG检索增强生成]]</code></td>
+    <td>明日方舟风格链接</td>
+    </tr>
+    <tr>
+    <td>带显示文字</td>
+    <td><code>[[RAG检索增强生成|点击这里]]</code></td>
+    <td>&quot;点击这里&quot;</td>
+    </tr>
+    <tr>
+    <td>外部链接</td>
+    <td><code>[百度](https://baidu.com)</code></td>
+    <td>普通 Markdown 链接</td>
+    </tr>
+    </tbody></table>
+    <p><strong>匹配优先级</strong>：</p>
+    <ol>
+    <li>精确匹配文件名（不含扩展名）</li>
+    <li>大小写不敏感匹配</li>
+    <li>前缀模糊匹配</li>
+    <li>降级为路径搜索</li>
+    </ol>
+    <h3 id="33-编辑规则">3.3 编辑规则</h3>
+    <table>
+    <thead>
+    <tr>
+    <th>规则</th>
+    <th>说明</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>frontmatter 必填</td>
+    <td>每个 <code>.md</code> 必须有完整 frontmatter</td>
+    </tr>
+    <tr>
+    <td>孤立页面禁止</td>
+    <td>每页至少链接 2 个其他页面</td>
+    </tr>
+    <tr>
+    <td>内容简洁</td>
+    <td>单页控制在 200 行内，超过则拆分</td>
+    </tr>
+    <tr>
+    <td>先 orient</td>
+    <td>每次编辑先读 <code>SCHEMA.md + index.md + log.md</code></td>
+    </tr>
+    <tr>
+    <td>更新 updated</td>
+    <td>修改内容后同步更新 frontmatter 的 <code>updated</code> 字段</td>
+    </tr>
+    </tbody></table>
+    <hr>
+    <h2 id="四、dify-知识库管理">四、Dify 知识库管理</h2>
+    <h3 id="41-本地访问-dify">4.1 本地访问 Dify</h3>
+    <table>
+    <thead>
+    <tr>
+    <th>地址</th>
+    <th>说明</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td><a href="http://localhost/v1">http://localhost/v1</a></td>
+    <td>Dify 主界面</td>
+    </tr>
+    <tr>
+    <td><a href="http://localhost/v1/apps">http://localhost/v1/apps</a></td>
+    <td>应用管理</td>
+    </tr>
+    <tr>
+    <td><a href="http://localhost/v1/datasets">http://localhost/v1/datasets</a></td>
+    <td>知识库管理</td>
+    </tr>
+    </tbody></table>
+    <h3 id="42-同步-wiki-到-dify">4.2 同步 Wiki 到 Dify</h3>
+    <pre><code class="language-powershell"># 方式一：使用脚本（推荐）
+    node tools/sync-wiki-to-dify.js
+    
+    # 方式二：手动同步
+    # 1. 打开 http://localhost/v1/datasets
+    # 2. 进入知识库 &quot;mmo的知识库&quot;
+    # 3. 点击「同步」按钮
+    </code></pre>
+    <blockquote>
+    <p>💡 同步后 Dify 会自动重新索引，约需 1-2 分钟。</p>
+    </blockquote>
+    <h3 id="43-dify-应用信息">4.3 Dify 应用信息</h3>
+    <table>
+    <thead>
+    <tr>
+    <th>配置项</th>
+    <th>值</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>应用名称</td>
+    <td>聊天机器人 mornikar</td>
+    </tr>
+    <tr>
+    <td>App API Key</td>
+    <td><code>app-JznEvGv3JlWWISRmNdjRO7yE</code></td>
+    </tr>
+    <tr>
+    <td>知识库名称</td>
+    <td>mmo的知识库</td>
+    </tr>
+    <tr>
+    <td>Dataset API Key</td>
+    <td><code>dataset-qfr0cZc2dnjftg5tVTraWRWf</code></td>
+    </tr>
+    <tr>
+    <td>向量数据库</td>
+    <td>Weaviate</td>
+    </tr>
+    </tbody></table>
+    <hr>
+    <h2 id="五、pagefind-搜索">五、Pagefind 搜索</h2>
+    <h3 id="51-工作原理">5.1 工作原理</h3>
+    <p>Pagefind 在 <code>public/</code> 目录中建立静态全文索引，支持模糊搜索、分词搜索。</p>
+    <h3 id="52-构建时机">5.2 构建时机</h3>
+    <table>
+    <thead>
+    <tr>
+    <th>场景</th>
+    <th>构建方式</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>CI 自动构建</td>
+    <td>每次 push 后自动运行</td>
+    </tr>
+    <tr>
+    <td>本地调试</td>
+    <td><code>wiki-sync.bat</code> 中自动包含</td>
+    </tr>
+    <tr>
+    <td>手动构建</td>
+    <td><code>npx pagefind --site public --output-path public/pagefind</code></td>
+    </tr>
+    </tbody></table>
+    <h3 id="53-验证搜索">5.3 验证搜索</h3>
+    <ol>
+    <li>访问 <a href="https://mornikar.github.io/pagefind/">https://mornikar.github.io/pagefind/</a></li>
+    <li>输入关键词测试搜索</li>
+    <li>确认 Wiki 文章能被检索到</li>
+    </ol>
+    <hr>
+    <h2 id="六、tailscale-公网访问">六、Tailscale 公网访问</h2>
+    <h3 id="61-设备信息">6.1 设备信息</h3>
+    <table>
+    <thead>
+    <tr>
+    <th>设备</th>
+    <th>Tailscale IP</th>
+    <th>域名</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>Windows 电脑</td>
+    <td><code>100.73.236.115</code></td>
+    <td><code>mornikar.tail7ee4f8.ts.net</code></td>
+    </tr>
+    <tr>
+    <td>Android 手机</td>
+    <td><code>100.69.47.104</code></td>
+    <td>—</td>
+    </tr>
+    </tbody></table>
+    <h3 id="62-使用条件">6.2 使用条件</h3>
+    <ol>
+    <li>电脑和手机都安装 Tailscale</li>
+    <li>都登录同一个 GitHub 账号</li>
+    <li>双方设备都显示「Connected」</li>
+    </ol>
+    <h3 id="63-访问方式">6.3 访问方式</h3>
+    <pre><code>手机访问博客：https://mornikar.tail7ee4f8.ts.net
+    手机访问 Dify：http://mornikar.tail7ee4f8.ts.net:18789
+    </code></pre>
+    <hr>
+    <h2 id="七、github-pages-部署状态">七、GitHub Pages 部署状态</h2>
+    <table>
+    <thead>
+    <tr>
+    <th>项目</th>
+    <th>值</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>部署源分支</td>
+    <td><code>main</code></td>
+    </tr>
+    <tr>
+    <td>CI 触发条件</td>
+    <td>push 到 <code>source</code> 分支</td>
+    </tr>
+    <tr>
+    <td>网站地址</td>
+    <td><a href="https://mornikar.github.io">https://mornikar.github.io</a></td>
+    </tr>
+    <tr>
+    <td>文档地址</td>
+    <td><a href="https://mornikar.github.io/docs/">https://mornikar.github.io/docs/</a></td>
+    </tr>
+    <tr>
+    <td>CI 历史</td>
+    <td><a href="https://github.com/mornikar/mornikar.github.io/actions">https://github.com/mornikar/mornikar.github.io/actions</a></td>
+    </tr>
+    </tbody></table>
+    <h3 id="手动触发-ci">手动触发 CI</h3>
+    <p>如果 CI 未自动触发：</p>
+    <ol>
+    <li>打开 <a href="https://github.com/mornikar/mornikar.github.io/actions">https://github.com/mornikar/mornikar.github.io/actions</a></li>
+    <li>点击「Wiki-Hexo 自动部署」</li>
+    <li>点击「Run workflow」→ 选择 <code>source</code> 分支 → 运行</li>
+    </ol>
+    <hr>
+    <h2 id="八、本地命令速查">八、本地命令速查</h2>
+    <table>
+    <thead>
+    <tr>
+    <th>命令</th>
+    <th>说明</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td><code>wiki-sync.bat</code></td>
+    <td>一键同步：清理→转换→生成→搜索→提交→推送</td>
+    </tr>
+    <tr>
+    <td><code>wiki-sync.bat --dry-run</code></td>
+    <td>预览转换结果（不修改文件）</td>
+    </tr>
+    <tr>
+    <td><code>node scripts/wiki-to-hexo.js</code></td>
+    <td>仅执行 Wiki → Hexo 转换</td>
+    </tr>
+    <tr>
+    <td><code>node scripts/wiki-to-hexo.js --dry-run</code></td>
+    <td>预览转换结果</td>
+    </tr>
+    <tr>
+    <td><code>node scripts/compile_css.js</code></td>
+    <td>手动编译 Stylus CSS</td>
+    </tr>
+    <tr>
+    <td><code>node tools/sync-wiki-to-dify.js</code></td>
+    <td>同步 Wiki 到 Dify</td>
+    </tr>
+    <tr>
+    <td><code>hexo server</code></td>
+    <td>本地预览（端口 4000）</td>
+    </tr>
+    <tr>
+    <td><code>hexo clean</code></td>
+    <td>清理 public/ 目录</td>
+    </tr>
+    <tr>
+    <td><code>hexo generate</code></td>
+    <td>生成静态文件</td>
+    </tr>
+    </tbody></table>
+    
+  </main>
+</div>
+<footer class="footer">
+  由 LLM Wiki 文档系统生成 &middot; <a href="/">返回博客</a>
+</footer>
+</body>
+</html>
