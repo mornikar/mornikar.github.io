@@ -119,6 +119,13 @@ jobs:
           echo "=== LearningEssays 页面 ==="
           ls public/LearningEssays/ 2>/dev/null | head -10 || echo "(空)"
 
+      - name: 复制项目文档到 public（供 GitHub Pages 访问）
+        run: |
+          mkdir -p public/docs
+          cp -r source/docs/* public/docs/
+          echo "=== docs/ 已复制到 public/ ==="
+          ls public/docs/
+
       - name: 部署到 GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:

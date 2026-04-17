@@ -45,6 +45,9 @@
 
   // Dify 会话 ID（多轮对话保持上下文）
   let conversationId = null
+  // 对话轮数计数（防止历史累积撑爆 LM 8K context）
+  let turnCount = 0
+  const MAX_TURNS = 4  // 超过4轮自动重置 conversation，避免 token 溢出
 
   // ─── DOM 创建 ────────────────────────────────────────────
   function createWidget() {
@@ -125,8 +128,57 @@
       .replace(/\n/g, '<br>')
   }
 
+  // ─── 预热：页面加载时静默 ping Dify ─────────────────────
+  let isWarmedUp = false
+  let warmUpTimer = null
+
+  function warmUp() {
+    if (!isWarmedUp && (isLocal || DIFY_PUBLIC_BASE)) {
+      warmUpTimer = setTimeout(async () => {
+        try {
+          const warmBody = {
+            inputs: {},
+            query: '.',
+            response_mode: 'streaming',
+            conversation_id: '',
+            user: 'wiki-warmup'
+          }
+          const resp = await fetch(`${difyBase}/chat-messages`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${DIFY_API_KEY}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(warmBody)
+          })
+          if (resp.ok) {
+            // 消费掉流，不展示
+            resp.body.getReader().cancel()
+            isWarmedUp = true
+            console.log('[WikiChat] 预热完成，模型已就绪')
+          }
+        } catch (e) {
+          console.warn('[WikiChat] 预热失败:', e.message)
+        }
+      }, 2000) // 延迟2秒，等页面渲染完再预热
+    }
+  }
+
+  // ─── 加载状态文案 ─────────────────────────────────────────
+  const LOADING_MSGS = [
+    '正在思考…',
+    'AI 正在思考…',
+    '请稍候…',
+    '正在唤醒模型…',
+    '模型加载中，请稍候…',
+  ]
+
+  function getLoadingMsg() {
+    return LOADING_MSGS[Math.floor(Math.random() * LOADING_MSGS.length)]
+  }
+
   // ─── Dify 流式对话 ───────────────────────────────────────
-  async function askDify(query) {
+  async function askDify(query, timeoutMs = 30000) {
     const body = {
       inputs: {},
       query,
@@ -136,15 +188,21 @@
     }
 
     console.log('[WikiChat] 发送请求到:', `${difyBase}/chat-messages`)
-    
+
+    // 带超时的 fetch
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+
     const resp = await fetch(`${difyBase}/chat-messages`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${DIFY_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
+      signal: controller.signal
     })
+    clearTimeout(timeoutId)
 
     console.log('[WikiChat] 响应状态:', resp.status)
     console.log('[WikiChat] Content-Type:', resp.headers.get('content-type'))
@@ -187,8 +245,16 @@
               bubble.closest('.wiki-chat-msg').scrollIntoView({ block: 'end', behavior: 'smooth' })
             }
             if (json.event === 'message_end') {
-              conversationId = json.conversation_id || conversationId
-              console.log('[WikiChat] 对话结束, conversationId:', conversationId)
+              turnCount++
+              if (turnCount >= MAX_TURNS) {
+                // 轮数超限，下次自动开新对话，防止 token 爆炸
+                conversationId = null
+                turnCount = 0
+                console.log('[WikiChat] 已达到最大轮数，自动重置对话')
+              } else {
+                conversationId = json.conversation_id || conversationId
+              }
+              console.log('[WikiChat] 对话结束, turnCount:', turnCount, 'conversationId:', conversationId)
             }
           } catch (_) { /* 跳过非 JSON 行 */ }
         }
@@ -261,13 +327,17 @@
     if (isLocal || DIFY_PUBLIC_BASE) {
       const typingDiv = document.createElement('div')
       typingDiv.className = 'wiki-chat-msg wiki-chat-msg--bot wiki-chat-typing'
-      typingDiv.innerHTML = '<div class="wiki-chat-bubble"><span class="wiki-typing-dot"></span><span class="wiki-typing-dot"></span><span class="wiki-typing-dot"></span></div>'
+      typingDiv.innerHTML = `<div class="wiki-chat-bubble">${getLoadingMsg()}</div>`
       document.getElementById('wiki-chat-messages').appendChild(typingDiv)
 
       try {
         await askDify(query)
       } catch (e) {
-        appendMessage('bot', `⚠ AI 暂时无法回答（${e.message}），请查看下方相关页面。`)
+        if (e.name === 'AbortError') {
+          appendMessage('bot', `⏳ AI 响应超时（>${timeoutMs/1000}秒），可能是模型正在加载中。请稍后重试，或查看下方相关页面。`)
+        } else {
+          appendMessage('bot', `⚠ AI 暂时无法回答（${e.message}），请查看下方相关页面。`)
+        }
       } finally {
         typingDiv.remove()
       }
@@ -285,8 +355,24 @@
     el.style.height = Math.min(el.scrollHeight, 120) + 'px'
   }
 
+  // ─── footer-credit OpenClaw 链接居中处理 ──────────────────
+  // 把 <a>OpenClaw_Launcher_<br>LobsterLauncher</a>
+  // 变成 <a href=...><span>OpenClaw_Launcher_</span><span>LobsterLauncher</span></a>
+  function fixFooterCreditLinks() {
+    const footerLinks = document.querySelectorAll('.footer-credit a')
+    footerLinks.forEach(link => {
+      const br = link.querySelector('br')
+      if (!br) return
+      const parts = link.innerHTML.split(/<br\s*\/?>/i)
+      if (parts.length >= 2) {
+        link.innerHTML = `<span>${parts[0]}</span><span>${parts[1]}</span>`
+      }
+    })
+  }
+
   // ─── 初始化 ──────────────────────────────────────────────
   function init() {
+    fixFooterCreditLinks()
     const { fab, panel } = createWidget()
 
     // 开关面板
@@ -308,14 +394,18 @@
 
     document.getElementById('wiki-chat-close').addEventListener('click', closePanel)
 
-    // 清空对话
+    // 清空对话（同时重置轮数）
     document.getElementById('wiki-chat-clear').addEventListener('click', () => {
       conversationId = null
+      turnCount = 0
       const messages = document.getElementById('wiki-chat-messages')
       messages.innerHTML = ''
       appendMessage('bot', WELCOME_MSG)
       document.getElementById('wiki-chat-search-results').style.display = 'none'
     })
+
+    // 页面加载时预热 Dify（静默 ping，不展示结果）
+    warmUp()
 
     // 发送
     document.getElementById('wiki-chat-send').addEventListener('click', handleSend)
