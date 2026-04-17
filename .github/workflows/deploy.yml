@@ -31,6 +31,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pages: write
+      id-token: write
 
     steps:
       - name: 检出代码（包含完整历史）
@@ -133,9 +135,11 @@ jobs:
           cp README.md public/
           echo "README.md → / (仓库主页)"
 
-      - name: 部署到 GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: 上传页面产物
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          publish_branch: main
+          path: ./public
+
+      - name: 部署到 GitHub Pages（Actions 原生，绕过 legacy Jekyll）
+        id: deployment
+        uses: actions/github-pages@v4
