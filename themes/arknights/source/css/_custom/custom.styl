@@ -14,21 +14,25 @@
       font-size: 23px;
       color: #22bbff;
       text-decoration: none;
-      padding: 6px 0;
-      position: relative;
-      display: inline-block;
+      padding: 0;
+      display: inline;
 
       span {
-        display: block;
+        display: inline-block;
+        text-align: center;
         line-height: 39px;
         height: 39px;
         white-space: nowrap;
+        padding: 0;
       }
 
-      // hover 时整个链接块蓝底白字
+      // hover 时整个链接块（两行）蓝底白字
       &:hover {
-        color: #fff;
         background: #22bbff;
+        color: #fff;
+      }
+      &:hover span {
+        color: #fff;
       }
     }
 

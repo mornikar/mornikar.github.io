@@ -363,7 +363,7 @@
     footerLinks.forEach(link => {
       const br = link.querySelector('br')
       if (!br) return
-      const parts = link.innerHTML.split(br)
+      const parts = link.innerHTML.split('<br>')
       if (parts.length >= 2) {
         link.innerHTML = `<span>${parts[0]}</span><span>${parts[1]}</span>`
       }
