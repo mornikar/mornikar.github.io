@@ -125,8 +125,57 @@
       .replace(/\n/g, '<br>')
   }
 
+  // ─── 预热：页面加载时静默 ping Dify ─────────────────────
+  let isWarmedUp = false
+  let warmUpTimer = null
+
+  function warmUp() {
+    if (!isWarmedUp && (isLocal || DIFY_PUBLIC_BASE)) {
+      warmUpTimer = setTimeout(async () => {
+        try {
+          const warmBody = {
+            inputs: {},
+            query: '.',
+            response_mode: 'streaming',
+            conversation_id: '',
+            user: 'wiki-warmup'
+          }
+          const resp = await fetch(`${difyBase}/chat-messages`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${DIFY_API_KEY}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(warmBody)
+          })
+          if (resp.ok) {
+            // 消费掉流，不展示
+            resp.body.getReader().cancel()
+            isWarmedUp = true
+            console.log('[WikiChat] 预热完成，模型已就绪')
+          }
+        } catch (e) {
+          console.warn('[WikiChat] 预热失败:', e.message)
+        }
+      }, 2000) // 延迟2秒，等页面渲染完再预热
+    }
+  }
+
+  // ─── 加载状态文案 ─────────────────────────────────────────
+  const LOADING_MSGS = [
+    '正在思考…',
+    'AI 正在思考…',
+    '请稍候…',
+    '正在唤醒模型…',
+    '模型加载中，请稍候…',
+  ]
+
+  function getLoadingMsg() {
+    return LOADING_MSGS[Math.floor(Math.random() * LOADING_MSGS.length)]
+  }
+
   // ─── Dify 流式对话 ───────────────────────────────────────
-  async function askDify(query) {
+  async function askDify(query, timeoutMs = 30000) {
     const body = {
       inputs: {},
       query,
@@ -136,15 +185,21 @@
     }
 
     console.log('[WikiChat] 发送请求到:', `${difyBase}/chat-messages`)
-    
+
+    // 带超时的 fetch
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+
     const resp = await fetch(`${difyBase}/chat-messages`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${DIFY_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
+      signal: controller.signal
     })
+    clearTimeout(timeoutId)
 
     console.log('[WikiChat] 响应状态:', resp.status)
     console.log('[WikiChat] Content-Type:', resp.headers.get('content-type'))
@@ -261,13 +316,17 @@
     if (isLocal || DIFY_PUBLIC_BASE) {
       const typingDiv = document.createElement('div')
       typingDiv.className = 'wiki-chat-msg wiki-chat-msg--bot wiki-chat-typing'
-      typingDiv.innerHTML = '<div class="wiki-chat-bubble"><span class="wiki-typing-dot"></span><span class="wiki-typing-dot"></span><span class="wiki-typing-dot"></span></div>'
+      typingDiv.innerHTML = `<div class="wiki-chat-bubble">${getLoadingMsg()}</div>`
       document.getElementById('wiki-chat-messages').appendChild(typingDiv)
 
       try {
         await askDify(query)
       } catch (e) {
-        appendMessage('bot', `⚠ AI 暂时无法回答（${e.message}），请查看下方相关页面。`)
+        if (e.name === 'AbortError') {
+          appendMessage('bot', `⏳ AI 响应超时（>${timeoutMs/1000}秒），可能是模型正在加载中。请稍后重试，或查看下方相关页面。`)
+        } else {
+          appendMessage('bot', `⚠ AI 暂时无法回答（${e.message}），请查看下方相关页面。`)
+        }
       } finally {
         typingDiv.remove()
       }
@@ -309,6 +368,16 @@
     document.getElementById('wiki-chat-close').addEventListener('click', closePanel)
 
     // 清空对话
+    document.getElementById('wiki-chat-clear').addEventListener('click', () => {
+      conversationId = null
+      const messages = document.getElementById('wiki-chat-messages')
+      messages.innerHTML = ''
+      appendMessage('bot', WELCOME_MSG)
+      document.getElementById('wiki-chat-search-results').style.display = 'none'
+    })
+
+    // 页面加载时预热 Dify（静默 ping，不展示结果）
+    warmUp()
     document.getElementById('wiki-chat-clear').addEventListener('click', () => {
       conversationId = null
       const messages = document.getElementById('wiki-chat-messages')
