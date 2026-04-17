@@ -355,8 +355,24 @@
     el.style.height = Math.min(el.scrollHeight, 120) + 'px'
   }
 
+  // ─── footer-credit OpenClaw 链接居中处理 ──────────────────
+  // 把 <a>OpenClaw_Launcher_<br>LobsterLauncher</a>
+  // 变成 <a href=...><span>OpenClaw_Launcher_</span><span>LobsterLauncher</span></a>
+  function fixFooterCreditLinks() {
+    const footerLinks = document.querySelectorAll('.footer-credit a')
+    footerLinks.forEach(link => {
+      const br = link.querySelector('br')
+      if (!br) return
+      const parts = link.innerHTML.split(br)
+      if (parts.length >= 2) {
+        link.innerHTML = `<span>${parts[0]}</span><span>${parts[1]}</span>`
+      }
+    })
+  }
+
   // ─── 初始化 ──────────────────────────────────────────────
   function init() {
+    fixFooterCreditLinks()
     const { fab, panel } = createWidget()
 
     // 开关面板
