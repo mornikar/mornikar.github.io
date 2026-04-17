@@ -61,14 +61,11 @@ aside
             each href, name in content
               a(href=href).icp-content= name
         br
-    nobr #{__('footer.publish')} 
-      a(href= 'http://hexo.io') Hexo
-    wbr
-    nobr  #{__('footer.theme')} 
-      a(href= 'https://github.com/Yue-plus/hexo-theme-arknights') Arknights
-    wbr
-    nobr  #{__('footer.by')} 
-      a(href= 'https://github.com/Yue-plus') Yue_plus
+    nobr
+      a(href='https://github.com/mornikar') mornikar の
+      | （
+      a(href='https://github.com/mornikar/OpenClaw_Launcher_LobsterLauncher') OpenClaw_Launcher_LobsterLauncher
+      |）
     if config.build_time
       wbr
       nobr  #{__('footer.build_time')}

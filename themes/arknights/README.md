@@ -678,6 +678,36 @@ search:
 build_time: true
 ```
 
+## 背景音乐（BGM）
+
+本主题支持页面背景音乐，位于侧边栏底部 🎵 按钮。
+
+### 配置项
+
+修改 **Hexo 目录** 下的 `_config.arknights.yml` 文件：
+
+```yaml
+bgm:
+  enable: true          # 开启音乐功能
+  autoplay: false        # 默认 false，进入页面不自动播放，点击按钮后才播放
+  loop: true             # 循环播放
+  src: /audio/bgm.mp3   # 音乐文件路径（相对于 source/ 目录）
+```
+
+### 添加/更换音乐
+
+1. 将 MP3 文件放入 `Hexo/source/audio/` 目录（目录不存在则新建）
+2. 修改 `_config.arknights.yml` 中的 `src` 为你的文件名，例如：
+
+```yaml
+bgm:
+  src: /audio/your-music.mp3
+```
+
+3. 如果需要多首音乐轮播，可以修改 `layout/includes/bottom-btn.pug` 中的 audio 标签，或自行扩展 JS 逻辑
+
+> 注意：`autoplay: true` 在大多数浏览器中会被自动拦截（浏览器策略要求用户主动交互后才能播放音频），建议保持 `autoplay: false`，让访客点击 🎵 按钮播放。
+
 ## Front-matter
 
 除了 [Hexo 支持的 Front-matter](https://hexo.io/zh-cn/docs/front-matter) 还支持：

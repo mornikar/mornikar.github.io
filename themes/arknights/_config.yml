@@ -94,7 +94,7 @@ search:
 # 背景音乐
 bgm:
   enable: true
-  autoplay: true
+  autoplay: false   # 默认不播放，点击页面底部 🎵 按钮后播放
   loop: true
   src: /audio/bgm.mp3
 
