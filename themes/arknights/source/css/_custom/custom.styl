@@ -2,15 +2,25 @@
 // Custom styles for Arknights theme
 // =============================================
 
-// Footer credit: mornikar の ... 项目列表布局
+// FooterCreditWrapper: 撑满剩余空间，向下对齐
+.footer-credit-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex: 1;
+  width: 100%;
+}
+
+// FooterCredit: 水平居中，内容垂直排列
 .footer-credit {
   display: flex;
   flex-direction: column;
   align-items: center;
   line-height: 1.8;
-  padding: 4px 0;
 
   .footer-title {
+    display: flex;
+    align-items: center;
     font-size: 0; // 消除inline-block空格
     a {
       font-size: $font-size;
@@ -20,17 +30,12 @@
         text-decoration: underline;
       }
     }
-    span {
-      font-size: $font-size;
-      color: var(--text-color);
-    }
+
   }
 
   .footer-sub {
-    font-size: $font-size;
-    color: var(--text-lighten);
-    // 小一号、淡色，表示这是列表名
     font-size: 0.85em;
+    color: var(--text-lighten);
     opacity: 0.65;
   }
 }
