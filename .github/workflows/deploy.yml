@@ -123,6 +123,8 @@ jobs:
         run: |
           mkdir -p public/docs
           cp -r source/docs/* public/docs/
+          # README.md 放到根目录（GitHub 仓库主页会显示）
+          cp README.md public/
           echo "=== docs/ 已复制到 public/ ==="
           ls public/docs/
 
