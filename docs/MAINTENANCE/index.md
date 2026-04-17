@@ -1,229 +1,245 @@
 ---
-title: 长期维护指南
-date: 2026-04-17 11:00:00
-type: docs
+title: 维护指南
+---
+# 🔧 维护指南
+
+## 一、系统要求
+
+| 环境 | 版本 | 安装方式 |
+|------|------|----------|
+| Node.js | ≥ 18.x | [nvm-windows](https://github.com/coreybutler/nvm-windows) |
+| npm | 内置 | — |
+| Git | ≥ 2.30 | [git-scm.com](https://git-scm.com/) |
+| Docker Desktop | ≥ 4.28 | [docker.com](https://www.docker.com/products/docker-desktop/) |
+| Tailscale | 最新版 | [tailscale.com/download](https://tailscale.com/download) |
+
+> 💡 **推荐**：使用 `nvm install 18 && nvm use 18` 安装 Node.js，避免全局污染。
+
 ---
 
-# 长期维护指南
+## 二、日常使用流程
 
-## 日常使用流程
-
-### 方式一：本地脚本（推荐）
+### 2.1 完整开发流程（推荐）
 
 ```powershell
-cd D:\Auxiliary_means\Git\mornikar.github.io\Hexo
+# 1. 拉取最新代码
+git pull origin source
 
-# 完整流程（Wiki → Dify → Hexo → 构建 → 部署）
+# 2. 编辑 Wiki 文件
+#    - 编辑 .wiki/concepts/xxx.md
+#    - 或新建文件
+
+# 3. 一键同步 + 预览
 wiki-sync.bat
 
-# 仅预览（不写入、不部署）
-wiki-sync.bat --dry-run
+# 4. 访问 http://localhost:4000 确认效果
 
-# 强制全量转换
-wiki-sync.bat --force
+# 5. 推送（CI 自动部署）
+git add -A
+git commit -m "feat: 更新 xxx"
+git push origin source
 ```
 
-`wiki-sync.bat` 内部执行 7 个步骤：
-1. hexo clean — 清理旧构建
-2. sync-wiki-to-dify.js — 同步 Wiki 到 Dify 知识库
-3. wiki-to-hexo.js — 转换 Wiki 到 Hexo Markdown
-4. hexo generate — 生成静态文件
-5. pagefind — 构建搜索索引
-6. git commit + push — 提交源文件变更
-7. hexo deploy — 部署到 GitHub Pages
-
-### 方式二：CI 自动部署
-
-只需推送 `.wiki/` 文件到 GitHub `source` 分支，CI 自动完成全部流程。
-
-### 方式三：分步手动操作
+### 2.2 仅预览（不修改文件）
 
 ```powershell
-# 1. Wiki → Dify
-node tools/sync-wiki-to-dify.js
+wiki-sync.bat --dry-run
+```
 
-# 2. Wiki → Hexo（增量）
+### 2.3 仅本地构建
+
+```powershell
+# 不执行 git 操作
 node scripts/wiki-to-hexo.js
-
-# 3. 构建
-npx hexo generate
-
-# 4. 搜索索引
-npx pagefind --site public --output-path public/pagefind
-
-# 5. 部署
-npx hexo deploy
+hexo generate
+hexo server
 ```
 
 ---
 
-## 添加新的 Wiki 文章
+## 三、Wiki 编辑规范
 
-### 步骤 1：在 .wiki/ 下创建文件
+### 3.1 新建 Wiki 文章
 
-根据内容类型选择目录：
+**Step 1**：在 `.wiki/` 对应目录下创建文件
 
-| 目录 | 分类 | 适用场景 |
-|------|------|----------|
-| concepts/ | LearningNote | 技术概念、原理、学习笔记 |
-| entities/ | LearningEssays | 项目随笔、个人思考、产品记录 |
-| comparisons/ | LearningNote | A vs B 类对比分析 |
-| queries/ | LearningNote | 查询结果、FAQ |
+```
+.wiki/
+├── concepts/       ← 技术概念
+├── entities/       ← 实体随笔
+├── comparisons/     ← 对比分析
+├── queries/        ← 查询结果
+└── raw/            ← 原始存档（不发布）
+```
 
-文件模板：
+**Step 2**：填写 frontmatter（必须完整）
+
+```yaml
+---
+title: RAG检索增强生成        # 页面标题（必填）
+type: concepts                # 固定为所在目录名（必填）
+tags: [AI, LLM, RAG]         # 标签（必填）
+created: 2025-09-12          # 创建日期（必填，YYYY-MM-DD）
+updated: 2025-09-12          # 更新日期（必填，YYYY-MM-DD）
+summary: 一句话描述           # 摘要（可选）
+aliases: [别名1, 别名2]      # 别名（可选）
+related: [相关页面1, 相关页面2] # 关联页面（可选）
+---
+```
+
+> ⚠️ **日期格式必须为 `YYYY-MM-DD`**，不能写成 `YYYY/MM/DD`，否则 hexo generate 无法生成文章！
+
+**Step 3**：使用 WikiLink 链接相关内容
 
 ```markdown
----
-title: 文章标题
-created: 2026-04-17
-updated: 2026-04-17
-tags: [AI, 学习]
-aliases: [别名1, 别名2]
-related: [相关页面1, 相关页面2]
-summary: 一句话描述
----
+## RAG 简介
 
-# 文章标题
+RAG（检索增强生成）结合了 [[信息检索]] 和 [[大语言模型]] 的优势...
 
-正文内容...
+## 相关技术
 
-## 参考资料
-
-- [[相关概念]] - 相关链接
+- [[向量数据库]]
+- [[Embedding模型]]
 ```
 
-### 步骤 2：运行同步脚本
+### 3.2 WikiLink 语法
 
-```powershell
-wiki-sync.bat
-```
+| 语法 | 示例 | 输出 |
+|------|------|------|
+| 直接链接 | `[[RAG检索增强生成]]` | 明日方舟风格链接 |
+| 带显示文字 | `[[RAG检索增强生成\|点击这里]]` | "点击这里" |
+| 外部链接 | `[百度](https://baidu.com)` | 普通 Markdown 链接 |
 
-或分步：
+**匹配优先级**：
+1. 精确匹配文件名（不含扩展名）
+2. 大小写不敏感匹配
+3. 前缀模糊匹配
+4. 降级为路径搜索
 
-```powershell
-node tools/sync-wiki-to-dify.js   # 同步到 Dify（AI 对话知识库）
-node scripts/wiki-to-hexo.js      # 转换到 Hexo（发布到博客）
-npx hexo generate                 # 构建静态文件
-npx hexo deploy                   # 部署
-```
+### 3.3 编辑规则
 
----
-
-## 更新现有 Wiki 文章
-
-1. 直接编辑 `.wiki/` 下的对应 `.md` 文件
-2. **记得更新 frontmatter 的 `updated` 字段为当天日期**
-3. 运行 `wiki-sync.bat` 同步
-
----
-
-## 管理 Dify 知识库
-
-### 访问 Dify
-
-| 环境 | 地址 |
+| 规则 | 说明 |
 |------|------|
-| 电脑本地 | http://localhost:80 |
-| 手机（公网） | http://mornikar.tail7ee4f8.ts.net |
+| frontmatter 必填 | 每个 `.md` 必须有完整 frontmatter |
+| 孤立页面禁止 | 每页至少链接 2 个其他页面 |
+| 内容简洁 | 单页控制在 200 行内，超过则拆分 |
+| 先 orient | 每次编辑先读 `SCHEMA.md + index.md + log.md` |
+| 更新 updated | 修改内容后同步更新 frontmatter 的 `updated` 字段 |
 
-### 配置信息（备用）
+---
+
+## 四、Dify 知识库管理
+
+### 4.1 本地访问 Dify
+
+| 地址 | 说明 |
+|------|------|
+| http://localhost/v1 | Dify 主界面 |
+| http://localhost/v1/apps | 应用管理 |
+| http://localhost/v1/datasets | 知识库管理 |
+
+### 4.2 同步 Wiki 到 Dify
+
+```powershell
+# 方式一：使用脚本（推荐）
+node tools/sync-wiki-to-dify.js
+
+# 方式二：手动同步
+# 1. 打开 http://localhost/v1/datasets
+# 2. 进入知识库 "mmo的知识库"
+# 3. 点击「同步」按钮
+```
+
+> 💡 同步后 Dify 会自动重新索引，约需 1-2 分钟。
+
+### 4.3 Dify 应用信息
 
 | 配置项 | 值 |
 |--------|-----|
-| Dataset API Key | `dataset-qfr0cZc2dnjftg5tVTraWRWf` |
-| Dataset ID | `29362489-8750-4915-8cf6-05198f234721` |
+| 应用名称 | 聊天机器人 mornikar |
 | App API Key | `app-JznEvGv3JlWWISRmNdjRO7yE` |
-| LM Studio | `http://localhost:1234/v1` |
-
-### 修改知识库同步脚本
-
-编辑 `tools/sync-wiki-to-dify.js` 中的 CONFIG：
-
-```javascript
-const CONFIG = {
-  apiBase:       'http://localhost/v1',
-  datasetApiKey: 'dataset-YOUR_KEY',    // 替换为你的 Key
-  datasetId:     'YOUR_DATASET_ID',    // 替换为你的 ID
-  wikiDir:       path.resolve(__dirname, '../.wiki'),
-  syncDirs:      ['concepts', 'entities', 'comparisons', 'queries'],
-  dryRun:        process.argv.includes('--dry-run'),
-}
-```
+| 知识库名称 | mmo的知识库 |
+| Dataset API Key | `dataset-qfr0cZc2dnjftg5tVTraWRWf` |
+| 向量数据库 | Weaviate |
 
 ---
 
-## WikiLink 语法
+## 五、Pagefind 搜索
 
-在 Wiki 文章中使用 `[[双括号]]` 链接到其他页面：
+### 5.1 工作原理
 
-```markdown
-[[文章标题]]              # 精确链接
-[[文章标题|显示文字]]      # 带别名显示
-```
+Pagefind 在 `public/` 目录中建立静态全文索引，支持模糊搜索、分词搜索。
 
-脚本自动转换为博客内链。
+### 5.2 构建时机
 
----
-
-## 手机端 AI 对话
-
-wiki-chat.js 自动检测访问来源使用对应的 Dify 地址。手机端通过 Tailscale 访问：
-
-1. 手机安装 Tailscale 并登录同一 GitHub 账号
-2. 访问 http://mornikar.tail7ee4f8.ts.net
-3. 点击右下角 🔵 AI 按钮即可对话
-
----
-
-## 常见问题排查
-
-| 问题 | 解决方案 |
+| 场景 | 构建方式 |
 |------|----------|
-| CI 部署失败 | `gh run view --log` 查看 GitHub Actions 日志 |
-| WikiLink 未匹配 | 目标页面不存在于 `.wiki/` 目录 |
-| Hexo 生成 0 文件 | frontmatter `date` 格式必须是 `YYYY-MM-DD` |
-| GitHub Pages 403 | workflow 需声明 `permissions: contents: write` |
-| Dify 同步失败 | 检查 Docker Desktop 是否运行 |
-| AI 对话报 Failed to fetch | 检查 Dify 和 LM Studio 服务状态 |
+| CI 自动构建 | 每次 push 后自动运行 |
+| 本地调试 | `wiki-sync.bat` 中自动包含 |
+| 手动构建 | `npx pagefind --site public --output-path public/pagefind` |
+
+### 5.3 验证搜索
+
+1. 访问 https://mornikar.github.io/pagefind/
+2. 输入关键词测试搜索
+3. 确认 Wiki 文章能被检索到
 
 ---
 
-## 定期检查清单
+## 六、Tailscale 公网访问
 
-- [ ] Wiki 文件 frontmatter 完整（title, created, updated, tags）
-- [ ] `wiki-sync.bat` 无报错
-- [ ] https://mornikar.github.io/ 页面正常
-- [ ] GitHub Actions CI 成功
-- [ ] Pagefind 搜索可用
-- [ ] Dify AI 对话正常
+### 6.1 设备信息
 
----
+| 设备 | Tailscale IP | 域名 |
+|------|-------------|------|
+| Windows 电脑 | `100.73.236.115` | `mornikar.tail7ee4f8.ts.net` |
+| Android 手机 | `100.69.47.104` | — |
 
-## 开发流程规范
+### 6.2 使用条件
 
-> **AI 主导开发测试，用户只做最终人工验收**
+1. 电脑和手机都安装 Tailscale
+2. 都登录同一个 GitHub 账号
+3. 双方设备都显示「Connected」
 
-| 阶段 | 执行者 | 产出 |
-|------|--------|------|
-| 需求确认 | AI + 用户 | 明确功能点/验收标准 |
-| 开发 | AI | 代码/配置变更 |
-| 自测 | AI | 本地 hexo generate + 浏览器验证 |
-| 多轮迭代 | AI | 修复问题直到稳定 |
-| GitHub 发布 | AI | push → 触发 CI |
-| 人工验收 | 用户 | 访问网站最终确认 |
+### 6.3 访问方式
 
----
-
-## 备份与恢复
-
-### 备份
-
-```powershell
-robocopy /E /MIR D:\Auxiliary_means\Git\mornikar.github.io\Hexo D:\Auxiliary_means\备份\LLM-Wiki-Hexo-YYYYMMDD
+```
+手机访问博客：https://mornikar.tail7ee4f8.ts.net
+手机访问 Dify：http://mornikar.tail7ee4f8.ts.net:18789
 ```
 
-### 恢复
+---
 
-```powershell
-robocopy /E /MIR D:\Auxiliary_means\备份\LLM-Wiki-Hexo-YYYYMMDD\Hexo D:\Auxiliary_means\Git\mornikar.github.io\Hexo
-```
+## 七、GitHub Pages 部署状态
+
+| 项目 | 值 |
+|------|-----|
+| 部署源分支 | `main` |
+| CI 触发条件 | push 到 `source` 分支 |
+| 网站地址 | https://mornikar.github.io |
+| 文档地址 | https://mornikar.github.io/docs/ |
+| CI 历史 | https://github.com/mornikar/mornikar.github.io/actions |
+
+### 手动触发 CI
+
+如果 CI 未自动触发：
+
+1. 打开 https://github.com/mornikar/mornikar.github.io/actions
+2. 点击「Wiki-Hexo 自动部署」
+3. 点击「Run workflow」→ 选择 `source` 分支 → 运行
+
+---
+
+## 八、本地命令速查
+
+| 命令 | 说明 |
+|------|------|
+| `wiki-sync.bat` | 一键同步：清理→转换→生成→搜索→提交→推送 |
+| `wiki-sync.bat --dry-run` | 预览转换结果（不修改文件） |
+| `node scripts/wiki-to-hexo.js` | 仅执行 Wiki → Hexo 转换 |
+| `node scripts/wiki-to-hexo.js --dry-run` | 预览转换结果 |
+| `node scripts/compile_css.js` | 手动编译 Stylus CSS |
+| `node tools/sync-wiki-to-dify.js` | 同步 Wiki 到 Dify |
+| `hexo server` | 本地预览（端口 4000） |
+| `hexo clean` | 清理 public/ 目录 |
+| `hexo generate` | 生成静态文件 |
