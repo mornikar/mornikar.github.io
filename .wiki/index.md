@@ -27,4 +27,12 @@
 
 ## 最近更新
 
+- 2026-04-17: Phase 6 完成，Wiki AI 对话 + Dify 知识库上线
 - 2025-09-12: 初始化 Wiki，完成首批文档
+
+## 项目文档
+
+- [[PROJECT|../PROJECT.md]] — 系统架构总览
+- [[MAINTENANCE|../MAINTENANCE.md]] — 日常使用与维护
+- [[TROUBLESHOOTING|../TROUBLESHOOTING.md]] — 问题与解决方案
+- [[MIGRATION|../MIGRATION.md]] — Wiki 格式规范

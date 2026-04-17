@@ -3,6 +3,15 @@
 > Append-only。每次 wiki-to-hexo.js 成功运行后自动追加记录。
 
 ## 2026
+
+### 2026-04-17
+- Phase 6 完成：Wiki AI 对话侧边栏 + Dify 知识库集成
+- `tools/sync-wiki-to-dify.js` 新增：将 .wiki/ 文件同步到 Dify 知识库
+- `wiki-sync.bat` 升级到 v4.0：新增步骤 2（Dify 同步）
+- Dify LM Studio 插件 SDK 修复：`.dict()` → `.model_dump()`
+- Tailscale 公网穿透部署完成（固定域名：mornikar.tail7ee4f8.ts.net）
+- 文档整合：新增 `PROJECT.md`、`TROUBLESHOOTING.md`，重写 `MAINTENANCE.md`、`MIGRATION.md`、`.wiki/SCHEMA.md`
+
 - 2026-04-15 20:25:46 | concepts | [[AI模型优化训练方向]](concepts\AI模型优化训练方向.md) → LearningNote/
 - 2026-04-15 20:25:46 | concepts | [[RAG检索增强生成]](concepts\RAG检索增强生成.md) → LearningNote/
 - 2026-04-15 20:25:46 | entities | [[Hexo博客升级记录]](entities\Hexo博客升级记录.md) → LearningEssays/
