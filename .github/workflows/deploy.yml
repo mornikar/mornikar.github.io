@@ -135,11 +135,8 @@ jobs:
           cp README.md public/
           echo "README.md → / (仓库主页)"
 
-      - name: 上传页面产物
+      - name: 上传页面产物并部署到 GitHub Pages
+        id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
-
-      - name: 部署到 GitHub Pages（Actions 原生，绕过 legacy Jekyll）
-        id: deployment
-        uses: actions/github-pages@v4
