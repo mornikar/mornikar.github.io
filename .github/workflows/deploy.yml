@@ -7,6 +7,7 @@ on:
     paths:
       - '.wiki/**'
       - 'scripts/wiki-to-hexo.js'
+      - 'scripts/build_docs_html.js'
       - 'tools/sync-wiki-to-dify.js'
       - '_config.yml'
       - 'themes/**'
@@ -119,17 +120,18 @@ jobs:
           echo "=== LearningEssays 页面 ==="
           ls public/LearningEssays/ 2>/dev/null | head -10 || echo "(空)"
 
-      - name: 复制项目文档到 public（供 GitHub Pages 访问）
+      - name: 构建项目文档 HTML
         run: |
-          mkdir -p public/docs
-          # .docs-src/ 不被 hexo 处理，每个文档是子目录/index.md
-          # 复制到 public/docs/ 后，GitHub Pages 自动渲染 index.md
-          # 最终 URL：/docs/PROJECT/、/docs/MAINTENANCE/ 等
-          cp -r .docs-src/* public/docs/
-          # README.md 放到根目录（GitHub 仓库主页会显示）
+          # .docs-src/ 是 markdown 文件，GitHub Pages 不渲染 .md
+          # 用 Node.js + marked 将 markdown 转为 HTML（复用 Hexo 依赖，无需额外安装）
+          node scripts/build_docs_html.js
+          echo "=== docs/ HTML 结构 ==="
+          find public/docs -type f | sort
+
+      - name: 复制 README 到根目录
+        run: |
           cp README.md public/
-          echo "=== docs/ 结构 ==="
-          ls public/docs/
+          echo "README.md → / (仓库主页)"
 
       - name: 部署到 GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
