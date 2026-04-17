@@ -2,26 +2,17 @@
 // Custom styles for Arknights theme
 // =============================================
 
-// #aside-block: 变为 flex 列，撑满剩余空间
-#aside-block {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
 // Footer credit: 水平居中，margin-top:auto 推到 #aside-block 最底部
 .footer-credit {
   text-align: center;
   margin-top: auto;
   padding-top: 16px;
 
-  .footer-title {
-    a {
-      color: var(--link-color);
-      &:hover {
-        color: var(--text-color);
-        text-decoration: underline;
-      }
+  a {
+    text-decoration: underline;
+    &:hover {
+      text-decoration: none;
+      color: var(--text-color);
     }
   }
 
