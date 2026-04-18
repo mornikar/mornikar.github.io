@@ -92,6 +92,7 @@ wiki-sync.bat
 
 | 文档 | 说明 |
 |------|------|
+| [🚀 安装部署指南](/docs/INSTALL/) | **新用户必读**：Fork 本项目 → 配置博客 → GitHub Pages 上线 |
 | [📄 项目总览](/docs/) | 系统架构、组件关系、快速导航 |
 | [📐 系统架构](/docs/PROJECT/) | 目录结构、核心组件、主题定制 |
 | [🔧 维护指南](/docs/MAINTENANCE/) | 日常使用流程、Dify 管理、Tailscale |

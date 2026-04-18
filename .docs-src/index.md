@@ -11,6 +11,7 @@ title: 项目总览
 
 | 文档 | 说明 |
 |------|------|
+| [🚀 安装部署](/docs/INSTALL/) | **新用户必读**：从零部署自己的博客到 GitHub Pages |
 | [📐 系统架构](/docs/PROJECT/) | 目录结构、组件关系、部署流程 |
 | [🔧 维护指南](/docs/MAINTENANCE/) | 日常使用、Wiki 编辑、Dify 同步 |
 | [🔍 故障排查](/docs/TROUBLESHOOTING/) | 常见问题与解决方案 |
