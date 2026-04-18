@@ -126,7 +126,6 @@ feed:
 # Sitemap
 sitemap:
   path: sitemap.xml
-  template: ./sitemap.xml
   rel: false
   tags: true
   categories: true
