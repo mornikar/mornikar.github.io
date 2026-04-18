@@ -9,6 +9,7 @@ on:
       - 'scripts/wiki-to-hexo.js'
       - 'scripts/build_docs_html.js'
       - 'scripts/compile_css.js'
+      - 'scripts/copy-assets.js'
       - 'tools/sync-wiki-to-dify.js'
       - '_config.yml'
       - 'themes/**'
@@ -113,6 +114,9 @@ jobs:
         run: |
           cp README.md public/
           echo "README.md → / (仓库主页)"
+
+      - name: 复制 wiki 资产文件到 public/assets/
+        run: node scripts/copy-assets.js
 
       - name: 部署到 GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
