@@ -531,7 +531,9 @@ function convertSingle(wikiPath, relativePath, wikiMeta) {
         return { title, category, layer, hexoPath, wikiPath, relativePath };
     }
 
-    const bodyConverted = convertWikiLinks(body, wikiMeta);
+    const bodyConverted = convertWikiLinks(body, wikiMeta)
+        // 修复 Hexo/Nunjucks 误解析 Dify 等模板变量（如 {{#var#}}）
+        .replace(/\{\{#/g, '&#123;&#123;#').replace(/#\}\}/g, '#&#125;&#125;');
     const related = frontmatter.related;
     const summary = frontmatter.summary || '';
 

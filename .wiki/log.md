@@ -3,6 +3,77 @@
 > Append-only。每次 wiki-to-hexo.js 成功运行后自动追加记录。
 
 ## 2026
+- 2026-04-18 17:22:45 | concepts | [[AI模型优化训练方向]](concepts\AI模型优化训练方向.md) → LearningNote/
+- 2026-04-18 17:22:45 | concepts | [[RAG检索增强生成]](concepts\RAG检索增强生成.md) → LearningNote/
+- 2026-04-18 17:22:45 | entities | [[Hexo博客升级记录]](entities\Hexo博客升级记录.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["AI工作流"]](raw\articles\AI产品方案\AI工作流.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["AI工作流 工作流"]](raw\articles\AI产品方案\AI工作流_工作流.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["AI本地部署想法"]](raw\articles\AI产品方案\AI本地部署想法.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["AI稳定上线工程化"]](raw\articles\AI产品方案\AI稳定上线工程化.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["PRD模板-小说国际化"]](raw\articles\AI产品方案\PRD模板小说国际化.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["PRD模板通用版"]](raw\articles\AI产品方案\PRD模板通用版.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["企业适用大模型全场景参考（复习版）"]](raw\articles\AI产品方案\企业适用大模型全场景参考_复习.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["内容推荐与增长业务（复习版）"]](raw\articles\AI产品方案\内容推荐增长业务_复习.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["广告复盘"]](raw\articles\AI产品方案\广告复盘.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["数据分析与产品经理"]](raw\articles\AI产品方案\数据分析与产品经理.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["简历业务盘点"]](raw\articles\AI产品方案\简历业务盘点.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["修改意见"]](raw\articles\AI产品方案\面试修改意见参考.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["AIGC指标梳理"]](raw\articles\AI行业分析\AIGC指标梳理.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["AIGC架构面试八股文"]](raw\articles\AI行业分析\AIGC架构面试八股文.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["AI产品经理学习路线"]](raw\articles\AI行业分析\AI产品经理学习路线.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["AI模型优化训练指标"]](raw\articles\AI行业分析\AI模型优化训练指标.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["ChatGPT各版本差异调研"]](raw\articles\AI行业分析\ChatGPT各版本差异调研.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["LLMWiki_VS_RAG调研"]](raw\articles\AI行业分析\LLMWiki_VS_RAG调研.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["大模型解构"]](raw\articles\AI行业分析\大模型解构.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["求职公司记录"]](raw\articles\AI行业分析\求职公司记录.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["CharGLM3部署"]](raw\articles\AI部署\CharGLM3部署.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["Dialoqbase部署"]](raw\articles\AI部署\Dialoqbase部署.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["Dify工作流搭建"]](raw\articles\AI部署\Dify工作流搭建.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["Dify私有化部署"]](raw\articles\AI部署\Dify私有化部署.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["OpenClaw Skills市场"]](raw\articles\AI部署\OpenClaw_Skills市场.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["OpenClaw + LLM 电商平台集成指南"]](raw\articles\AI部署\OpenClaw电商集成.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["Skill封装与优化"]](raw\articles\AI部署\Skill封装与优化.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["电商AI_Claw方案"]](raw\articles\AI部署\电商AI_Claw方案.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["电商自动化Skills"]](raw\articles\AI部署\电商自动化Skills.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["多模态AI笔记"]](raw\articles\多模态\多模态AI笔记.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["AIGC随笔"]](raw\articles\随笔\AIGC随笔.md) → LearningEssays/
+- 2026-04-18 17:22:45 | entities | [["随笔"]](raw\articles\随笔\随笔.md) → LearningEssays/
+- 2026-04-18 17:22:45 | ML | [["Matplotlib基础"]](raw\ML\Matplotlib基础.md) → 机器学习/
+- 2026-04-18 17:22:45 | ML | [["ndarray运算"]](raw\ML\ndarray运算.md) → 机器学习/
+- 2026-04-18 17:22:45 | ML | [["Numpy基础"]](raw\ML\Numpy基础.md) → 机器学习/
+- 2026-04-18 17:22:45 | ML | [["Pandas基础"]](raw\ML\Pandas基础.md) → 机器学习/
+- 2026-04-18 17:22:45 | ML | [["深度学习与机器学习笔记"]](raw\ML\机器学习开课吧笔记.md) → 机器学习/
+- 2026-04-18 17:22:45 | ML | [["机器学习算法分类"]](raw\ML\机器学习算法分类.md) → 机器学习/
+- 2026-04-18 17:22:45 | ML | [["矩阵运算"]](raw\ML\矩阵运算.md) → 机器学习/
+- 2026-04-18 17:22:45 | OS | [["云环境笔记"]](raw\OS\云环境笔记.md) → 云环境/
+- 2026-04-18 17:22:45 | PM | [["企业适用大模型场景参考"]](raw\PM\企业适用大模型场景参考.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | PM | [["内容推荐与增长业务"]](raw\PM\内容推荐与增长业务.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | PM | [["复盘临时文档"]](raw\PM\复盘临时文档.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | PM | [["广告复盘"]](raw\PM\广告复盘.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | PM | [["数据分析与数据产品经理"]](raw\PM\数据分析or数据产品经理.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | PM | [["简历业务盘点"]](raw\PM\简历业务盘点整理版本.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | PM | [["面试修改意见参考"]](raw\PM\面试修改意见参考.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Flask基础"]](raw\skills\flask\Flask基础.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Flask基础（二）"]](raw\skills\flask\Flask基础2.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Flask数据操作"]](raw\skills\flask\Flask数据操作.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Flask数据迁移"]](raw\skills\flask\Flask数据迁移.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Flask注意点"]](raw\skills\flask\Flask注意点.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Flask虚拟环境"]](raw\skills\flask\Flask虚拟环境.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Flask链接MySQL"]](raw\skills\flask\Flask链接MySQL.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Git基础命令"]](raw\skills\git\Git基础命令.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["MySQL操作分类"]](raw\skills\mysql\MySQL操作分类.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["MySQL笔记"]](raw\skills\mysql\MySQL笔记.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Conda启动命令"]](raw\skills\python\Conda启动命令.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Conda基础命令"]](raw\skills\python\Conda基础命令.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Conda必要操作"]](raw\skills\python\Conda必要操作.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Conda环境导入"]](raw\skills\python\Conda环境导入.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Conda环境导入2"]](raw\skills\python\Conda环境导入2.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Conda环境导入3"]](raw\skills\python\Conda环境导入3.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Pip环境导出导入"]](raw\skills\python\Pip环境导出导入.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Vim常用命令"]](raw\skills\ubuntu\Vim常用命令.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["DRF框架"]](raw\skills\web\DRF框架.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | skills | [["Restful风格HTTP接口"]](raw\skills\web\Restful风格HTTP接口.md) → AIGC笔记随笔/
+- 2026-04-18 17:22:45 | snippets | [[PDF嵌入Snippet]](raw\snippets\PDF嵌入Snippet.md) → AIGC笔记随笔/
 - 2026-04-18 17:18:09 | concepts | [[AI模型优化训练方向]](concepts\AI模型优化训练方向.md) → LearningNote/
 - 2026-04-18 17:18:09 | concepts | [[RAG检索增强生成]](concepts\RAG检索增强生成.md) → LearningNote/
 - 2026-04-18 17:18:09 | entities | [[Hexo博客升级记录]](entities\Hexo博客升级记录.md) → LearningEssays/

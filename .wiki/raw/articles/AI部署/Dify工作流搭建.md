@@ -31,7 +31,7 @@ updated: 2026-04-18
           "model": "your-local-model",
           "messages": [
             {"role": "system", "content": "你是一个分类器，请将用户输入分为：A. 闲聊 B. 查知识库 C. 写代码。只返回字母。"},
-            {"role": "user", "content": "{{#start.user_input#}}"}
+            {"role": "user", "content": "&#123;&#123;#start.user_input#&#125;&#125;"}
           ],
           "max_tokens": 5,
           "temperature": 0.1
@@ -65,7 +65,7 @@ updated: 2026-04-18
      
           {
            "model": "qwen/qwen3.5-9b@q4_k_m",
-           "input": "你是一个分类器，请将用户输入分为：A. 闲聊 B. 查知识库 C. 写代码。只返回字母。\n\n用户输入：{{#start.user_input#}}",
+           "input": "你是一个分类器，请将用户输入分为：A. 闲聊 B. 查知识库 C. 写代码。只返回字母。\n\n用户输入：&#123;&#123;#start.user_input#&#125;&#125;",
            "temperature": 0.1
          }
      
@@ -151,7 +151,7 @@ updated: 2026-04-18
         },
         {
           "role": "user",
-          "content": "{{#start.user_input#}}"
+          "content": "&#123;&#123;#start.user_input#&#125;&#125;"
         }
       ],
       "max_tokens": 5,
