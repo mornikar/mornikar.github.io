@@ -15,6 +15,7 @@
 - raw/ 目录重组（87 个文件分到 articles/ML/PM/OS/skills 子目录），全部补全 frontmatter
 - Dialoqbase部署.md 中的 API Key 已替换为占位符（防止 GitHub Secret Scanning 拦截推送）
 - `.github/workflows/deploy.yml` CI 触发路径加入 `scripts/compile_css.js`
+- ⚠️ **Pages 部署异常**：CI `deploy-pages@v4` 步骤报告成功，但 GitHub Pages 停留在旧 commit `d062660`（4/17）。排查后发现 CI 产物正常上传，但 Pages 服务层未更新。已通过 workflow_dispatch 重新触发。
 
 ### 2026-04-17
 - Phase 6 完成：Wiki AI 对话侧边栏 + Dify 知识库集成
