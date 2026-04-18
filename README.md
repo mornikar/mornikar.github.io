@@ -6,6 +6,13 @@
 
 ---
 
+🌐 LLM Wiki + Hexo 博客
+
+**🌐 在线访问**：
+https://mornikar.github.io/docs/
+
+---
+
 ## 🛠️ 技术栈
 
 | 技术 | 版本 | 用途 |
