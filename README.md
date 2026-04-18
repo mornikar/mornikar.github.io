@@ -116,8 +116,9 @@ scripts/                   ← 自动化脚本
   → GitHub Actions CI 自动触发
       ① wiki-to-hexo.js 转换格式
       ② hexo generate 生成 HTML
-      ③ Pagefind 建立搜索索引
-      ④ deploy-pages 部署到 GitHub Pages
+      ③ compile_css.js 编译 Stylus（含 wiki-chat/wikilink 样式）
+      ④ Pagefind 建立搜索索引
+      ⑤ deploy-pages 部署到 GitHub Pages
   → https://你的用户名.github.io 上线（2~3 分钟）
 ```
 

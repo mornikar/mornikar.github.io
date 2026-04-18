@@ -27,6 +27,7 @@
 
 ## 最近更新
 
+- 2026-04-18: CI 故障修复，移除 hexo-renderer-stylus，解决 CSS 编译死循环；raw/ 目录重组；PDF.js 嵌入支持
 - 2026-04-17: Phase 6 完成，Wiki AI 对话 + Dify 知识库上线
 - 2025-09-12: 初始化 Wiki，完成首批文档
 

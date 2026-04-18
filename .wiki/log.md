@@ -4,6 +4,18 @@
 
 ## 2026
 
+### 2026-04-18
+- CI CSS 编译故障排查：
+  - **问题1**：`compile_css.js` 被 hexo-renderer-stylus 错误触发（stylus 渲染时 `public/css/` 尚未创建）
+  - **修复**：移除 `hexo-renderer-stylus`；`compile_css.js` 改用 Hexo `after_generate` hook；CI workflow 直接调用 `node scripts/compile_css.js`
+  - **问题2**：sitemap generator 找不到 `./sitemap.xml` 模板
+  - **修复**：移除 `_config.yml` 中的 `template: ./sitemap.xml`（使用内置模板）
+  - commit `23c2d9a` → CI 成功 ✅
+- PDF.js v4.4.168 已装到 `themes/arknights/source/lib/pdfjs/`
+- raw/ 目录重组（87 个文件分到 articles/ML/PM/OS/skills 子目录），全部补全 frontmatter
+- Dialoqbase部署.md 中的 API Key 已替换为占位符（防止 GitHub Secret Scanning 拦截推送）
+- `.github/workflows/deploy.yml` CI 触发路径加入 `scripts/compile_css.js`
+
 ### 2026-04-17
 - Phase 6 完成：Wiki AI 对话侧边栏 + Dify 知识库集成
 - `tools/sync-wiki-to-dify.js` 新增：将 .wiki/ 文件同步到 Dify 知识库

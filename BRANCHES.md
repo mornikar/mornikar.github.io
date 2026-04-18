@@ -61,6 +61,8 @@ source 分支（当前仓库）
 │   ├── wiki-to-hexo.js
 │   ├── build_docs_html.js
 │   └── compile_css.js
+├── tools/               ← 辅助工具
+│   └── sync-wiki-to-dify.js  ← Wiki → Dify 知识库同步
 ├── .github/workflows/   ← CI 工作流
 └── _config.yml          ← Hexo 配置
 ```
@@ -82,11 +84,11 @@ source 分支（当前仓库）
 │  GitHub source 分支                  │
 │                                      │
 │  CI 自动触发构建                      │
-│  ├─ npm install                     │
+│  ├─ npm ci                         │
 │  ├─ wiki-to-hexo.js                 │
 │  ├─ hexo generate                   │
-│  ├─ compile_css.js                  │
-│  ├─ pagefind                        │
+│  ├─ compile_css.js                  │  ← stylus 直接编译（hexo-renderer-stylus 已移除）
+│  ├─ Pagefind                        │
 │  ├─ build_docs_html.js              │  ← .docs-src/*.md → HTML
 │  ├─ cp README.md                    │
 │  ├─ upload-pages-artifact            │
@@ -121,7 +123,8 @@ source 分支（当前仓库）
 | `.wiki/**` | Wiki 源文档变更 |
 | `scripts/wiki-to-hexo.js` | 转换脚本更新 |
 | `scripts/build_docs_html.js` | 文档构建脚本 |
-| `scripts/sync-wiki-to-dify.js` | Dify 同步脚本 |
+| `scripts/compile_css.js` | CSS 编译脚本 |
+| `tools/sync-wiki-to-dify.js` | Dify 同步脚本 |
 | `_config.yml` | Hexo 配置 |
 | `themes/**` | 主题代码 |
 | `.github/workflows/**` | CI 工作流 |

@@ -8,6 +8,7 @@ on:
       - '.wiki/**'
       - 'scripts/wiki-to-hexo.js'
       - 'scripts/build_docs_html.js'
+      - 'scripts/compile_css.js'
       - 'tools/sync-wiki-to-dify.js'
       - '_config.yml'
       - 'themes/**'
@@ -82,8 +83,8 @@ jobs:
       - name: 生成静态文件
         run: npx hexo generate
 
-      # 手动编译主题 CSS：hexo-renderer-stylus 在 CI 中无法解析多级 @import
-      # 直接用 Node.js + stylus 编译，绕过 hexo 的 CSS 处理
+      # hexo-renderer-stylus 已移除（多级 @import bug）；stylus 作为 devDependency
+      # 直接用 Node.js + stylus 编译主题 CSS（含 wiki-chat/wikilink 样式）
       - name: 编译完整 CSS（含 wiki-chat 样式）
         run: node scripts/compile_css.js
 

@@ -185,39 +185,22 @@ fetch('/js/wiki-chat.js')
 
 ---
 
-## 5. CSS 编译失败
+## 5. CSS 样式不完整
 
-**症状**：`hexo generate` 报错 `Error: ENOENT` 或 Stylus 语法错误。
+**症状**：`arknights.css` 体积很小（几 KB），WikiLink、wiki-chat 样式丢失。
 
-### 原因
+**原因**：`hexo-renderer-stylus` 已从依赖中移除，Stylus 源文件不会被自动编译进 `arknights.css`。
 
-`hexo-renderer-stylus` 无法处理多级 `@import`，导致 `wikilink.styl` 等文件未被编译进 `arknights.css`。
+**解决方案**
 
-### 解决方案
-
-**Step 1**：本地修复
+`compile_css.js` 在 CI 中独立运行（`hexo generate` 后），本地也通过 Hexo `after_generate` hook 自动触发：
 
 ```powershell
-# 方式一：使用编译脚本
+# 本地手动触发
 node scripts/compile_css.js
-
-# 方式二：手动编译
-node -e "const stylus=require('stylus'),fs=require('fs');stylus(fs.readFileSync('themes/arknights/source/css/arknights.styl','utf8')).set('paths',['themes/arknights/source/css/_modules','themes/arknights/source/css/_core','themes/arknights/source/css/_custom','themes/arknights/source/css/_page']).render((e,c)=>{if(e)console.error(e);else fs.writeFileSync('public/css/arknights.css',c)})"
 ```
 
-**Step 2**：验证编译结果
-
-```powershell
-# 检查文件是否存在
-dir public/css/arknights.css
-
-# 检查文件大小（应有数十 KB）
-dir public/css/arknights.css | findstr "bytes"
-```
-
-**Step 3**：推送并确认 CI 使用了编译脚本
-
-CI 日志中应看到 `compile_css.js` 执行记录。
+验证编译成功：检查 `public/css/arknights.css` 是否存在且 > 50KB。
 
 ---
 

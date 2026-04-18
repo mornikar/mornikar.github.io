@@ -88,15 +88,15 @@ push to source
 │    GitHub Actions CI            │
 │                                │
 │  ① Checkout source             │
-│  ② npm install                 │
-│  ③ node wiki-to-hexo.js        │
-│  ④ hexo generate               │
-│  ⑤ node compile_css.js         │  ← 处理多级 @import
-│  ⑥ npx pagefind                │
-│  ⑦ node build_docs_html.js      │  ← .docs-src/*.md → HTML
-│  ⑧ cp README.md public/        │
-│  ⑨ upload-pages-artifact         │
-│  ⑩ deploy-pages                 │  ← Actions 原生 Pages 部署 |
+│  ② npm ci                     │
+│  ③ wiki-to-hexo.js            │
+│  ④ hexo generate              │
+│  ⑤ compile_css.js            │  ← stylus 直接编译（无 hexo-renderer-stylus）
+│  ⑥ Pagefind 索引              │
+│  ⑦ build_docs_html.js         │  ← .docs-src/*.md → HTML
+│  ⑧ cp README.md              │
+│  ⑨ upload-pages-artifact      │
+│  ⑩ deploy-pages              │  ← Actions 原生 Pages 部署 |
 └─────────────────────────────────┘
        │
        ▼
@@ -114,7 +114,8 @@ https://mornikar.github.io
 | `.wiki/**` | Wiki 源文档变更 |
 | `scripts/wiki-to-hexo.js` | 转换脚本更新 |
 | `scripts/build_docs_html.js` | 文档构建脚本 |
-| `scripts/sync-wiki-to-dify.js` | Dify 同步脚本 |
+| `scripts/compile_css.js` | CSS 编译脚本 |
+| `tools/sync-wiki-to-dify.js` | Dify 同步脚本 |
 | `_config.yml` | Hexo 配置 |
 | `themes/**` | 主题代码 |
 | `.github/workflows/**` | CI 工作流 |
@@ -192,15 +193,16 @@ Hexo 7 的 `_buildLocals` 将 frontmatter 扁平化，导致 pug-runtime 的 `co
 | `scripts/hexo7-pug-fix.js` | patch `node_modules/hexo-renderer-pug/lib/pug.js` |
 | `layout.pug` | 使用 `page` 局部变量而非裸函数调用 |
 
-### 5.3 Stylus 多级 @import 编译
+### 5.3 Stylus CSS 编译
 
-hexo-renderer-stylus 无法处理多级 `@import`，CI 中改用 Node.js stylus 直接编译：
+`hexo-renderer-stylus` 已从依赖中移除（其多级 @import 处理有 bug）。`stylus` 作为 devDependency 直接使用：
 
 ```bash
 node scripts/compile_css.js
 ```
 
-本地如有同样问题，运行同目录命令。
+- **本地**：通过 Hexo `after_generate` hook 自动触发（`compile_css.js` 检测 `typeof hexo !== 'undefined'`）
+- **CI**：workflow 中显式调用 `node scripts/compile_css.js`（在 `hexo generate` 之后）
 
 ---
 
