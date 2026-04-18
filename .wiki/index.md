@@ -1,5 +1,7 @@
 ---
+
 ---
+
 # LLM Wiki 索引
 
 > Dr.GT_Mornikar 的知识库
@@ -37,3 +39,19 @@
 - [维护指南](/docs/MAINTENANCE/) — 日常使用流程、Dify 管理
 - [故障排查](/docs/TROUBLESHOOTING/) — 常见问题与解决方案
 - [迁移规范](/docs/MIGRATION/) — Wiki 格式规范、CI 部署说明
+
+## 统计
+
+- concepts: 2
+- entities: 1
+- comparisons: 0
+- queries: 0
+- 总计: 3
+
+## 统计
+
+- concepts: 2
+- entities: 1
+- comparisons: 0
+- queries: 0
+- 总计: 3

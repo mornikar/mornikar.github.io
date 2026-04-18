@@ -64,6 +64,7 @@ default_category: uncategorized
 category_map:
   LearningNote: 笔记
   LearningEssays: 随笔
+  AIGC笔记随笔: AIGC
   docker: Docker
   Ubuntu: Ubuntu
   flask: Flask
@@ -75,8 +76,8 @@ category_map:
   机器学习: 机器学习
   测试: 测试
   随笔未整理: 随笔
-  AIGC笔记随笔: AIGC
   conda: Anaconda
+
 tag_map:
   AIGC: AIGC
   Docker: Docker

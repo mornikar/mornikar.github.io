@@ -33,10 +33,27 @@ const CATEGORY_MAP = {
     entities:    'LearningEssays',
     comparisons: 'LearningNote',
     queries:     'LearningNote',
+    // raw/articles 子目录映射
+    'AI产品方案': 'AIGC笔记随笔',
+    'AI行业分析': 'AIGC笔记随笔',
+    'AI部署':     'AIGC笔记随笔',
+    '多模态':     'AIGC笔记随笔',
+    '随笔':       'AIGC笔记随笔',
+    // raw/ 顶级子目录
+    'ML':        '机器学习',
+    'OS':        '云环境',
+    'PM':        'AIGC笔记随笔',
+    'skills':    'AIGC笔记随笔',
+    'snippets':  'AIGC笔记随笔',
 };
 
 // Wiki 层名称
 const LAYER_DIRS = ['concepts', 'entities', 'comparisons', 'queries'];
+
+// raw/articles 子目录（这些文章在 raw/articles/SUBDIR/*.md，映射到对应分类）
+const RAW_ARTICLE_SUBDIRS = ['AI产品方案', 'AI行业分析', 'AI部署', '多模态', '随笔'];
+// raw/ 顶级子目录（直接在 raw/SUBDIR/*.md）
+const RAW_TOP_SUBDIRS = ['ML', 'OS', 'PM', 'skills', 'snippets'];
 
 // ============ 参数解析 ============
 const args = process.argv.slice(2);
@@ -261,10 +278,12 @@ function processFrontmatterEnhancements(frontmatter, layer, wikiMeta) {
     if (!tags.includes('wiki')) tags.unshift('wiki');
 
     // 分类处理
-    // Phase 2: 支持 wikiCategory 覆盖
-    let category = CATEGORY_MAP[layer] || 'LearningNote';
-    if (frontmatter.wikiCategory && ['LearningNote', 'LearningEssays'].includes(frontmatter.wikiCategory)) {
+    // 优先使用 wikiCategory，否则查 CATEGORY_MAP（支持 raw 子目录），最后默认
+    let category = null;
+    if (frontmatter.wikiCategory && ['LearningNote', 'LearningEssays', 'AIGC笔记随笔', '机器学习', '云环境'].includes(frontmatter.wikiCategory)) {
         category = frontmatter.wikiCategory;
+    } else {
+        category = CATEGORY_MAP[layer] || 'LearningNote';
     }
 
     // 别名处理
@@ -301,24 +320,47 @@ function main() {
         }
     });
 
-    const stats = { concepts: 0, entities: 0, comparisons: 0, queries: 0, skipped: 0 };
+    const stats = { concepts: 0, entities: 0, comparisons: 0, queries: 0, skipped: 0,
+        'AI产品方案': 0, 'AI行业分析': 0, 'AI部署': 0, '多模态': 0, '随笔': 0,
+        'ML': 0, 'OS': 0, 'PM': 0, 'skills': 0, 'snippets': 0 };
     const converted = [];
 
-    function scanWiki(dir) {
+    function scanWiki(dir, inRaw) {
         const items = fs.readdirSync(dir);
         for (const item of items) {
             const fullPath = path.join(dir, item);
             const stat = fs.statSync(fullPath);
 
             if (stat.isDirectory()) {
-                if (LAYER_DIRS.includes(item) || item === 'raw') {
-                    scanWiki(fullPath);
+                // 在 .wiki/ 顶层：只扫描 layer 目录和 raw
+                // 进入 raw/ 后：扫描所有子目录（raw/articles/SUBDIR, raw/ML, raw/skills 等）
+                if (inRaw || LAYER_DIRS.includes(item) || item === 'raw') {
+                    scanWiki(fullPath, inRaw || item === 'raw');
                 }
             } else if (item.endsWith('.md')) {
                 const relativePath = path.relative(WIKI_DIR, fullPath);
-                const layer = relativePath.split(path.sep)[0];
+                const parts = relativePath.split(path.sep);
 
-                if (!LAYER_DIRS.includes(layer)) continue;
+                // 判断 layer 来源：
+                // 1. raw/articles/SUBDIR/*.md → frontmatter.type 或 SUBDIR
+                // 2. raw/SUBDIR/*.md（SUBDIR in RAW_TOP_SUBDIRS）→ SUBDIR
+                // 3. .wiki/layer/*.md → layer
+                let layer = parts[0];
+                if (layer === 'raw' && parts.length >= 3 && parts[1] === 'articles') {
+                    // raw/articles/SUBDIR/*.md：优先用 frontmatter.type，否则用 SUBDIR
+                    const fm = parseFrontmatter(fs.readFileSync(fullPath, 'utf-8')).frontmatter;
+                    layer = (fm && fm.type && LAYER_DIRS.includes(fm.type)) ? fm.type : parts[2];
+                } else if (layer === 'raw' && parts.length >= 2) {
+                    layer = parts[1];
+                }
+
+                // 跳过不在 LAYER_DIRS 的 layer（除非是 raw 子目录映射）
+                if (!LAYER_DIRS.includes(layer) && !RAW_ARTICLE_SUBDIRS.includes(layer) && !RAW_TOP_SUBDIRS.includes(layer)) {
+                    // 如果 frontmatter 有 type 且是 layer，优先使用
+                    const fm = parseFrontmatter(fs.readFileSync(fullPath, 'utf-8')).frontmatter;
+                    if (!(fm && fm.type && LAYER_DIRS.includes(fm.type))) continue;
+                    layer = fm.type;
+                }
 
                 const contentMd5 = md5File(fullPath);
                 const prev = prevMeta[fullPath];
@@ -467,13 +509,21 @@ function convertSingle(wikiPath, relativePath, wikiMeta) {
     const content = fs.readFileSync(wikiPath, 'utf-8');
     const { frontmatter, body } = parseFrontmatter(content);
 
-    const layer = relativePath.split(path.sep)[0];
+    const parts = relativePath.split(path.sep);
+    let layer = parts[0];
+    if (layer === 'raw' && parts.length >= 3 && parts[1] === 'articles') {
+        layer = (frontmatter.type && LAYER_DIRS.includes(frontmatter.type)) ? frontmatter.type : parts[2];
+    } else if (layer === 'raw' && parts.length >= 2) {
+        layer = parts[1];
+    }
     const { tags, category, aliases } = processFrontmatterEnhancements(frontmatter, layer, wikiMeta);
 
     const created = frontmatter.created || new Date().toISOString().split('T')[0];
     const title = frontmatter.title || path.basename(wikiPath, '.md');
     const hexoDate = created.replace(/\//g, '-');
-    const filename = `${hexoDate}-${title}.md`;
+    // 文件名需要清理非法字符（Windows 不支持 \ / : * ? " < > |）
+    const safeName = slugify(title);
+    const filename = `${hexoDate}-${safeName}.md`;
     const hexoPath = path.join(POSTS_DIR, category, filename);
 
     if (DRY_RUN) {

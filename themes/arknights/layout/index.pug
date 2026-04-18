@@ -1,8 +1,6 @@
 extends includes/layout.pug
 
 block content
-  include includes/docs-home.pug
-  .posts-title 最新文章
   .posts
     include includes/recent-posts.pug
   #paginator!= paginator()
