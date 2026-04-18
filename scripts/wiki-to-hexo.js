@@ -393,9 +393,45 @@ function main() {
     }
 
     console.log('\n✨ ' + (DRY_RUN ? 'Dry-run 完成！' : '转换完成！'));
-    if (!DRY_RUN && converted.length > 0) {
-        console.log('   运行 hexo generate 构建博客');
+    if (!DRY_RUN) {
+        copyAssets();
+        if (converted.length > 0) {
+            console.log('   运行 hexo generate 构建博客');
+        }
     }
+}
+
+// ============ Phase 2 新增：assets 拷贝 ============
+
+function copyAssets() {
+    const srcAssets = path.join(WIKI_DIR, 'raw', 'assets');
+    const SOURCE_DIR = path.join(__dirname, '..', 'source');
+    const dstAssets = path.join(SOURCE_DIR, 'assets');
+
+    if (!fs.existsSync(srcAssets)) {
+        console.log('  (raw/assets 不存在，跳过 assets 拷贝)');
+        return;
+    }
+
+    fs.mkdirSync(dstAssets, { recursive: true });
+
+    let count = 0;
+    function copyDir(src, dst) {
+        fs.mkdirSync(dst, { recursive: true });
+        fs.readdirSync(src, { withFileTypes: true }).forEach(entry => {
+            const srcPath = path.join(src, entry.name);
+            const dstPath = path.join(dst, entry.name);
+            if (entry.isDirectory()) {
+                copyDir(srcPath, dstPath);
+            } else {
+                fs.copyFileSync(srcPath, dstPath);
+                count++;
+            }
+        });
+    }
+
+    copyDir(srcAssets, dstAssets);
+    console.log(`  📎 已拷贝 ${count} 个 assets 文件到 source/assets/`);
 }
 
 function generateHexoContent(result, prevWikiMeta) {

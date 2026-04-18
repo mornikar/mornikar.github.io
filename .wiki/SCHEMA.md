@@ -10,9 +10,13 @@
 ├── index.md           # 索引 — 所有页面的总览
 ├── log.md             # 操作日志 — append-only
 ├── raw/               # Layer 1：不可变原始材料（不发布）
-│   ├── articles/     #   网络文章
-│   ├── papers/        #   学术论文
-│   └── transcripts/  #   会议记录 / 访谈
+│   ├── articles/     #   主题文章（AI行业分析、AI产品方案、AI部署、多模态、随笔）
+│   ├── ML/           #   机器学习笔记
+│   ├── PM/           #   产品经理资料
+│   ├── OS/           #   操作系统 / 云环境
+│   ├── skills/       #   技能笔记（flask/git/mysql/python/ubuntu/web）
+│   ├── configs/       #   配置文件
+│   └── assets/       #   图片等资源
 ├── concepts/          # Layer 2：技术概念 → LearningNote
 ├── entities/          # Layer 2：实体随笔 → LearningEssays
 ├── comparisons/       # Layer 2：对比分析 → LearningNote
@@ -61,6 +65,18 @@ summary: 一句话描述                 # 可选，用于 index 和 meta
 
 **注意：** 新增标签需先更新本文件，禁止自由添加未列在此处的标签。
 
+## assets/ 目录（PDF 等二进制资源）
+
+```
+.wiki/raw/assets/          # 放 PDF、图片等资源（不参与 wiki 层发布）
+  └── *.pdf, *.png, ...
+```
+
+- **PDF 文件**：放 `raw/assets/`，通过 wiki-to-hexo 自动拷贝到 Hexo `source/assets/`
+- **嵌入方式**：复制 `snippets/PDF嵌入Snippet.md` 中的 HTML 模板到文章
+- **PDF.js**：已内置到 `themes/arknights/source/lib/pdfjs/`（v4.4.168），无需额外安装
+- **文件大小建议**：单个 PDF < 20MB（GitHub 单文件限制 100MB）
+
 ## WikiLink 规范
 
 使用 `[[双括号]]` 链接到同 Wiki 的其他页面：
@@ -86,7 +102,8 @@ summary: 一句话描述                 # 可选，用于 index 和 meta
 4. **内容简洁** — 单页控制在 200 行内，超过则拆分
 5. **更新 updated** — 修改内容后同步更新 frontmatter 的 updated 字段
 6. **raw/ 不可修改** — 原始资料保持不变，修正放 wiki 页面
-7. **冲突处理** — 脚本检测到冲突时自动生成 `.conflict.backup.md`
+7. **raw/ frontmatter 必填** — raw/ 目录所有 .md 文件同样需要 title/type/tags/frontmatter
+8. **冲突处理** — 脚本检测到冲突时自动生成 `.conflict.backup.md`
 
 ## 同步流程
 

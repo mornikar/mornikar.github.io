@@ -1,0 +1,148 @@
+---
+title: "多模态AI笔记"
+type: entities
+tags: [多模态, AI]
+created: 2026-04-18
+updated: 2026-04-18
+---
+
+
+
+
+LLM领域的AI应用
+
+
+
+1、基座模型与上层应用，分层清晰、各有空间
+
+2、应用层几乎不涉及模型和算法
+
+3、逻辑性抢、更容易量化
+
+
+
+
+
+多模态领域的AI应用
+
+1、模型即是应用
+
+2、多模型模块的组合
+
+3、多模块底层逻辑的理解
+
+
+
+![ea5705823bbc7b820471ffb5ea7aa77](C:\Users\Q\Documents\工作资料\简历\AIGC笔记随笔\多模态Image\ea5705823bbc7b820471ffb5ea7aa77.jpg)
+
+
+
+
+
+
+
+
+
+
+
+多模态领域的重要技术突破：
+
+语言与视觉打通的Clip（contrastive Language-Image pre-training ）openAI于2021-1月发布
+
+
+
+
+
+向量、空间、特征
+
+
+
+
+
+1、Contrastive pre-training
+
+大量训练数据、弱监督训练
+
+OpenAI对其设计了简单模型结构：相似度运算
+
+![5a417d362a3b571849bb943a5e8ef38](C:\Users\Q\Documents\工作资料\简历\AIGC笔记随笔\多模态Image\5a417d362a3b571849bb943a5e8ef38.jpg)
+
+![9657e450d5f862ec36c9949812edc7e](C:\Users\Q\Documents\工作资料\简历\AIGC笔记随笔\多模态Image\9657e450d5f862ec36c9949812edc7e.jpg)
+
+
+
+各种多模态的模块组合与学习:
+
+
+
+如：Text2Image（文生图-文字生成图片Text to Image）
+
+2022.4 DALLE2组合了
+
+1、Clip Text Encoder
+
+2、Diffusion Model 中的逆向扩散过程
+
+两个模型中间用一个Transformer Decoder 串联起来
+
+
+
+
+
+2022.8 Stablel Diffusion 发现了
+
+1、Runway首席科学家Patrick Esser 发表了一遍有关Latent Diffusion Model的论文
+
+2、用代码把论文里的模型实现了一遍
+
+![3d82f987ced5ed297f2c923a3db6e68](C:\Users\Q\Documents\工作资料\简历\AIGC笔记随笔\多模态Image\3d82f987ced5ed297f2c923a3db6e68.jpg)
+
+
+
+
+
+如：Text2Video（文生视频-文字生成视频Text to Video）
+
+2023.3月 发布的Gen2 里面组合了
+
+1、Clip Text Encoder
+
+2、Diffusion Model中的逆向扩散过程
+
+（逆向扩散过程：如清晰的一张图逐渐加噪点变模糊化，这叫扩散，逆向扩散就是一张模糊的旧图逆向训练成清晰的图）
+
+3、Latent Diffusion Model中的潜在空间
+
+
+
+
+
+20024.2 发布的Sora组合了
+
+1、DALLLE3的Caption improvement
+
+2、Meta ICCV2023的DIT（Duffusion Transformer）替换U-Net
+
+3、Google ICCV2021 的ViViT（A Video Vision Transformer）
+
+![cadfdb5b613b92f0e3934de174ee074](C:\Users\Q\Documents\工作资料\简历\AIGC笔记随笔\多模态Image\cadfdb5b613b92f0e3934de174ee074.jpg)
+
+建议：
+
+1、不要一上来就做一个单独的AI产品
+
+2、从一个优化带你开始
+
+3、2C产品建议从留存、活跃、互动率考虑
+
+4、2B从大规模效率出发
+
+5、内部系统从用户操作复杂度
+
+
+
+
+
+
+
+学习模型原理、学习模型边界、学习多模态的各种模块
