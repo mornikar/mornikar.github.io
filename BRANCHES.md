@@ -1,7 +1,7 @@
 # 🌲 分支架构说明
 
-> 本文件说明 mornikar.github.io 仓库的分支结构与工作流程。  
-> **最后更新**：2026-04-17
+> 本文件说明 mornikar.github.io 仓库的分支结构与工作流程。
+> **最后更新**：2026-04-18
 
 ---
 
@@ -41,37 +41,29 @@
 **主要内容**：
 
 ```
-source/
-├── source/_posts/       ← Hexo 文章（由 wiki-to-hexo.js 生成）
-│   ├── LearningNote/
-│   └── LearningEssays/
-├── themes/              ← 主题代码
-│   └── arknights/
-├── scripts/             ← 自动化脚本
-│   ├── wiki-to-hexo.js
-│   ├── build_docs_html.js  ← .docs-src/ → HTML
-│   └── compile_css.js
-├── .wiki/               ← Wiki 源文档
+source 分支（当前仓库）
+├── .wiki/               ← Wiki 源文档（编辑入口）
 │   ├── concepts/
 │   ├── entities/
 │   └── ...
-├── .docs-src/           ← 项目文档（由 build_docs_html.js 转 HTML）
+├── .docs-src/           ← 项目文档（CI 用 build_docs_html.js 转 HTML）
 │   ├── index.md
+│   ├── INSTALL/index.md      ← 安装部署指南
 │   ├── PROJECT/index.md
 │   ├── MAINTENANCE/index.md
 │   ├── TROUBLESHOOTING/index.md
 │   └── MIGRATION/index.md
+├── source/_posts/       ← Hexo 文章（由 wiki-to-hexo.js 自动生成）
+│   ├── LearningNote/
+│   └── LearningEssays/
+├── themes/arknights/   ← 主题代码
+├── scripts/             ← 自动化脚本
+│   ├── wiki-to-hexo.js
+│   ├── build_docs_html.js
+│   └── compile_css.js
 ├── .github/workflows/   ← CI 工作流
 └── _config.yml          ← Hexo 配置
 ```
-
-### gh-pages（旧部署分支，已废弃）
-
-| 属性 | 值 |
-|------|-----|
-| **历史** | legacy GitHub Pages 从 `gh-pages` 读取（peaceiris/actions-gh-pages） |
-| **现状** | 已切换到 `main` + `build_type=workflow`，此分支保留作备份 |
-| **操作** | 可保留，无需删除 |
 
 ---
 
@@ -174,6 +166,7 @@ source/
 
 | 文档 | 地址 |
 |------|------|
+| 🚀 安装部署 | https://mornikar.github.io/docs/INSTALL/ |
 | 🌐 项目总览 | https://mornikar.github.io/docs/ |
 | 📐 系统架构 | https://mornikar.github.io/docs/PROJECT/ |
 | 🔧 维护指南 | https://mornikar.github.io/docs/MAINTENANCE/ |
@@ -189,5 +182,6 @@ source/
 |------|------|
 | GitHub 仓库 | https://github.com/mornikar/mornikar.github.io |
 | 网站主站 | https://mornikar.github.io/ |
+| 项目文档站 | https://mornikar.github.io/docs/ |
 | CI 构建历史 | https://github.com/mornikar/mornikar.github.io/actions |
-| Wiki Schema | https://mornikar.github.io/wiki/index.html |
+| Releases 下载 | https://github.com/mornikar/mornikar.github.io/releases |

@@ -16,7 +16,7 @@ title: 项目总览
 | [🔧 维护指南](/docs/MAINTENANCE/) | 日常使用、Wiki 编辑、Dify 同步 |
 | [🔍 故障排查](/docs/TROUBLESHOOTING/) | 常见问题与解决方案 |
 | [📋 迁移规范](/docs/MIGRATION/) | Wiki 格式、WikiLink、frontmatter |
-| [🌲 分支说明](/docs/BRANCHES/) | source/main/gh-pages 分支关系 |
+| [🌲 分支说明](/docs/BRANCHES/) | source/main 分支关系、工作流程 |
 
 ---
 
@@ -69,7 +69,7 @@ wiki-sync.bat --dry-run
 
 ### 方式三：仅文档贡献者
 
-直接编辑 `source/docs/` 目录下的 Markdown 文件，推送后 CI 自动部署到 `/docs/`。
+直接编辑 `.docs-src/` 目录下的 Markdown 文件，推送后 CI 自动将 Markdown 转换为 HTML 并部署到 `/docs/`。
 
 ---
 
@@ -94,9 +94,9 @@ wiki-sync.bat --dry-run
 ┌─────────────────────────────────────────────────────┐
 │                 GitHub Pages                          │
 │                                                     │
-│  source 分支  ──→  CI  ──→  main 分支              │
-│                           │                         │
-│                           ▼                         │
+│  source 分支  ──→  CI  ──→  main 分支（Actions 原生 Pages）│
+│                              │                       │
+│                              ▼                       │
 │  mornikar.github.io  +  /docs/                      │
 └─────────────────────────────────────────────────────┘
 ```
