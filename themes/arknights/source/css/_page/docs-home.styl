@@ -1,0 +1,57 @@
+// Docs 文档导航卡片（首页专用）
+#docs-home
+  margin-bottom 30px
+
+.docs-section-title
+  color var(--theme-highlight)
+  font-size 1.1rem
+  font-weight bold
+  padding 0 0 12px 0
+  margin 0 0 10px 0
+  border-bottom 2px solid var(--theme-highlight)
+
+.docs-cards
+  display grid
+  grid-template-columns repeat(auto-fill, minmax(220px, 1fr))
+  gap 12px
+  margin-bottom 8px
+
+.docs-card
+  background-color var(--theme-bg-trans1)
+  border 1px solid var(--theme-unimportant)
+  padding 14px 16px
+  display block
+  transition .3s
+  position relative
+  &:hover
+    background-color var(--theme-highlight)
+    border-color var(--theme-highlight)
+    .docs-card-title,
+    .docs-card-desc
+      color var(--theme-text-hover)
+    .docs-card-icon
+      color var(--theme-text-hover)
+  .docs-card-icon
+    font-size 1.4rem
+    margin-bottom 6px
+    display block
+  .docs-card-title
+    color var(--theme-text-light)
+    font-weight bold
+    font-size 0.95rem
+    margin-bottom 4px
+    line-height 1.3
+  .docs-card-desc
+    color var(--theme-unimportant)
+    font-size 0.8rem
+    line-height 1.4
+    margin 0
+
+// 博客文章标题（在 docs 卡片之后）
+.posts-title
+  color var(--theme-highlight)
+  font-size 1.1rem
+  font-weight bold
+  padding 0 0 12px 0
+  margin 20px 0 10px 0
+  border-bottom 2px solid var(--theme-highlight)
