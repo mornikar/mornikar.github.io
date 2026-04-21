@@ -18,7 +18,8 @@ title: 故障排查
 | CSS 编译失败 | Stylus @import 问题 | [§5](#5-css-编译失败) |
 | Pug 渲染错误 | hexo7-pug-fix 未生效 | [§6](#6-pug-渲染错误) |
 | GitHub Pages 404 | 分支/路径配置错误 | [§7](#7-github-pages-404) |
-| Dify 无法访问 | Docker 未启动/端口占用 | [§8](#8-dify-无法访问) |
+| Giscus 评论不显示 | App 未安装/Discussions 未开启 | [§8](#8-giscus-评论不显示) |
+| Dify 无法访问 | Docker 未启动/端口占用 | [§9](#9-dify-无法访问) |
 
 ---
 
@@ -277,7 +278,7 @@ GitHub Settings → Pages页面显示 `built` 即为正常。如果显示 `deplo
 
 ---
 
-## 8. Dify 无法访问
+## 9. Dify 无法访问
 
 **症状**：http://localhost/v1 无法打开。
 
@@ -313,7 +314,58 @@ docker logs $(docker ps -q --filter "name=dify" | head -1) --tail 50
 
 ---
 
-## 9. 联系方式
+## 8. Giscus 评论不显示
+
+**症状**：文章底部没有 Giscus 评论区。
+
+### 排查步骤
+
+**Step 1**：检查配置是否启用
+
+确认 `themes/arknights/_config.yml` 中 giscus 已启用：
+
+```yaml
+giscus:
+  enable: true
+```
+
+**Step 2**：检查 Giscus App 安装
+
+1. 打开 https://github.com/apps/giscus
+2. 确认 App 已安装到你的仓库
+3. 如果未安装，点击 "Install" 并授权
+
+**Step 3**：检查 Discussions 功能
+
+1. 进入仓库 Settings → Features
+2. 确认 Discussions 已勾选开启
+3. 如果未开启，勾选并确认
+
+**Step 4**：检查浏览器 Console
+
+1. 打开博客文章页面
+2. 按 F12 打开 DevTools
+3. 切换到 Console 面板
+4. 刷新页面，查看是否有 Giscus 相关错误
+
+**Step 5**：检查网络请求
+
+1. DevTools → Network 面板
+2. 筛选 `giscus.app` 请求
+3. 确认请求成功返回（无 CORS 错误）
+
+### 常见错误及解决
+
+| 错误信息 | 原因 | 解决方案 |
+|----------|------|----------|
+| `404 Not Found` | repo_id 或 category_id 错误 | 重新从 giscus.app 获取 |
+| `403 Forbidden` | Giscus App 未安装 | 安装 Giscus App |
+| `Discussions disabled` | Discussions 未开启 | 仓库 Settings 开启 Discussions |
+| 页面空白 | 仓库非公开 | 将仓库设为 Public |
+
+---
+
+## 10. 联系方式
 
 如果以上方法都无法解决问题：
 

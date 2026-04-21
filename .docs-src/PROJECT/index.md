@@ -171,6 +171,21 @@ https://mornikar.github.io
 | 索引时机 | CI 中自动构建 |
 | 访问地址 | `https://mornikar.github.io/pagefind/` |
 
+### 4.5 Giscus 评论系统
+
+| 项目 | 值 |
+|------|-----|
+| 类型 | 基于 GitHub Discussions |
+| 主题 | preferred_color_scheme（跟随网站明暗） |
+| 配置位置 | `themes/arknights/_config.yml` |
+| 启用条件 | 仓库公开 + Giscus App 安装 + Discussions 开启 |
+
+**工作原理**：
+- 访客评论 → Giscus 前端 → GitHub API → 创建/更新 Discussion
+- 评论数据存储在仓库的 Discussions 中，无需独立数据库
+
+**详细配置**：参见 [Giscus 留言系统](/docs/GISCUS/)
+
 ---
 
 ## 五、主题定制

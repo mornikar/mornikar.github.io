@@ -14,9 +14,10 @@ title: 项目总览
 | [🚀 安装部署](/docs/INSTALL/) | **新用户必读**：从零部署自己的博客到 GitHub Pages |
 | [📐 系统架构](/docs/PROJECT/) | 目录结构、组件关系、部署流程 |
 | [🔧 维护指南](/docs/MAINTENANCE/) | 日常使用、Wiki 编辑、Dify 同步 |
+| [💬 Giscus 留言](/docs/GISCUS/) | 基于 GitHub Discussions 的评论系统 |
 | [🔍 故障排查](/docs/TROUBLESHOOTING/) | 常见问题与解决方案 |
 | [📋 迁移规范](/docs/MIGRATION/) | Wiki 格式、WikiLink、frontmatter |
-| [🌲 分支说明](/docs/BRANCHES/) | source/gh-pages 分支关系、工作流程 |
+| [🌲 分支说明](/docs/BRANCHES/) | source/main 分支关系、工作流程 |
 
 ---
 

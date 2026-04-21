@@ -231,7 +231,47 @@ Pagefind 在 `public/` 目录中建立静态全文索引，支持模糊搜索、
 
 ---
 
-## 八、本地命令速查
+## 八、Giscus 评论系统维护
+
+### 8.1 评论数据位置
+
+评论存储在 GitHub Discussions 中：
+- 仓库地址：https://github.com/mornikar/mornikar.github.io/discussions
+- 每个页面自动对应一个 Discussion
+
+### 8.2 管理评论
+
+1. 打开仓库 Discussions 页面
+2. 可以对评论进行编辑、删除、置顶等操作
+3. 可以设置分类、添加标签
+
+### 8.3 修改 Giscus 配置
+
+编辑 `themes/arknights/_config.yml` 中的 giscus 配置：
+
+```yaml
+giscus:
+  enable: true
+  repo: mornikar/mornikar.github.io
+  repo_id: R_xxxxxxxxxxxxx
+  category: Announcements
+  category_id: DIC_xxxxxxxxxxxxx
+  mapping: pathname
+  input_position: top
+  theme: preferred_color_scheme
+```
+
+### 8.4 常见问题
+
+| 问题 | 解决方案 |
+|------|----------|
+| 评论不显示 | 检查 Giscus App 是否安装、Discussions 是否开启 |
+| 关闭某页评论 | 在 frontmatter 中添加 `comments: false` |
+| 修改主题 | 修改 `theme` 参数：`light` / `dark` / `preferred_color_scheme` |
+
+---
+
+## 九、本地命令速查
 
 | 命令 | 说明 |
 |------|------|
