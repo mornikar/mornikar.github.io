@@ -15,11 +15,12 @@ title: 故障排查
 | Wiki 文章没出现在博客 | 转换/编译问题 | [§2](#2-wiki-文章没出现在博客) |
 | CI 构建失败 | 依赖/脚本错误 | [§3](#3-ci-构建失败) |
 | wiki-chat-侧边栏没生效 | JS 未加载/路径错误 | [§4](#4-wiki-chat-侧边栏没生效) |
-| CSS 编译失败 | Stylus @import 问题 | [§5](#5-css-编译失败) |
-| Pug 渲染错误 | hexo7-pug-fix 未生效 | [§6](#6-pug-渲染错误) |
-| GitHub Pages 404 | 分支/路径配置错误 | [§7](#7-github-pages-404) |
-| Giscus 评论不显示 | App 未安装/Discussions 未开启 | [§8](#8-giscus-评论不显示) |
-| Dify 无法访问 | Docker 未启动/端口占用 | [§9](#9-dify-无法访问) |
+| AI 助手对话失败 | API 配置错误/CORS 问题 | [§5](#5-ai-助手对话失败) |
+| CSS 编译失败 | Stylus @import 问题 | [§6](#6-css-编译失败) |
+| Pug 渲染错误 | hexo7-pug-fix 未生效 | [§7](#7-pug-渲染错误) |
+| GitHub Pages 404 | 分支/路径配置错误 | [§8](#8-github-pages-404) |
+| Giscus 评论不显示 | App 未安装/Discussions 未开启 | [§9](#9-giscus-评论不显示) |
+| Dify 无法访问 | Docker 未启动/端口占用 | [§10](#10-dify-无法访问) |
 
 ---
 
@@ -186,7 +187,69 @@ fetch('/js/wiki-chat.js')
 
 ---
 
-## 5. CSS 样式不完整
+## 5. AI 助手对话失败
+
+**症状**：AI 助手显示但无法发送消息，或收到错误回复。
+
+### 5.1 检查接入方式
+
+确认当前配置的接入方式与实际需求匹配：
+
+| 模式 | 配置位置 | 检查项 |
+|------|----------|--------|
+| Dify | 登录页 / 设置面板 | Dify 服务是否运行 |
+| 在线 API | 登录页 / 设置面板 | Cloudflare Worker 是否可用 |
+| 直连模型 | 登录页 / 设置面板 | LM Studio 是否运行 |
+
+### 5.2 检查 API 配置
+
+**Step 1**：打开登录页 `/login/`
+
+**Step 2**：检查当前接入模式配置
+
+**Step 3**：验证各项参数：
+- API 地址是否正确
+- API 密钥是否有效
+- 模型名称是否匹配
+
+### 5.3 检查 CORS 问题
+
+如果是在线 API 模式出现跨域错误：
+
+1. 确认使用 Cloudflare Worker 代理
+2. 检查代理地址是否正确
+3. 验证 Worker 是否正常响应
+
+```javascript
+// 测试代理
+fetch('https://dify-proxy.1548324254.workers.dev/health')
+  .then(r => r.json())
+  .then(console.log)
+```
+
+### 5.4 检查浏览器 Console
+
+1. 按 F12 打开 DevTools
+2. 切换到 Console 面板
+3. 查看是否有错误信息
+
+常见错误：
+- `Failed to fetch` — 网络问题或 CORS
+- `401 Unauthorized` — API 密钥错误
+- `404 Not Found` — API 地址错误
+
+### 5.5 常见问题解决
+
+| 问题 | 原因 | 解决 |
+|------|------|------|
+| 发送消息无响应 | 服务未启动 | 启动 Dify / LM Studio |
+| CORS 错误 | 跨域限制 | 使用在线 API 模式 |
+| 401 错误 | API 密钥错误 | 检查并更新密钥 |
+| 回复乱码 | 模型编码问题 | 更换模型或调整配置 |
+
+---
+
+## 6. CSS 样式不完整
 
 **症状**：`arknights.css` 体积很小（几 KB），WikiLink、wiki-chat 样式丢失。
 
@@ -205,7 +268,7 @@ node scripts/compile_css.js
 
 ---
 
-## 6. Pug 渲染错误
+## 7. Pug 渲染错误
 
 **症状**：页面空白或显示 `500 Internal Server Error`。
 
@@ -245,7 +308,7 @@ hexo server
 
 ---
 
-## 7. GitHub Pages 404
+## 8. GitHub Pages 404
 
 **症状**：访问 `mornikar.github.io` 或 `/docs/` 返回 404。
 
@@ -278,7 +341,7 @@ GitHub Settings → Pages页面显示 `built` 即为正常。如果显示 `deplo
 
 ---
 
-## 9. Dify 无法访问
+## 10. Dify 无法访问
 
 **症状**：http://localhost/v1 无法打开。
 
@@ -314,7 +377,7 @@ docker logs $(docker ps -q --filter "name=dify" | head -1) --tail 50
 
 ---
 
-## 8. Giscus 评论不显示
+## 9. Giscus 评论不显示
 
 **症状**：文章底部没有 Giscus 评论区。
 
@@ -365,7 +428,7 @@ giscus:
 
 ---
 
-## 10. 联系方式
+## 11. 联系方式
 
 如果以上方法都无法解决问题：
 

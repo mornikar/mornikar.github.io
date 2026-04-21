@@ -13,6 +13,7 @@ title: 项目总览
 |------|------|
 | [🚀 安装部署](/docs/INSTALL/) | **新用户必读**：从零部署自己的博客到 GitHub Pages |
 | [📐 系统架构](/docs/PROJECT/) | 目录结构、组件关系、部署流程 |
+| [🤖 AI 助手](/docs/AI_CHAT/) | Wiki AI 对话助手使用指南 |
 | [🔧 维护指南](/docs/MAINTENANCE/) | 日常使用、Wiki 编辑、Dify 同步 |
 | [💬 Giscus 留言](/docs/GISCUS/) | 基于 GitHub Discussions 的评论系统 |
 | [🔍 故障排查](/docs/TROUBLESHOOTING/) | 常见问题与解决方案 |
@@ -111,9 +112,12 @@ wiki-sync.bat --dry-run
 | **Hexo** | 7.x | 静态博客生成 |
 | **hexo-theme-arknights** | fork | 明日方舟风格主题 |
 | **wiki-to-hexo.js** | v4.0 | Wiki → Hexo 格式转换 |
-| **Dify** | 1.13.3 | 本地 RAG 知识库 + AI 对话 |
-| **WikiChat** | — | 网站侧边栏 AI 对话悬浮按钮 |
+| **Wiki AI 助手** | Phase 7 | 三模式 AI 对话（登录页 + 悬浮面板） |
+| **Dify** | 1.13.3 | 本地 RAG 知识库 |
+| **LM Studio** | — | 本地模型推理 |
+| **Cloudflare Worker** | — | API 代理（CORS 跨域） |
 | **Pagefind** | 1.5.x | 静态全文搜索 |
+| **Giscus** | — | GitHub Discussions 评论 |
 | **Tailscale** | — | 公网安全穿透 |
 
 ---

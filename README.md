@@ -101,6 +101,7 @@ scripts/                   ← 自动化脚本
 |------|------|
 | [🚀 安装部署](https://mornikar.github.io/docs/INSTALL/) | **新用户必读**：从零部署自己的博客 |
 | [📐 系统架构](https://mornikar.github.io/docs/PROJECT/) | 目录结构、组件关系、主题定制 |
+| [🤖 AI 助手](https://mornikar.github.io/docs/AI_CHAT/) | Wiki AI 对话助手使用指南 |
 | [🔧 日常维护](https://mornikar.github.io/docs/MAINTENANCE/) | Wiki 编辑、Dify 同步、Tailscale |
 | [💬 Giscus 留言](https://mornikar.github.io/docs/GISCUS/) | 基于 GitHub Discussions 的评论系统 |
 | [🔍 故障排查](https://mornikar.github.io/docs/TROUBLESHOOTING/) | 常见问题与解决方案 |
