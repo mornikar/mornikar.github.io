@@ -1,4 +1,5 @@
-const DIFY_IP = '59.41.69.9'
+// 直接使用公网 IP（临时方案，IP 变化需手动更新）
+const DIFY_DOMAIN = '59.41.69.9'
 const DIFY_PORT = '8088'
 
 export default {
@@ -25,7 +26,7 @@ export default {
     }
 
     try {
-      const targetUrl = `http://${DIFY_IP}:${DIFY_PORT}${url.pathname}${url.search}`
+      const targetUrl = `http://${DIFY_DOMAIN}:${DIFY_PORT}${url.pathname}${url.search}`
       const headers = {}
       const auth = request.headers.get('Authorization')
       if (auth) headers['Authorization'] = auth
