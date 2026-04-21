@@ -174,6 +174,7 @@ giscus:
   lang: zh-CN
   loading: lazy
   crossorigin: anonymous
+  theme: preferred_color_scheme
 
 # 图表支持
 mermaid:
@@ -189,6 +190,9 @@ mathjax:
   enable: false
   version: "2.6.1"
 
+
+
+
 # 在 `<head>` 标签内引入 CSS 样式表
 # 支持直接引入短片段，用 "{ }" 包裹（包括引号），例： - "{a {color: #2bf}}"
 stylesheets:
@@ -196,3 +200,4 @@ stylesheets:
 # 在 `<body>` 尾部引入 JavaScript 脚本
 # 支持直接引入短片段，用 "{ }" 包裹（包括引号），例： - "{var test='test'}"
 scripts:
+
