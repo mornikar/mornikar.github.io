@@ -250,6 +250,69 @@
   }
   function getSettings() { return loadSettings() || getDefaultSettings() }
 
+  // ─── 监听输入变化，自动保存配置 ──────────────────────────
+  function setupAutoSave() {
+    const autoSave = () => {
+      const s = getSettings()
+      const mode = s.mode
+      const prompt = document.getElementById('wiki-cfg-prompt')?.value.trim() || DEFAULT_PROMPT
+      const partial = { mode, prompt, dify: s.dify, api: s.api, direct: s.direct }
+
+      if (mode === 'dify') {
+        partial.dify = {
+          baseUrl: document.getElementById('wiki-cfg-dify-url')?.value.trim() || s.dify.baseUrl,
+          apiKey: document.getElementById('wiki-cfg-dify-key')?.value.trim() || s.dify.apiKey
+        }
+      } else if (mode === 'api') {
+        partial.api = {
+          endpoint: document.getElementById('wiki-cfg-api-endpoint')?.value.trim() || '',
+          apiKey: document.getElementById('wiki-cfg-api-key')?.value.trim() || '',
+          model: document.getElementById('wiki-cfg-api-model')?.value.trim() || ''
+        }
+      } else if (mode === 'direct') {
+        partial.direct = {
+          endpoint: document.getElementById('wiki-cfg-direct-endpoint')?.value.trim() || '',
+          apiKey: document.getElementById('wiki-cfg-direct-key')?.value.trim() || '',
+          model: document.getElementById('wiki-cfg-direct-model')?.value.trim() || ''
+        }
+      }
+
+      // 合并并保存（不覆盖 username）
+      const merged = { ...s, ...partial }
+      saveSettings(merged)
+    }
+
+    // 使用事件委托，监听配置区域内所有输入
+    const container = document.getElementById('wiki-login-config-area')
+    if (!container) return
+
+    // 输入时延迟保存（避免频繁写入）
+    let saveTimer = null
+    container.addEventListener('input', () => {
+      clearTimeout(saveTimer)
+      saveTimer = setTimeout(autoSave, 500)
+    })
+
+    // 模式切换时立即保存
+    document.querySelectorAll('.wiki-mode-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        setTimeout(autoSave, 50)
+      })
+    })
+
+    // 用户名输入时也自动保存
+    const usernameInput = document.getElementById('wiki-login-username')
+    if (usernameInput) {
+      usernameInput.addEventListener('input', () => {
+        clearTimeout(saveTimer)
+        saveTimer = setTimeout(() => {
+          const s = getSettings()
+          saveSettings({ ...s, username: usernameInput.value.trim() })
+        }, 500)
+      })
+    }
+  }
+
   // ═══════════════════════════════════════════════════════════
   //  模式配置渲染
   // ═══════════════════════════════════════════════════════════
@@ -476,6 +539,9 @@
     })
 
     renderModeConfig(currentMode)
+
+    // 启用自动保存
+    setupAutoSave()
 
     // 提交登录
     const submitBtn = document.getElementById('wiki-login-submit')

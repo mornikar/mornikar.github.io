@@ -58,6 +58,10 @@ html(lang=config.language theme-mode=htmlThemeMode)
     //- Phase 6: Wiki AI 对话侧边栏
     script(defer src=url_for('/js/wiki-chat.js'))
 
+    //- Phase 8: Wiki AI 看板娘
+    if theme.kanban && theme.kanban.enable
+      script(defer src=url_for('/js/wiki-kanban.js'))
+
     if theme.scripts && theme.scripts.length > 0
       //- scripts list from config.yml
       each url in theme.scripts

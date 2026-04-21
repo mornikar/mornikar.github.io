@@ -197,6 +197,10 @@ mathjax:
 # 支持直接引入短片段，用 "{ }" 包裹（包括引号），例： - "{a {color: #2bf}}"
 stylesheets:
 
+# Wiki AI 看板娘
+kanban:
+  enable: true  # 是否启用看板娘功能（点击 ⚙️ 按钮可详细配置）
+
 # 在 `<body>` 尾部引入 JavaScript 脚本
 # 支持直接引入短片段，用 "{ }" 包裹（包括引号），例： - "{var test='test'}"
 scripts:

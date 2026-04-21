@@ -500,6 +500,50 @@
       settingsPanel.remove()
     })
 
+    // ─── 自动保存配置 ────────────────────────────────────────
+    const autoSaveConfig = () => {
+      const s = getSettings()
+      const prompt = document.getElementById('wiki-set-prompt')?.value.trim() || DEFAULT_PROMPT
+      const partial = { mode: currentMode, prompt, username: s.username, dify: s.dify, api: s.api, direct: s.direct }
+
+      if (currentMode === 'dify') {
+        partial.dify = {
+          baseUrl: document.getElementById('wiki-cfg-dify-url')?.value.trim() || s.dify.baseUrl,
+          apiKey: document.getElementById('wiki-cfg-dify-key')?.value.trim() || s.dify.apiKey
+        }
+      } else if (currentMode === 'api') {
+        partial.api = {
+          endpoint: document.getElementById('wiki-cfg-api-endpoint')?.value.trim() || '',
+          apiKey: document.getElementById('wiki-cfg-api-key')?.value.trim() || '',
+          model: document.getElementById('wiki-cfg-api-model')?.value.trim() || ''
+        }
+      } else if (currentMode === 'direct') {
+        partial.direct = {
+          endpoint: document.getElementById('wiki-cfg-direct-endpoint')?.value.trim() || '',
+          apiKey: document.getElementById('wiki-cfg-direct-key')?.value.trim() || '',
+          model: document.getElementById('wiki-cfg-direct-model')?.value.trim() || ''
+        }
+      }
+
+      const merged = { ...s, ...partial }
+      saveSettings(merged)
+    }
+
+    // 监听配置区域输入变化
+    let saveTimer = null
+    settingsPanel.addEventListener('input', () => {
+      clearTimeout(saveTimer)
+      saveTimer = setTimeout(autoSaveConfig, 500)
+    })
+
+    // 模式切换时保存
+    settingsPanel.querySelectorAll('.wiki-mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setTimeout(autoSaveConfig, 50)
+      })
+    })
+
+    // 保存按钮
     document.getElementById('wiki-settings-save').addEventListener('click', () => {
       const username = document.getElementById('wiki-set-username').value.trim()
       if (!username) { alert('用户名不能为空'); return }
