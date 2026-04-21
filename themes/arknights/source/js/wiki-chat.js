@@ -1,107 +1,83 @@
 /**
  * Wiki AI 对话侧边栏
- * Phase 6: 问答机器人
+ * Phase 7: 多模型接入 + 设置面板
  *
- * 检索策略（混合 B 方案）：
- *   1. 优先：Dify RAG API（语义理解）
- *   2. 兜底：Pagefind 关键词搜索（精确匹配页面）
+ * 接入模式：
+ *   1. Dify（RAG 知识库） — 通过 Cloudflare Worker 代理
+ *   2. 在线 API（OpenAI 兼容）— 直接调用商家 API
+ *   3. 直连模型地址 — 连接本地/远程 OpenAI 兼容端点
  *
- * API 地址自动切换：
- *   - 本地开发（localhost / 127.0.0.1）→ http://localhost/v1
- *   - 公网访问 → DIFY_PUBLIC_BASE（内网穿透后的公网地址）
- *
- * 配置说明：
- *   - DIFY_PUBLIC_BASE: 填入你的内网穿透公网地址（如 localtunnel / frp / ngrok 输出地址）
- *     示例：https://abc123.loca.lt  或  https://your-vps.com/dify
- *     注意：末尾不要加 /v1，代码会自动拼接
+ * 登录页面：/login（独立页面）
+ * 数据存储：localStorage（wiki-chat-settings）
  */
 
 ;(function () {
   'use strict'
 
-  // ─── 配置 ────────────────────────────────────────────────
-  const DIFY_API_BASE    = 'http://localhost/v1'
-  // ★ 公网 API 地址：Cloudflare Workers 代理（HTTPS）
-  const DIFY_PUBLIC_BASE = 'https://dify-proxy.1548324254.workers.dev'
-  const DIFY_API_KEY     = 'app-JznEvGv3JlWWISRmNdjRO7yE'
+  // ─── 常量 ────────────────────────────────────────────────
+  const STORAGE_KEY = 'wiki-chat-settings'
 
-  // 从 URL 参数覆盖公网地址，格式：?dify=https://xxx.loca.lt
-  const urlParamDify = new URLSearchParams(location.search).get('dify')
-  const difyPublicAddr = urlParamDify || DIFY_PUBLIC_BASE
-  const CHAT_TITLE    = 'Wiki AI 助手'
-  const CHAT_PLACEHOLDER = '问我关于 LLM Wiki 的任何问题…'
+  const DEFAULT_DIFY = {
+    baseUrl: 'https://dify-proxy.1548324254.workers.dev',
+    apiKey: 'app-JznEvGv3JlWWISRmNdjRO7yE'
+  }
+
+  const CHAT_TITLE    = 'Wiki AI Mornikar'
+  const CHAT_PLACEHOLDER = '问我关于 Wiki 知识库的任何问题…'
   const WELCOME_MSG   = '你好！我是基于 Wiki 知识库的 AI 助手。可以问我关于 LLM 相关知识、模型对比、RAG 等问题。'
 
-  // 判断是否本地环境（可直连 Dify）
-  const isLocal = ['localhost', '127.0.0.1', '::1'].includes(location.hostname)
+  const DEFAULT_PROMPT = '你是一个基于 Wiki 知识库的 AI 助手，擅长回答关于编程、AI、LLM、RAG 等技术问题。请用中文回答，保持简洁准确。'
 
-  // 动态选择 API 地址
-  const difyBase = (isLocal || !difyPublicAddr)
-    ? DIFY_API_BASE
-    : difyPublicAddr.replace(/\/$/, '') + '/v1'
+  const LOADING_MSGS = [
+    '正在思考…',
+    'AI 正在思考…',
+    '请稍候…',
+    '正在唤醒模型…',
+    '模型加载中，请稍候…',
+  ]
 
-  // Pagefind 搜索引擎（懒加载）
-  let pagefindInstance = null
+  // ─── 用户设置管理 ────────────────────────────────────────
+  function loadSettings() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      if (raw) return JSON.parse(raw)
+    } catch (_) {}
+    return null
+  }
 
-  // Dify 会话 ID（多轮对话保持上下文）
-  let conversationId = null
-  // 对话轮数计数（防止历史累积撑爆 LM 8K context）
-  let turnCount = 0
-  const MAX_TURNS = 4  // 超过4轮自动重置 conversation，避免 token 溢出
+  function saveSettings(settings) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings))
+  }
 
-  // ─── DOM 创建 ────────────────────────────────────────────
-  function createWidget() {
-    // 悬浮按钮
-    const fab = document.createElement('button')
-    fab.id = 'wiki-chat-fab'
-    fab.title = CHAT_TITLE
-    fab.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-    </svg>`
+  function getDefaultSettings() {
+    return {
+      mode: 'dify',
+      username: '',
+      prompt: DEFAULT_PROMPT,
+      dify: { ...DEFAULT_DIFY },
+      api: { endpoint: '', apiKey: '', model: '' },
+      direct: { endpoint: '', apiKey: '', model: '' }
+    }
+  }
 
-    // 侧边栏容器
-    const panel = document.createElement('div')
-    panel.id = 'wiki-chat-panel'
-    panel.setAttribute('aria-hidden', 'true')
-    panel.innerHTML = `
-      <div id="wiki-chat-header">
-        <span id="wiki-chat-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-          ${CHAT_TITLE}
-        </span>
-        <div id="wiki-chat-header-actions">
-          <button id="wiki-chat-clear" title="清空对话">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-              <path d="M10 11v6"/><path d="M14 11v6"/>
-            </svg>
-          </button>
-          <button id="wiki-chat-close" title="关闭">✕</button>
-        </div>
-      </div>
-      <div id="wiki-chat-messages">
-        <div class="wiki-chat-msg wiki-chat-msg--bot">
-          <div class="wiki-chat-bubble">${WELCOME_MSG}</div>
-        </div>
-      </div>
-      <div id="wiki-chat-search-results" style="display:none"></div>
-      <div id="wiki-chat-input-area">
-        <textarea id="wiki-chat-input" placeholder="${CHAT_PLACEHOLDER}" rows="1"></textarea>
-        <button id="wiki-chat-send" title="发送">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-          </svg>
-        </button>
-      </div>
-      ${!isLocal && !difyPublicAddr ? `<div id="wiki-chat-offline-tip">⚠ AI 助手需配置公网穿透地址后才能在公网使用。</div>` : ''}
-      ${!isLocal && difyPublicAddr ? `<div id="wiki-chat-offline-tip">🌐 公网模式 · AI 助手已连接</div>` : ''}
-    `
+  function getSettings() {
+    return loadSettings() || getDefaultSettings()
+  }
 
-    document.body.appendChild(fab)
-    document.body.appendChild(panel)
-    return { fab, panel }
+  // ─── 判断是否已登录配置 ──────────────────────────────────
+  function isConfigured() {
+    const s = getSettings()
+    if (!s.username) return false
+    if (s.mode === 'dify') return !!s.dify.apiKey
+    if (s.mode === 'api') return !!(s.api.endpoint && s.api.apiKey && s.api.model)
+    if (s.mode === 'direct') return !!(s.direct.endpoint && s.direct.model)
+    return false
+  }
+
+  // ─── 未登录跳转 ──────────────────────────────────────────
+  function redirectToLogin() {
+    const root = document.querySelector('meta[name="wiki-root"]')?.content || '/'
+    window.location.href = root + 'login/'
   }
 
   // ─── 消息渲染 ────────────────────────────────────────────
@@ -111,7 +87,6 @@
     div.className = `wiki-chat-msg wiki-chat-msg--${role}`
     const bubble = document.createElement('div')
     bubble.className = 'wiki-chat-bubble'
-    // 简单 markdown：加粗、换行
     bubble.innerHTML = renderMarkdown(content)
     div.appendChild(bubble)
     if (isStreaming) div.dataset.streaming = 'true'
@@ -128,151 +103,12 @@
       .replace(/\n/g, '<br>')
   }
 
-  // ─── 预热：页面加载时静默 ping Dify ─────────────────────
-  let isWarmedUp = false
-  let warmUpTimer = null
-
-  function warmUp() {
-    if (!isWarmedUp && (isLocal || DIFY_PUBLIC_BASE)) {
-      warmUpTimer = setTimeout(async () => {
-        try {
-          const warmBody = {
-            inputs: {},
-            query: '.',
-            response_mode: 'streaming',
-            conversation_id: '',
-            user: 'wiki-warmup'
-          }
-          const resp = await fetch(`${difyBase}/chat-messages`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${DIFY_API_KEY}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(warmBody)
-          })
-          if (resp.ok) {
-            // 消费掉流，不展示
-            resp.body.getReader().cancel()
-            isWarmedUp = true
-            console.log('[WikiChat] 预热完成，模型已就绪')
-          }
-        } catch (e) {
-          console.warn('[WikiChat] 预热失败:', e.message)
-        }
-      }, 2000) // 延迟2秒，等页面渲染完再预热
-    }
-  }
-
-  // ─── 加载状态文案 ─────────────────────────────────────────
-  const LOADING_MSGS = [
-    '正在思考…',
-    'AI 正在思考…',
-    '请稍候…',
-    '正在唤醒模型…',
-    '模型加载中，请稍候…',
-  ]
-
-  function getLoadingMsg() {
-    return LOADING_MSGS[Math.floor(Math.random() * LOADING_MSGS.length)]
-  }
-
-  // ─── Dify 流式对话 ───────────────────────────────────────
-  async function askDify(query, timeoutMs = 30000) {
-    const body = {
-      inputs: {},
-      query,
-      response_mode: 'streaming',
-      conversation_id: conversationId || '',
-      user: 'wiki-visitor'
-    }
-
-    console.log('[WikiChat] 发送请求到:', `${difyBase}/chat-messages`)
-
-    // 带超时的 fetch
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
-
-    const resp = await fetch(`${difyBase}/chat-messages`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${DIFY_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body),
-      signal: controller.signal
-    })
-    clearTimeout(timeoutId)
-
-    console.log('[WikiChat] 响应状态:', resp.status)
-    console.log('[WikiChat] Content-Type:', resp.headers.get('content-type'))
-
-    if (!resp.ok) {
-      const text = await resp.text()
-      console.error('[WikiChat] API 错误:', text)
-      throw new Error(`Dify API 错误 ${resp.status}: ${text}`)
-    }
-
-    const bubble = appendMessage('bot', '', true)
-    let fullText = ''
-
-    const reader = resp.body.getReader()
-    const decoder = new TextDecoder()
-    let buffer = ''
-
-    try {
-      while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
-        const chunk = decoder.decode(value, { stream: true })
-        buffer += chunk
-
-        const lines = buffer.split('\n')
-        buffer = lines.pop() // 保留不完整的行
-
-        for (const line of lines) {
-          if (!line.trim()) continue
-          console.log('[WikiChat] 收到数据:', line.substring(0, 100))
-          
-          if (!line.startsWith('data: ')) continue
-          const data = line.slice(6).trim()
-          if (data === '[DONE]') break
-          try {
-            const json = JSON.parse(data)
-            if (json.event === 'message') {
-              fullText += json.answer || ''
-              bubble.innerHTML = renderMarkdown(fullText)
-              bubble.closest('.wiki-chat-msg').scrollIntoView({ block: 'end', behavior: 'smooth' })
-            }
-            if (json.event === 'message_end') {
-              turnCount++
-              if (turnCount >= MAX_TURNS) {
-                // 轮数超限，下次自动开新对话，防止 token 爆炸
-                conversationId = null
-                turnCount = 0
-                console.log('[WikiChat] 已达到最大轮数，自动重置对话')
-              } else {
-                conversationId = json.conversation_id || conversationId
-              }
-              console.log('[WikiChat] 对话结束, turnCount:', turnCount, 'conversationId:', conversationId)
-            }
-          } catch (_) { /* 跳过非 JSON 行 */ }
-        }
-      }
-    } catch (e) {
-      console.error('[WikiChat] 读取流错误:', e)
-    }
-
-    bubble.closest('.wiki-chat-msg').removeAttribute('data-streaming')
-    return fullText
-  }
-
   // ─── Pagefind 兜底搜索 ───────────────────────────────────
+  let pagefindInstance = null
+
   async function searchPagefind(query) {
     try {
       if (!pagefindInstance) {
-        // Pagefind 懒加载（需要先 hexo generate + pagefind 索引）
-        // @ts-ignore
         const pf = await import('/pagefind/pagefind.js')
         await pf.init()
         pagefindInstance = pf
@@ -305,6 +141,405 @@
     `
   }
 
+  // ─── 对话状态 ────────────────────────────────────────────
+  let conversationId = null
+  let chatHistory = []
+  let turnCount = 0
+  const MAX_TURNS = 4
+
+  function resetConversation() {
+    conversationId = null
+    chatHistory = []
+    turnCount = 0
+  }
+
+  // ─── Dify 模式对话 ──────────────────────────────────────
+  async function askDify(query, settings, timeoutMs = 60000) {
+    const difyBase = settings.dify.baseUrl.replace(/\/$/, '') + '/v1'
+    const body = {
+      inputs: {},
+      query,
+      response_mode: 'streaming',
+      conversation_id: conversationId || '',
+      user: settings.username || 'wiki-visitor'
+    }
+
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+
+    const resp = await fetch(`${difyBase}/chat-messages`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${settings.dify.apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal
+    })
+    clearTimeout(timeoutId)
+
+    if (!resp.ok) {
+      const text = await resp.text()
+      throw new Error(`Dify API 错误 ${resp.status}: ${text}`)
+    }
+
+    return resp
+  }
+
+  // ─── OpenAI 兼容模式对话（API / Direct 共用）────────────
+  async function askOpenAI(query, settings, timeoutMs = 60000) {
+    const cfg = settings.mode === 'api' ? settings.api : settings.direct
+    const endpoint = cfg.endpoint.replace(/\/$/, '')
+    const model = cfg.model
+
+    chatHistory.push({ role: 'user', content: query })
+
+    if (chatHistory.length > MAX_TURNS * 2 + 1) {
+      chatHistory = chatHistory.slice(-(MAX_TURNS * 2 + 1))
+    }
+
+    // 注入 system prompt（如果用户配置了自定义 prompt）
+    const systemPrompt = settings.prompt || DEFAULT_PROMPT
+    const messagesWithSystem = [{ role: 'system', content: systemPrompt }, ...chatHistory]
+
+    const body = {
+      model,
+      messages: messagesWithSystem,
+      stream: true
+    }
+
+    const headers = {
+      'Content-Type': 'application/json'
+    }
+    if (cfg.apiKey) {
+      headers['Authorization'] = `Bearer ${cfg.apiKey}`
+    }
+
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+
+    const resp = await fetch(`${endpoint}/chat/completions`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+      signal: controller.signal
+    })
+    clearTimeout(timeoutId)
+
+    if (!resp.ok) {
+      const text = await resp.text()
+      throw new Error(`API 错误 ${resp.status}: ${text}`)
+    }
+
+    return resp
+  }
+
+  // ─── 统一发送入口 ────────────────────────────────────────
+  async function sendMessage(query) {
+    const settings = getSettings()
+    let resp
+
+    if (settings.mode === 'dify') {
+      resp = await askDify(query, settings)
+    } else {
+      resp = await askOpenAI(query, settings)
+    }
+
+    const bubble = appendMessage('bot', '', true)
+    let fullText = ''
+
+    const reader = resp.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        const chunk = decoder.decode(value, { stream: true })
+        buffer += chunk
+
+        const lines = buffer.split('\n')
+        buffer = lines.pop()
+
+        for (const line of lines) {
+          if (!line.trim()) continue
+
+          if (settings.mode === 'dify') {
+            if (!line.startsWith('data: ')) continue
+            const data = line.slice(6).trim()
+            if (data === '[DONE]') break
+            try {
+              const json = JSON.parse(data)
+              if (json.event === 'message') {
+                fullText += json.answer || ''
+                bubble.innerHTML = renderMarkdown(fullText)
+                bubble.closest('.wiki-chat-msg').scrollIntoView({ block: 'end', behavior: 'smooth' })
+              }
+              if (json.event === 'message_end') {
+                turnCount++
+                if (turnCount >= MAX_TURNS) {
+                  conversationId = null
+                  turnCount = 0
+                  console.log('[WikiChat] 已达到最大轮数，自动重置对话')
+                } else {
+                  conversationId = json.conversation_id || conversationId
+                }
+              }
+            } catch (_) {}
+          } else {
+            if (!line.startsWith('data: ')) continue
+            const data = line.slice(6).trim()
+            if (data === '[DONE]') break
+            try {
+              const json = JSON.parse(data)
+              const delta = json.choices?.[0]?.delta?.content || ''
+              if (delta) {
+                fullText += delta
+                bubble.innerHTML = renderMarkdown(fullText)
+                bubble.closest('.wiki-chat-msg').scrollIntoView({ block: 'end', behavior: 'smooth' })
+              }
+            } catch (_) {}
+          }
+        }
+      }
+    } catch (e) {
+      console.error('[WikiChat] 读取流错误:', e)
+    }
+
+    bubble.closest('.wiki-chat-msg').removeAttribute('data-streaming')
+
+    if (settings.mode !== 'dify' && fullText) {
+      chatHistory.push({ role: 'assistant', content: fullText })
+    }
+
+    return fullText
+  }
+
+  // ─── 设置面板 ────────────────────────────────────────────
+  function createSettingsPanel() {
+    const settings = getSettings()
+    const div = document.createElement('div')
+    div.id = 'wiki-chat-settings'
+    div.innerHTML = `
+      <div class="wiki-settings-header">
+        <span class="wiki-settings-title">⚙ 设置</span>
+        <button id="wiki-settings-close" title="关闭">✕</button>
+      </div>
+      <div class="wiki-settings-body">
+        <div class="wiki-login-field">
+          <label>用户名</label>
+          <input type="text" id="wiki-set-username" value="${settings.username}" autocomplete="off">
+        </div>
+        <div class="wiki-login-field">
+          <label>接入方式</label>
+          <div class="wiki-login-mode-btns">
+            <button class="wiki-mode-btn${settings.mode === 'dify' ? ' active' : ''}" data-mode="dify">Dify</button>
+            <button class="wiki-mode-btn${settings.mode === 'api' ? ' active' : ''}" data-mode="api">在线 API</button>
+            <button class="wiki-mode-btn${settings.mode === 'direct' ? ' active' : ''}" data-mode="direct">直连</button>
+          </div>
+        </div>
+        <div id="wiki-settings-config-area"></div>
+        <div class="wiki-login-field">
+          <label>System Prompt</label>
+          <textarea id="wiki-set-prompt" rows="4" placeholder="输入自定义 system prompt…">${settings.prompt || DEFAULT_PROMPT}</textarea>
+        </div>
+        <div class="wiki-settings-actions">
+          <button id="wiki-settings-save" class="wiki-login-submit">保存</button>
+          <button id="wiki-settings-logout" class="wiki-login-submit wiki-btn-danger">退出登录</button>
+        </div>
+      </div>
+    `
+    return div
+  }
+
+  function renderModeConfig(container, mode) {
+    const settings = getSettings()
+    if (mode === 'dify') {
+      container.innerHTML = `
+        <div class="wiki-login-field">
+          <label>Dify API 地址</label>
+          <input type="text" id="wiki-cfg-dify-url" placeholder="Cloudflare Worker 地址" value="${settings.dify.baseUrl}" autocomplete="off">
+        </div>
+        <div class="wiki-login-field">
+          <label>Dify API Key</label>
+          <input type="password" id="wiki-cfg-dify-key" placeholder="app-xxx" value="${settings.dify.apiKey}" autocomplete="off">
+        </div>
+      `
+    } else if (mode === 'api') {
+      container.innerHTML = `
+        <div class="wiki-login-field">
+          <label>API 端点</label>
+          <input type="text" id="wiki-cfg-api-endpoint" placeholder="https://api.openai.com/v1" value="${settings.api.endpoint}" autocomplete="off">
+        </div>
+        <div class="wiki-login-field">
+          <label>API Key</label>
+          <input type="password" id="wiki-cfg-api-key" placeholder="sk-xxx" value="${settings.api.apiKey}" autocomplete="off">
+        </div>
+        <div class="wiki-login-field">
+          <label>模型名称</label>
+          <input type="text" id="wiki-cfg-api-model" placeholder="gpt-3.5-turbo" value="${settings.api.model}" autocomplete="off">
+        </div>
+      `
+    } else if (mode === 'direct') {
+      container.innerHTML = `
+        <div class="wiki-login-field">
+          <label>模型端点</label>
+          <input type="text" id="wiki-cfg-direct-endpoint" placeholder="http://localhost:1234/v1" value="${settings.direct.endpoint}" autocomplete="off">
+        </div>
+        <div class="wiki-login-field">
+          <label>API Key <span class="wiki-field-optional">（可选）</span></label>
+          <input type="password" id="wiki-cfg-direct-key" placeholder="本地模型可留空" value="${settings.direct.apiKey}" autocomplete="off">
+        </div>
+        <div class="wiki-login-field">
+          <label>模型名称</label>
+          <input type="text" id="wiki-cfg-direct-model" placeholder="qwen/qwen3.5-9b" value="${settings.direct.model}" autocomplete="off">
+        </div>
+      `
+    }
+  }
+
+  // ─── DOM 创建 ────────────────────────────────────────────
+  function createWidget() {
+    const fab = document.createElement('button')
+    fab.id = 'wiki-chat-fab'
+    fab.title = CHAT_TITLE
+    fab.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>`
+
+    const panel = document.createElement('div')
+    panel.id = 'wiki-chat-panel'
+    panel.setAttribute('aria-hidden', 'true')
+    panel.innerHTML = `
+      <div id="wiki-chat-header">
+        <span id="wiki-chat-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          ${CHAT_TITLE}
+        </span>
+        <div id="wiki-chat-header-actions">
+          <button id="wiki-chat-login-btn" title="登录">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10 17 15 12 10 7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+          </button>
+          <button id="wiki-chat-settings-btn" title="设置">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </button>
+          <button id="wiki-chat-clear" title="清空对话">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+              <path d="M10 11v6"/><path d="M14 11v6"/>
+            </svg>
+          </button>
+          <button id="wiki-chat-close" title="关闭">✕</button>
+        </div>
+      </div>
+      <div id="wiki-chat-content"></div>
+      <div id="wiki-chat-input-area">
+        <textarea id="wiki-chat-input" placeholder="${CHAT_PLACEHOLDER}" rows="1"></textarea>
+        <button id="wiki-chat-send" title="发送">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+        </button>
+      </div>
+    `
+
+    document.body.appendChild(fab)
+    document.body.appendChild(panel)
+    return { fab, panel }
+  }
+
+  // ─── 切换到聊天视图 ──────────────────────────────────────
+  function showChatView() {
+    const content = document.getElementById('wiki-chat-content')
+    const inputArea = document.getElementById('wiki-chat-input-area')
+    inputArea.style.display = 'flex'
+    content.innerHTML = `
+      <div id="wiki-chat-messages">
+        <div class="wiki-chat-msg wiki-chat-msg--bot">
+          <div class="wiki-chat-bubble">${WELCOME_MSG}</div>
+        </div>
+      </div>
+      <div id="wiki-chat-search-results" style="display:none"></div>
+    `
+    resetConversation()
+  }
+
+  // ─── 显示设置面板 ────────────────────────────────────────
+  function showSettings() {
+    const panel = document.getElementById('wiki-chat-panel')
+    const existing = document.getElementById('wiki-chat-settings')
+    if (existing) existing.remove()
+
+    const settingsPanel = createSettingsPanel()
+    panel.appendChild(settingsPanel)
+
+    const settings = getSettings()
+    const configArea = document.getElementById('wiki-settings-config-area')
+    renderModeConfig(configArea, settings.mode)
+
+    let currentMode = settings.mode
+    settingsPanel.querySelectorAll('.wiki-mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentMode = btn.dataset.mode
+        settingsPanel.querySelectorAll('.wiki-mode-btn').forEach(b => b.classList.remove('active'))
+        btn.classList.add('active')
+        renderModeConfig(configArea, currentMode)
+      })
+    })
+
+    document.getElementById('wiki-settings-close').addEventListener('click', () => {
+      settingsPanel.remove()
+    })
+
+    document.getElementById('wiki-settings-save').addEventListener('click', () => {
+      const username = document.getElementById('wiki-set-username').value.trim()
+      if (!username) { alert('用户名不能为空'); return }
+
+      const prompt = document.getElementById('wiki-set-prompt').value.trim() || DEFAULT_PROMPT
+
+      const newSettings = { ...getDefaultSettings(), username, mode: currentMode, prompt }
+
+      if (currentMode === 'dify') {
+        const url = document.getElementById('wiki-cfg-dify-url')?.value.trim()
+        const key = document.getElementById('wiki-cfg-dify-key')?.value.trim()
+        newSettings.dify = { baseUrl: url || DEFAULT_DIFY.baseUrl, apiKey: key || DEFAULT_DIFY.apiKey }
+      } else if (currentMode === 'api') {
+        const endpoint = document.getElementById('wiki-cfg-api-endpoint')?.value.trim()
+        const key = document.getElementById('wiki-cfg-api-key')?.value.trim()
+        const model = document.getElementById('wiki-cfg-api-model')?.value.trim()
+        if (!endpoint || !key || !model) { alert('请填写完整的 API 配置'); return }
+        newSettings.api = { endpoint, apiKey: key, model }
+      } else if (currentMode === 'direct') {
+        const endpoint = document.getElementById('wiki-cfg-direct-endpoint')?.value.trim()
+        const key = document.getElementById('wiki-cfg-direct-key')?.value.trim()
+        const model = document.getElementById('wiki-cfg-direct-model')?.value.trim()
+        if (!endpoint || !model) { alert('请填写端点和模型名称'); return }
+        newSettings.direct = { endpoint, apiKey: key, model }
+      }
+
+      saveSettings(newSettings)
+      resetConversation()
+      showChatView()
+      settingsPanel.remove()
+    })
+
+    document.getElementById('wiki-settings-logout').addEventListener('click', () => {
+      localStorage.removeItem(STORAGE_KEY)
+      resetConversation()
+      settingsPanel.remove()
+      redirectToLogin()
+    })
+  }
+
   // ─── 发送逻辑 ────────────────────────────────────────────
   async function handleSend() {
     const input = document.getElementById('wiki-chat-input')
@@ -317,47 +552,37 @@
     input.style.height = 'auto'
     sendBtn.disabled = true
 
-    // 用户消息
     appendMessage('user', query)
 
-    // 同步触发 Pagefind 搜索（不等 AI，立即展示页面链接）
     searchPagefind(query).then(results => renderSearchResults(results, searchContainer))
 
-    // AI 回答（需要本地 Dify 或已配置公网穿透地址）
-    if (isLocal || DIFY_PUBLIC_BASE) {
-      const typingDiv = document.createElement('div')
-      typingDiv.className = 'wiki-chat-msg wiki-chat-msg--bot wiki-chat-typing'
-      typingDiv.innerHTML = `<div class="wiki-chat-bubble">${getLoadingMsg()}</div>`
-      document.getElementById('wiki-chat-messages').appendChild(typingDiv)
+    const typingDiv = document.createElement('div')
+    typingDiv.className = 'wiki-chat-msg wiki-chat-msg--bot wiki-chat-typing'
+    typingDiv.innerHTML = `<div class="wiki-chat-bubble">${LOADING_MSGS[Math.floor(Math.random() * LOADING_MSGS.length)]}</div>`
+    document.getElementById('wiki-chat-messages').appendChild(typingDiv)
 
-      try {
-        await askDify(query)
-      } catch (e) {
-        if (e.name === 'AbortError') {
-          appendMessage('bot', `⏳ AI 响应超时（>${timeoutMs/1000}秒），可能是模型正在加载中。请稍后重试，或查看下方相关页面。`)
-        } else {
-          appendMessage('bot', `⚠ AI 暂时无法回答（${e.message}），请查看下方相关页面。`)
-        }
-      } finally {
-        typingDiv.remove()
+    try {
+      await sendMessage(query)
+    } catch (e) {
+      if (e.name === 'AbortError') {
+        appendMessage('bot', '⏳ AI 响应超时，请稍后重试。')
+      } else {
+        appendMessage('bot', `⚠ AI 暂时无法回答（${e.message}）`)
       }
-    } else {
-      appendMessage('bot', '当前为公网访问，AI 对话需在本地运行。请查看上方相关页面。')
+    } finally {
+      typingDiv.remove()
     }
 
     sendBtn.disabled = false
     input.focus()
   }
 
-  // ─── 自动调整输入框高度 ──────────────────────────────────
   function autoResize(el) {
     el.style.height = 'auto'
     el.style.height = Math.min(el.scrollHeight, 120) + 'px'
   }
 
   // ─── footer-credit OpenClaw 链接居中处理 ──────────────────
-  // 把 <a>OpenClaw_Launcher_<br>LobsterLauncher</a>
-  // 变成 <a href=...><span>OpenClaw_Launcher_</span><span>LobsterLauncher</span></a>
   function fixFooterCreditLinks() {
     const footerLinks = document.querySelectorAll('.footer-credit a')
     footerLinks.forEach(link => {
@@ -373,15 +598,97 @@
   // ─── 初始化 ──────────────────────────────────────────────
   function init() {
     fixFooterCreditLinks()
+
+    // ─── 未登录时：创建面板，点击登录按钮跳转 ───
+    if (!isConfigured()) {
+      const fab = document.createElement('button')
+      fab.id = 'wiki-chat-fab'
+      fab.title = CHAT_TITLE
+      fab.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>`
+
+      const panel = document.createElement('div')
+      panel.id = 'wiki-chat-panel'
+      panel.setAttribute('aria-hidden', 'true')
+      panel.innerHTML = `
+        <div id="wiki-chat-header">
+          <span id="wiki-chat-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            ${CHAT_TITLE}
+          </span>
+          <div id="wiki-chat-header-actions">
+            <button id="wiki-chat-login-btn" title="登录">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                <polyline points="10 17 15 12 10 7"/>
+                <line x1="15" y1="12" x2="3" y2="12"/>
+              </svg>
+            </button>
+            <button id="wiki-chat-close" title="关闭">✕</button>
+          </div>
+        </div>
+        <div id="wiki-chat-content">
+          <div id="wiki-chat-messages">
+            <div class="wiki-chat-msg wiki-chat-msg--bot">
+              <div class="wiki-chat-bubble">${WELCOME_MSG}</div>
+            </div>
+            <div class="wiki-chat-msg wiki-chat-msg--bot">
+              <div class="wiki-chat-bubble">👉 点击右上角的 <strong>登录</strong> 按钮进入配置页面，连接你的 AI 模型。</div>
+            </div>
+          </div>
+        </div>
+        <div id="wiki-chat-input-area">
+          <textarea id="wiki-chat-input" placeholder="请先登录后再提问…" rows="1" disabled></textarea>
+          <button id="wiki-chat-send" title="发送" disabled>
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+          </button>
+        </div>
+      `
+
+      document.body.appendChild(fab)
+      document.body.appendChild(panel)
+
+      function openPanel() {
+        panel.classList.add('wiki-chat-panel--open')
+        panel.setAttribute('aria-hidden', 'false')
+        fab.classList.add('wiki-chat-fab--active')
+      }
+      function closePanel() {
+        panel.classList.remove('wiki-chat-panel--open')
+        panel.setAttribute('aria-hidden', 'true')
+        fab.classList.remove('wiki-chat-fab--active')
+      }
+
+      fab.addEventListener('click', () => {
+        panel.classList.contains('wiki-chat-panel--open') ? closePanel() : openPanel()
+      })
+      document.getElementById('wiki-chat-close').addEventListener('click', closePanel)
+      document.getElementById('wiki-chat-login-btn').addEventListener('click', redirectToLogin)
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closePanel()
+      })
+      return
+    }
+
     const { fab, panel } = createWidget()
 
-    // 开关面板
     function openPanel() {
       panel.classList.add('wiki-chat-panel--open')
       panel.setAttribute('aria-hidden', 'false')
       fab.classList.add('wiki-chat-fab--active')
-      document.getElementById('wiki-chat-input').focus()
+      showChatView()
+      setTimeout(() => {
+        const input = document.getElementById('wiki-chat-input')
+        if (input) input.focus()
+      }, 350)
     }
+
     function closePanel() {
       panel.classList.remove('wiki-chat-panel--open')
       panel.setAttribute('aria-hidden', 'true')
@@ -393,21 +700,19 @@
     })
 
     document.getElementById('wiki-chat-close').addEventListener('click', closePanel)
-
-    // 清空对话（同时重置轮数）
+    document.getElementById('wiki-chat-settings-btn').addEventListener('click', showSettings)
+    document.getElementById('wiki-chat-login-btn').addEventListener('click', redirectToLogin)
     document.getElementById('wiki-chat-clear').addEventListener('click', () => {
-      conversationId = null
-      turnCount = 0
+      resetConversation()
       const messages = document.getElementById('wiki-chat-messages')
-      messages.innerHTML = ''
-      appendMessage('bot', WELCOME_MSG)
-      document.getElementById('wiki-chat-search-results').style.display = 'none'
+      if (messages) {
+        messages.innerHTML = ''
+        appendMessage('bot', WELCOME_MSG)
+      }
+      const searchContainer = document.getElementById('wiki-chat-search-results')
+      if (searchContainer) searchContainer.style.display = 'none'
     })
 
-    // 页面加载时预热 Dify（静默 ping，不展示结果）
-    warmUp()
-
-    // 发送
     document.getElementById('wiki-chat-send').addEventListener('click', handleSend)
     document.getElementById('wiki-chat-input').addEventListener('keydown', e => {
       if (e.key === 'Enter' && !e.shiftKey) {
@@ -419,7 +724,6 @@
       autoResize(this)
     })
 
-    // ESC 关闭
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') closePanel()
     })

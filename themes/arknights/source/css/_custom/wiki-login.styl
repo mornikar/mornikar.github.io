@@ -1,0 +1,349 @@
+/* ============================================
+   Wiki AI 登录页 — 科幻风格
+   星云粒子 + 扫描线 + 霓虹发光边框
+   ============================================ */
+
+#wiki-login-page
+  position fixed
+  inset 0
+  width 100vw
+  height 100vh
+  overflow hidden
+  background #0a0a0f
+  display flex
+  align-items center
+  justify-content center
+  z-index 9999
+
+  /* Canvas 粒子背景 */
+  #wiki-login-canvas
+    position absolute
+    inset 0
+    width 100%
+    height 100%
+    z-index 0
+
+  /* 扫描线 overlay */
+  .wiki-login-scanlines
+    position absolute
+    inset 0
+    z-index 1
+    pointer-events none
+    background repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 255, 0.03) 2px,
+      rgba(0, 255, 255, 0.03) 4px
+    )
+    animation scanline-move 8s linear infinite
+
+  /* 主内容容器 */
+  .wiki-login-container
+    position relative
+    z-index 2
+    width 100%
+    max-width 420px
+    padding 2rem
+    display flex
+    flex-direction column
+    align-items center
+    gap 1.5rem
+
+  /* === 品牌区 === */
+  .wiki-login-brand
+    text-align center
+    display flex
+    flex-direction column
+    align-items center
+    gap 0.5rem
+
+  .wiki-login-brand-icon
+    width 64px
+    height 64px
+    border-radius 50%
+    background linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 128, 0.1))
+    border 1px solid rgba(0, 255, 255, 0.3)
+    display flex
+    align-items center
+    justify-content center
+    color #2bf
+    font-size 28px
+    animation brand-pulse 3s ease-in-out infinite
+    box-shadow 0 0 20px rgba(0, 255, 255, 0.15), inset 0 0 20px rgba(0, 255, 255, 0.05)
+    svg
+      width 32px
+      height 32px
+
+  .wiki-login-brand-title
+    font-size 1.75rem
+    font-weight 700
+    color #fff
+    margin 0
+    letter-spacing 2px
+    text-shadow 0 0 20px rgba(0, 255, 255, 0.4), 0 0 40px rgba(0, 255, 255, 0.2)
+
+  .wiki-login-brand-subtitle
+    font-size 0.875rem
+    color rgba(255, 255, 255, 0.5)
+    margin 0
+    letter-spacing 4px
+    text-transform uppercase
+
+  /* === 登录卡片 === */
+  .wiki-login-card
+    width 100%
+    background rgba(10, 15, 25, 0.85)
+    backdrop-filter blur(20px)
+    border 1px solid rgba(0, 255, 255, 0.15)
+    border-radius 16px
+    padding 2rem
+    position relative
+    overflow hidden
+    box-shadow 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 60px rgba(0, 255, 255, 0.05)
+
+    /* 卡片发光边框动画 */
+    &::before
+      content ''
+      position absolute
+      top -2px
+      left -2px
+      right -2px
+      bottom -2px
+      background linear-gradient(45deg, #2bf, transparent, #fe2, transparent, #2bf)
+      background-size 400% 400%
+      border-radius 18px
+      z-index -1
+      animation border-glow 6s ease infinite
+      opacity 0.4
+
+    &::after
+      content ''
+      position absolute
+      inset 0
+      border-radius 16px
+      background linear-gradient(180deg, rgba(0, 255, 255, 0.03) 0%, transparent 50%)
+      pointer-events none
+
+  /* === 表单字段 === */
+  .wiki-login-field
+    margin-bottom 1.25rem
+    position relative
+
+    &:last-child
+      margin-bottom 0
+
+  .wiki-login-label
+    display flex
+    align-items center
+    gap 0.4rem
+    font-size 0.75rem
+    color rgba(0, 255, 255, 0.7)
+    text-transform uppercase
+    letter-spacing 2px
+    margin-bottom 0.5rem
+    font-weight 500
+    svg
+      opacity 0.6
+
+  .wiki-login-field input[type="text"],
+  .wiki-login-field input[type="password"]
+    width 100%
+    padding 0.75rem 1rem
+    background rgba(0, 0, 0, 0.4)
+    border 1px solid rgba(0, 255, 255, 0.2)
+    border-radius 8px
+    color #fff
+    font-size 0.9375rem
+    font-family inherit
+    outline none
+    transition all 0.3s ease
+    box-sizing border-box
+
+    &::placeholder
+      color rgba(255, 255, 255, 0.25)
+
+    &:focus
+      border-color #2bf
+      box-shadow 0 0 0 3px rgba(0, 255, 255, 0.1), 0 0 15px rgba(0, 255, 255, 0.1)
+      background rgba(0, 0, 0, 0.6)
+
+  .wiki-login-field textarea
+    width 100%
+    padding 0.75rem 1rem
+    background rgba(0, 0, 0, 0.4)
+    border 1px solid rgba(0, 255, 255, 0.2)
+    border-radius 8px
+    color #fff
+    font-size 0.9375rem
+    font-family inherit
+    outline none
+    transition all 0.3s ease
+    box-sizing border-box
+    resize vertical
+    min-height 80px
+
+    &::placeholder
+      color rgba(255, 255, 255, 0.25)
+
+    &:focus
+      border-color #2bf
+      box-shadow 0 0 0 3px rgba(0, 255, 255, 0.1), 0 0 15px rgba(0, 255, 255, 0.1)
+      background rgba(0, 0, 0, 0.6)
+
+  .wiki-login-field-line
+    position absolute
+    bottom 0
+    left 50%
+    width 0
+    height 2px
+    background linear-gradient(90deg, transparent, #2bf, transparent)
+    transition all 0.4s ease
+    border-radius 1px
+
+  .wiki-login-field input:focus + .wiki-login-field-line
+    left 0
+    width 100%
+
+  /* === 模式切换标签 === */
+  .wiki-login-mode-tabs
+    display flex
+    gap 0.5rem
+    background rgba(0, 0, 0, 0.3)
+    border-radius 10px
+    padding 0.25rem
+    border 1px solid rgba(0, 255, 255, 0.1)
+
+  .wiki-mode-tab
+    flex 1
+    display flex
+    flex-direction column
+    align-items center
+    gap 0.25rem
+    padding 0.6rem 0.3rem
+    background transparent
+    border none
+    border-radius 8px
+    color rgba(255, 255, 255, 0.5)
+    font-size 0.75rem
+    cursor pointer
+    transition all 0.3s ease
+    position relative
+    overflow hidden
+
+    &:hover
+      color rgba(255, 255, 255, 0.8)
+      background rgba(0, 255, 255, 0.05)
+
+    &.active
+      color #2bf
+      background rgba(0, 255, 255, 0.1)
+      box-shadow 0 0 15px rgba(0, 255, 255, 0.1)
+
+      .wiki-mode-tab-icon
+        filter drop-shadow(0 0 6px rgba(0, 255, 255, 0.5))
+
+  .wiki-mode-tab-icon
+    font-size 1.25rem
+    transition all 0.3s ease
+
+  .wiki-mode-tab-text
+    font-size 0.7rem
+    white-space nowrap
+
+  /* === 提交按钮 === */
+  .wiki-login-submit
+    width 100%
+    padding 0.875rem
+    margin-top 0.5rem
+    background linear-gradient(135deg, rgba(0, 255, 255, 0.15), rgba(0, 200, 255, 0.1))
+    border 1px solid rgba(0, 255, 255, 0.3)
+    border-radius 10px
+    color #2bf
+    font-size 1rem
+    font-weight 600
+    letter-spacing 2px
+    cursor pointer
+    position relative
+    overflow hidden
+    transition all 0.3s ease
+    text-transform uppercase
+
+    &:hover
+      background linear-gradient(135deg, rgba(0, 255, 255, 0.25), rgba(0, 200, 255, 0.2))
+      border-color #2bf
+      box-shadow 0 0 25px rgba(0, 255, 255, 0.2), 0 0 50px rgba(0, 255, 255, 0.1)
+      transform translateY(-1px)
+
+    &:active
+      transform translateY(0)
+
+    .wiki-submit-glow
+      position absolute
+      inset 0
+      background linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent)
+      transform translateX(-100%)
+      transition transform 0.6s ease
+
+    &:hover .wiki-submit-glow
+      transform translateX(100%)
+
+  /* === 错误提示 === */
+  .wiki-login-error
+    color #ff4444
+    font-size 0.8125rem
+    text-align center
+    min-height 1.2rem
+    margin-top -0.5rem
+    margin-bottom 0.5rem
+    text-shadow 0 0 10px rgba(255, 68, 68, 0.3)
+    animation error-flicker 0.5s ease
+
+  /* === 底部提示 === */
+  .wiki-login-footer
+    font-size 0.75rem
+    color rgba(255, 255, 255, 0.3)
+    text-align center
+    margin 0
+    letter-spacing 1px
+
+  /* === 动画定义 === */
+  @keyframes scanline-move
+    0%
+      background-position 0 0
+    100%
+      background-position 0 100vh
+
+  @keyframes border-glow
+    0%, 100%
+      background-position 0% 50%
+    50%
+      background-position 100% 50%
+
+  @keyframes brand-pulse
+    0%, 100%
+      box-shadow 0 0 20px rgba(0, 255, 255, 0.15), inset 0 0 20px rgba(0, 255, 255, 0.05)
+    50%
+      box-shadow 0 0 35px rgba(0, 255, 255, 0.3), inset 0 0 30px rgba(0, 255, 255, 0.1)
+
+  @keyframes error-flicker
+    0%, 100%
+      opacity 1
+    50%
+      opacity 0.5
+
+  /* === 响应式 === */
+  @media (max-width: 480px)
+    .wiki-login-container
+      padding 1rem
+      max-width 100%
+
+    .wiki-login-card
+      padding 1.5rem
+      border-radius 12px
+
+    .wiki-login-brand-title
+      font-size 1.5rem
+
+    .wiki-mode-tab-text
+      font-size 0.65rem

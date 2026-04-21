@@ -1,5 +1,6 @@
-// 直接使用公网 IP（临时方案，IP 变化需手动更新）
-const DIFY_DOMAIN = '59.41.69.9'
+// DDNS 域名（Dynu 动态 DNS，自动跟随 IP 变化）
+// 域名: mornikar.giize.com（注意是两个 i，不是 gilze）
+const DIFY_DOMAIN = 'mornikar.giize.com'
 const DIFY_PORT = '8088'
 
 export default {

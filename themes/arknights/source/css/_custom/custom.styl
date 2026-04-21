@@ -49,3 +49,662 @@
     margin: 39px 0;
   }
 }
+
+// ============================================
+// Wiki AI 登录页 — 赛博雨幕 + Arknights 战术面板
+// ============================================
+
+#wiki-login-page
+  position fixed
+  inset 0
+  width 100vw
+  height 100vh
+  overflow hidden
+  background #06060c
+  display flex
+  align-items center
+  justify-content center
+  z-index 9999
+
+  // 多层 Canvas 背景容器
+  #wiki-login-bg
+    position absolute
+    inset 0
+    z-index 0
+    pointer-events none
+
+  // 扫描线 overlay
+  .wiki-login-scanlines
+    position absolute
+    inset 0
+    z-index 3
+    pointer-events none
+    background repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 200, 0.02) 2px,
+      rgba(0, 255, 200, 0.02) 4px
+    )
+    animation scanline-move 10s linear infinite
+
+  // 装饰网格
+  .wiki-login-grid
+    position absolute
+    inset 0
+    z-index 2
+    pointer-events none
+    background-image \
+      linear-gradient(rgba(0, 255, 200, 0.025) 1px, transparent 1px),\
+      linear-gradient(90deg, rgba(0, 255, 200, 0.025) 1px, transparent 1px)
+    background-size 80px 80px
+    mask-image radial-gradient(ellipse at center, black 20%, transparent 70%)
+    -webkit-mask-image radial-gradient(ellipse at center, black 20%, transparent 70%)
+
+  // 主内容区
+  .wiki-login-container
+    position relative
+    z-index 10
+    width 100%
+    max-width 420px
+    padding 2rem
+    display flex
+    flex-direction column
+    align-items center
+    gap 1.5rem
+
+  // ─── Logo 区 ───
+  .wiki-login-brand
+    text-align center
+    display flex
+    flex-direction column
+    align-items center
+    gap 0.5rem
+
+  .wiki-login-brand-icon
+    width 64px
+    height 64px
+    position relative
+    display flex
+    align-items center
+    justify-content center
+    color #00ffaa
+    animation brand-pulse 3s ease-in-out infinite
+
+    // 六边形外框
+    &::before
+      content ''
+      position absolute
+      inset 0
+      background linear-gradient(135deg, rgba(0, 255, 170, 0.12), rgba(0, 200, 255, 0.08))
+      clip-path polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)
+      border 1px solid rgba(0, 255, 170, 0.3)
+
+    // 内发光
+    &::after
+      content ''
+      position absolute
+      inset 3px
+      background linear-gradient(135deg, rgba(0, 255, 170, 0.06), rgba(0, 200, 255, 0.04))
+      clip-path polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)
+
+    svg
+      width 28px
+      height 28px
+      position relative
+      z-index 1
+      stroke #00ffaa
+
+  .wiki-login-brand-title
+    font-size 1.6rem
+    font-weight 700
+    color #fff
+    margin 0
+    letter-spacing 4px
+    text-shadow 0 0 20px rgba(0, 255, 170, 0.3), 0 0 40px rgba(0, 255, 170, 0.1)
+    font-family 'BenderLight', monospace
+
+  .wiki-login-brand-subtitle
+    font-size 0.75rem
+    color rgba(255, 255, 255, 0.35)
+    margin 0
+    letter-spacing 6px
+    text-transform uppercase
+    font-family 'BenderLight', monospace
+
+  // ─── 登录卡片 — Arknights + 黑客混合风格 ───
+  .wiki-login-card
+    width 100%
+    background rgba(6, 10, 18, 0.94)
+    backdrop-filter blur(30px)
+    border 1px solid rgba(0, 255, 170, 0.1)
+    position relative
+    overflow visible
+    box-shadow \
+      0 0 0 1px rgba(0, 255, 170, 0.03),\
+      0 12px 48px rgba(0, 0, 0, 0.7),\
+      0 0 100px rgba(0, 255, 170, 0.03)
+    padding 2rem
+
+    // 顶部状态条
+    &::before
+      content ''
+      position absolute
+      top -1px
+      left 24px
+      right 24px
+      height 1px
+      background linear-gradient(90deg, transparent, #00ffaa, transparent)
+      opacity 0.5
+
+    // 底部状态条
+    &::after
+      content ''
+      position absolute
+      bottom -1px
+      left 24px
+      right 24px
+      height 1px
+      background linear-gradient(90deg, transparent, #00cc88, transparent)
+      opacity 0.3
+
+    // 角标装饰 — 黑客风格
+    .wiki-card-corner
+      position absolute
+      width 12px
+      height 12px
+      border-color rgba(0, 255, 170, 0.35)
+      border-style solid
+      transition all 0.3s ease
+
+      &--tl
+        top -1px
+        left -1px
+        border-width 2px 0 0 2px
+
+      &--tr
+        top -1px
+        right -1px
+        border-width 2px 2px 0 0
+
+      &--bl
+        bottom -1px
+        left -1px
+        border-width 0 0 2px 2px
+
+      &--br
+        bottom -1px
+        right -1px
+        border-width 0 2px 2px 0
+
+    &:hover .wiki-card-corner
+      width 20px
+      height 20px
+      border-color rgba(0, 255, 170, 0.6)
+
+  // ─── 表单字段 ───
+  .wiki-login-field
+    margin-bottom 1.25rem
+    position relative
+
+    &:last-child
+      margin-bottom 0
+
+  .wiki-login-label
+    display flex
+    align-items center
+    gap 0.4rem
+    font-size 0.68rem
+    color rgba(0, 255, 170, 0.55)
+    text-transform uppercase
+    letter-spacing 2px
+    margin-bottom 0.5rem
+    font-weight 500
+    font-family 'BenderLight', monospace
+
+    svg
+      opacity 0.4
+      stroke rgba(0, 255, 170, 0.6)
+
+  .wiki-login-field input[type="text"],
+  .wiki-login-field input[type="password"]
+    width 100%
+    padding 0.75rem 1rem
+    background rgba(0, 0, 0, 0.55)
+    border 1px solid rgba(0, 255, 170, 0.12)
+    border-radius 0
+    color #e0fff0
+    font-size 0.9rem
+    font-family 'BenderLight', monospace
+    outline none
+    transition all 0.3s ease
+    box-sizing border-box
+    // 斜切角效果
+    clip-path polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)
+
+    &::placeholder
+      color rgba(255, 255, 255, 0.18)
+      font-family 'BenderLight', monospace
+
+    &:focus
+      border-color rgba(0, 255, 170, 0.4)
+      box-shadow 0 0 0 1px rgba(0, 255, 170, 0.08), inset 0 0 24px rgba(0, 255, 170, 0.03)
+      background rgba(0, 0, 0, 0.75)
+      color #fff
+
+  .wiki-login-field-line
+    position absolute
+    bottom 0
+    left 10px
+    right 10px
+    height 1px
+    background linear-gradient(90deg, transparent, #00ffaa, transparent)
+    opacity 0
+    transition opacity 0.3s ease
+
+  .wiki-login-field input:focus ~ .wiki-login-field-line
+    opacity 0.5
+
+  // ─── 模式切换 — 科技风标签 ───
+  .wiki-login-mode-tabs
+    display flex
+    gap 0
+    background rgba(0, 0, 0, 0.45)
+    border 1px solid rgba(0, 255, 170, 0.08)
+    padding 0.2rem
+    position relative
+
+    // 外框角标
+    &::before
+      content ''
+      position absolute
+      top -1px
+      left -1px
+      width 6px
+      height 6px
+      border-top 1px solid rgba(0, 255, 170, 0.25)
+      border-left 1px solid rgba(0, 255, 170, 0.25)
+
+    &::after
+      content ''
+      position absolute
+      bottom -1px
+      right -1px
+      width 6px
+      height 6px
+      border-bottom 1px solid rgba(0, 255, 170, 0.25)
+      border-right 1px solid rgba(0, 255, 170, 0.25)
+
+  .wiki-mode-tab
+    flex 1
+    display flex
+    flex-direction column
+    align-items center
+    gap 0.3rem
+    padding 0.55rem 0.15rem
+    background transparent
+    border none
+    color rgba(255, 255, 255, 0.35)
+    font-size 0.65rem
+    cursor pointer
+    transition all 0.3s ease
+    position relative
+    font-family 'BenderLight', monospace
+    letter-spacing 1px
+    text-transform uppercase
+
+    // 未选中时的细边框
+    &::before
+      content ''
+      position absolute
+      inset 0
+      border 1px solid transparent
+      transition all 0.3s ease
+
+    &:hover
+      color rgba(255, 255, 255, 0.65)
+      background rgba(0, 255, 170, 0.03)
+
+    &.active
+      color #00ffaa
+      background rgba(0, 255, 170, 0.07)
+
+      &::before
+        border-color rgba(0, 255, 170, 0.2)
+
+      .wiki-mode-tab-icon svg
+        filter drop-shadow(0 0 4px rgba(0, 255, 170, 0.4))
+        stroke #00ffaa
+
+      // 底部指示条
+      &::after
+        content ''
+        position absolute
+        bottom 2px
+        left 25%
+        right 25%
+        height 1px
+        background #00ffaa
+        box-shadow 0 0 6px rgba(0, 255, 170, 0.3)
+
+  .wiki-mode-tab-icon
+    display flex
+    align-items center
+    justify-content center
+
+    svg
+      width 18px
+      height 18px
+      stroke rgba(255, 255, 255, 0.35)
+      transition all 0.3s ease
+
+  .wiki-mode-tab-text
+    font-size 0.6rem
+    white-space nowrap
+
+  // ─── 提交按钮 — 战术确认风格 ───
+  .wiki-login-submit
+    width 100%
+    padding 0.875rem
+    margin-top 0.75rem
+    background rgba(0, 255, 170, 0.06)
+    border 1px solid rgba(0, 255, 170, 0.2)
+    border-radius 0
+    color #00ffaa
+    font-size 0.85rem
+    font-weight 600
+    letter-spacing 5px
+    cursor pointer
+    position relative
+    overflow hidden
+    transition all 0.3s ease
+    text-transform uppercase
+    font-family 'BenderLight', monospace
+    clip-path polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px)
+
+    &:hover
+      background rgba(0, 255, 170, 0.12)
+      border-color rgba(0, 255, 170, 0.4)
+      box-shadow 0 0 20px rgba(0, 255, 170, 0.1), inset 0 0 20px rgba(0, 255, 170, 0.03)
+      transform translateY(-1px)
+      color #fff
+
+    &:active
+      transform translateY(0)
+
+    // 扫描光效
+    .wiki-submit-glow
+      position absolute
+      inset 0
+      background linear-gradient(90deg, transparent, rgba(0, 255, 170, 0.12), transparent)
+      transform translateX(-100%)
+      transition transform 0.8s ease
+
+    &:hover .wiki-submit-glow
+      transform translateX(100%)
+
+    // 角标
+    &::before
+      content ''
+      position absolute
+      top 0
+      left 0
+      width 6px
+      height 6px
+      border-top 1px solid #00ffaa
+      border-left 1px solid #00ffaa
+      opacity 0.4
+
+    &::after
+      content ''
+      position absolute
+      bottom 0
+      right 0
+      width 6px
+      height 6px
+      border-bottom 1px solid #00ffaa
+      border-right 1px solid #00ffaa
+      opacity 0.4
+
+  // ─── 错误提示 ───
+  .wiki-login-error
+    color #ff5555
+    font-size 0.78rem
+    text-align center
+    min-height 1.2rem
+    margin-top -0.25rem
+    margin-bottom 0.5rem
+    text-shadow 0 0 8px rgba(255, 85, 85, 0.25)
+    animation error-flicker 0.5s ease
+    font-family 'BenderLight', monospace
+    letter-spacing 1px
+
+  // ─── 底部提示 ───
+  .wiki-login-footer
+    font-size 0.65rem
+    color rgba(255, 255, 255, 0.2)
+    text-align center
+    margin 0
+    letter-spacing 3px
+    text-transform uppercase
+    font-family 'BenderLight', monospace
+
+  // ─── 动画定义 ───
+  @keyframes scanline-move
+    0%
+      background-position 0 0
+    100%
+      background-position 0 100vh
+
+  @keyframes border-glow
+    0%, 100%
+      background-position 0% 50%
+    50%
+      background-position 100% 50%
+
+  @keyframes brand-pulse
+    0%, 100%
+      filter drop-shadow(0 0 6px rgba(0, 255, 170, 0.15))
+    50%
+      filter drop-shadow(0 0 14px rgba(0, 255, 170, 0.35))
+
+  @keyframes error-flicker
+    0%, 100%
+      opacity 1
+    50%
+      opacity 0.5
+
+  // ─── 响应式 ───
+  @media (max-width: 480px)
+    .wiki-login-container
+      padding 1rem
+      max-width 100%
+
+    .wiki-login-card
+      padding 1.5rem
+
+    .wiki-login-brand-title
+      font-size 1.3rem
+
+    .wiki-mode-tab-text
+      font-size 0.55rem
+
+    .wiki-login-brand-icon
+      width 52px
+      height 52px
+
+// ============================================
+// 导航栏登录按钮
+// ============================================
+
+.wiki-login-btn
+  position fixed
+  top 16px
+  right 20px
+  z-index 1000
+  display flex
+  align-items center
+  gap 6px
+  padding 6px 14px
+  background rgba(0, 255, 200, 0.08)
+  border 1px solid rgba(0, 255, 200, 0.2)
+  color #2bf
+  font-size 0.8rem
+  font-family 'BenderLight', monospace
+  letter-spacing 1px
+  text-decoration none
+  clip-path polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)
+  transition all 0.3s ease
+
+  svg
+    stroke #2bf
+    transition all 0.3s ease
+
+  &:hover
+    background rgba(0, 255, 200, 0.15)
+    border-color rgba(0, 255, 200, 0.4)
+    box-shadow 0 0 15px rgba(0, 255, 200, 0.1)
+    color #fff
+
+    svg
+      stroke #fff
+      filter drop-shadow(0 0 4px rgba(0, 255, 200, 0.5))
+
+// ============================================
+// 登录切换动画 — 扫描线窗口揭示
+// 扫描线条带从右到左移动，条带内展示目标页面预览
+// ============================================
+
+#wiki-scan-transition
+  position fixed
+  inset 0
+  z-index 10000
+  pointer-events none
+  overflow hidden
+
+  .wiki-scan-line
+    position absolute
+    top 0
+    right -90px
+    width 90px
+    height 100%
+    background linear-gradient(90deg,
+      transparent 0%,
+      rgba(0, 255, 200, 0.03) 15%,
+      rgba(0, 255, 200, 0.18) 50%,
+      rgba(0, 255, 200, 0.03) 85%,
+      transparent 100%
+    )
+    box-shadow \
+      -15px 0 50px rgba(0, 255, 200, 0.2), \
+      15px 0 50px rgba(0, 255, 200, 0.1), \
+      inset 0 0 40px rgba(0, 255, 200, 0.06)
+    display flex
+    align-items center
+    justify-content center
+    transition transform 3.6s cubic-bezier(0.22, 0, 0.28, 1)
+
+    // 扫描线边缘高光
+    &::before
+      content ''
+      position absolute
+      left 0
+      top 0
+      bottom 0
+      width 1px
+      background linear-gradient(180deg, transparent, #2bf, transparent)
+      opacity 0.6
+
+    &::after
+      content ''
+      position absolute
+      right 0
+      top 0
+      bottom 0
+      width 1px
+      background linear-gradient(180deg, transparent, #2bf, transparent)
+      opacity 0.4
+
+  &.active .wiki-scan-line
+    transform translateX(-(100vw + 180px))
+
+  // ─── 目标页面预览（微型聊天界面） ───
+  .wiki-scan-preview
+    width 72px
+    height 78%
+    background rgba(6, 10, 16, 0.97)
+    border 1px solid rgba(0, 255, 200, 0.2)
+    border-radius 3px
+    overflow hidden
+    display flex
+    flex-direction column
+    gap 4px
+    padding 8px 6px
+    box-shadow 0 0 30px rgba(0, 255, 200, 0.08), inset 0 0 20px rgba(0, 255, 200, 0.02)
+    position relative
+
+  // 模拟消息气泡
+  .wiki-scan-msg
+    align-self var(--a)
+    width var(--w)
+    height 7px
+    background rgba(0, 255, 200, 0.12)
+    border-radius 3px
+    animation scan-msg-pulse 1.8s ease var(--d) infinite alternate
+
+  // 输入框
+  .wiki-scan-input
+    margin-top auto
+    height 12px
+    border 1px solid rgba(0, 255, 200, 0.15)
+    border-radius 2px
+    position relative
+    background rgba(0, 255, 200, 0.03)
+
+  // 闪烁光标
+  .wiki-scan-cursor
+    position absolute
+    left 3px
+    top 3px
+    bottom 3px
+    width 2px
+    background #2bf
+    animation cursor-blink 0.7s step-end infinite
+    box-shadow 0 0 4px rgba(0, 255, 200, 0.5)
+
+  // 数据流装饰线
+  .wiki-scan-datastream
+    position absolute
+    left 0
+    right 0
+    top var(--top)
+    height 1px
+    background linear-gradient(90deg, transparent, rgba(0, 255, 200, 0.15), transparent)
+    opacity 0
+    animation datastream-flow 2s linear var(--delay) infinite
+
+@keyframes scan-msg-pulse
+  from
+    opacity 0.25
+    transform scaleX(0.9)
+  to
+    opacity 0.7
+    transform scaleX(1)
+
+@keyframes cursor-blink
+  0%, 100%
+    opacity 1
+  50%
+    opacity 0
+
+@keyframes datastream-flow
+  0%
+    opacity 0
+    transform translateX(100%)
+  20%
+    opacity 1
+  80%
+    opacity 1
+  100%
+    opacity 0
+    transform translateX(-100%)

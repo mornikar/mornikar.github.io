@@ -1,0 +1,108 @@
+<div id="wiki-login-page">
+  <!-- 多层 Canvas 背景容器 -->
+  <div id="wiki-login-bg"></div>
+
+  <!-- 扫描线 overlay -->
+  <div class="wiki-login-scanlines"></div>
+
+  <!-- 装饰性网格线 -->
+  <div class="wiki-login-grid"></div>
+
+  <!-- 主内容区 -->
+  <div class="wiki-login-container">
+    <!-- Logo 区 -->
+    <div class="wiki-login-brand">
+      <div class="wiki-login-brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <h1 class="wiki-login-brand-title">Wiki AI Mornikar</h1>
+      <p class="wiki-login-brand-subtitle">连接你的 AI 模型</p>
+    </div>
+
+    <!-- 登录表单卡片 — Arknights 科技风 -->
+    <div class="wiki-login-card">
+      <!-- 角标装饰 -->
+      <div class="wiki-card-corner wiki-card-corner--tl"></div>
+      <div class="wiki-card-corner wiki-card-corner--tr"></div>
+      <div class="wiki-card-corner wiki-card-corner--bl"></div>
+      <div class="wiki-card-corner wiki-card-corner--br"></div>
+
+      <!-- 用户名 -->
+      <div class="wiki-login-field">
+        <label class="wiki-login-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          用户名
+        </label>
+        <input type="text" id="wiki-login-username" placeholder="输入你的昵称" autocomplete="off" maxlength="20">
+        <div class="wiki-login-field-line"></div>
+      </div>
+
+      <!-- 接入方式 -->
+      <div class="wiki-login-field">
+        <label class="wiki-login-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+          接入方式
+        </label>
+        <div class="wiki-login-mode-tabs">
+          <button class="wiki-mode-tab active" data-mode="dify">
+            <span class="wiki-mode-tab-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
+            </span>
+            <span class="wiki-mode-tab-text">Dify 知识库</span>
+          </button>
+          <button class="wiki-mode-tab" data-mode="api">
+            <span class="wiki-mode-tab-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+            </span>
+            <span class="wiki-mode-tab-text">在线 API</span>
+          </button>
+          <button class="wiki-mode-tab" data-mode="direct">
+            <span class="wiki-mode-tab-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                <line x1="8" y1="21" x2="16" y2="21"/>
+                <line x1="12" y1="17" x2="12" y2="21"/>
+              </svg>
+            </span>
+            <span class="wiki-mode-tab-text">直连模型</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 动态配置区 -->
+      <div id="wiki-login-config-area"></div>
+
+      <!-- 错误提示 -->
+      <div id="wiki-login-error" class="wiki-login-error"></div>
+
+      <!-- 提交按钮 -->
+      <button id="wiki-login-submit" class="wiki-login-submit">
+        <span class="wiki-submit-text">进入对话</span>
+        <span class="wiki-submit-glow"></span>
+      </button>
+    </div>
+
+    <!-- 底部提示 -->
+    <p class="wiki-login-footer">配置将保存在浏览器本地</p>
+  </div>
+</div>
+
+<script defer src="/js/wiki-login.js"></script>
