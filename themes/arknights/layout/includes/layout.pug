@@ -59,6 +59,10 @@ html(lang=config.language theme-mode=htmlThemeMode)
     script(defer src='https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js')
     script(defer src=url_for('/js/wiki-chat.js'))
 
+    //- Phase 7: Wiki AI 登录页（仅 /login/ 页面加载）
+    if _page.path && _page.path.indexOf('login') === 0
+      script(src=url_for('/js/wiki-login.js'))
+
     //- Phase 8: Wiki AI 看板娘 (Live2D)
     if theme.kanban && theme.kanban.enable
       script(defer src=url_for('/live2d/live2d.js'))

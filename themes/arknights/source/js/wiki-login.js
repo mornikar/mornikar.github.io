@@ -12,6 +12,7 @@
 
 ;(function () {
   'use strict'
+  console.log('[wiki-login] IIFE 开始执行, readyState:', document.readyState, 'loginPage:', !!document.getElementById('wiki-login-page'))
 
   const STORAGE_KEY = 'wiki-chat-settings'
 
