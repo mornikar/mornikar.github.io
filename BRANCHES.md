@@ -1,7 +1,7 @@
 # 🌲 分支架构说明
 
 > 本文件说明 mornikar.github.io 仓库的分支结构与工作流程。
-> **最后更新**：2026-04-19
+> **最后更新**：2026-04-22
 
 ---
 
@@ -11,7 +11,7 @@
 :|------|------|------|----------|
 | **`source`** | 🔧 **开发分支** | 否 | 所有开发在此完成 |
 | **`gh-pages`** | 🏠 **GitHub Pages 部署源**（静态文件） | 否 | CI 自动推送；不手动操作 |
-| **`main`** | 📌 **备用**（无实际作用） | 否 | 不使用 |
+| **`main`** | 📄 **项目文档展示** | 否 | 从 source 同步文档 |
 
 > ⚠️ **核心原则**：永远在 `source` 开发。**不要**直接推送内容到 `gh-pages`。
 
@@ -68,13 +68,32 @@ source 分支（当前仓库）
 
 > 💡 `gh-pages` 分支由 CI 通过 `peaceiris/actions-gh-pages@v4` 自动推送（`force_orphan: true`）。**不使用** `deploy-pages@v4` 的 artifact 方式——因为 `github-pages` 环境的自定义分支策略会拦截 artifact 部署。
 
-### main（主分支）
+### main（主分支 / 项目文档）
 
 | 属性 | 值 |
 :|------|-----|
-| **职责** | 备用，当前无实际作用 |
-| **历史** | 曾作为 GitHub Actions workflow 方式的部署源（2026-04-18） |
-| **禁止** | 不在此分支开发或推送 |
+| **职责** | 项目文档展示分支，GitHub 仓库首页展示用 |
+| **内容** | `README.md`、`BRANCHES.md`、`.docs-src/` 项目文档 |
+| **更新方式** | 从 `source` 分支手动同步文档文件 |
+| **禁止** | 不在此分支开发 |
+
+**主要内容**：
+
+```
+main 分支（项目文档）
+├── README.md            ← 项目说明（与 source 分支同步）
+├── BRANCHES.md          ← 分支架构说明
+└── .docs-src/           ← 项目文档源文件
+    ├── index.md
+    ├── AI_CHAT/index.md       ← AI 助手文档
+    ├── PROJECT/index.md       ← 系统架构文档
+    ├── INSTALL/index.md       ← 安装部署指南
+    ├── MAINTENANCE/index.md
+    ├── TROUBLESHOOTING/index.md
+    └── MIGRATION/index.md
+```
+
+> 💡 `main` 分支仅包含项目文档，不包含源码或构建产物。源码在 `source` 分支，构建产物在 `gh-pages` 分支。
 
 ---
 
