@@ -15,6 +15,8 @@
 | 📝 **Wiki 管理** | 把 Markdown 丢进 `.wiki/` 目录，push 即发布 |
 | 🔗 **WikiLink 双向链接** | `[[文章标题]]` 自动高亮，鼠标悬停预览 |
 | 🤖 **AI 对话侧边栏** | 网站右下角悬浮按钮，接入 Dify RAG 知识库 |
+| 🐱 **Live2D 看板娘** | 页面左侧阿丽露模型，可对话、换装、TTS 朗读 |
+| 🎙️ **TTS 朗读** | AI 回复自动朗读，多音色切换，猫女仆人设 |
 | 🔍 **静态全文搜索** | Pagefind，无需服务器，离线可用 |
 | 🎨 **Arknights 明日方舟主题** | 自定义 CSS，蓝色系卡片风格 |
 | ⚡ **CI 全自动发布** | push → 2 分钟内上线，无需手动操作 |
@@ -74,6 +76,9 @@ git add . && git commit -m "更新文章" && git push
 
 source/_posts/            ← Hexo 文章（由脚本自动生成，无需手动编辑）
 themes/arknights/         ← 明日方舟风格主题
+  source/live2d/          ← Live2D 看板娘 + AI 对话
+  source/js/wiki-chat.js  ← AI 对话面板 + TTS
+  source/js/wiki-login.js ← 登录页特效 + 配置
 scripts/                   ← 自动化脚本
 ```
 
@@ -88,6 +93,7 @@ scripts/                   ← 自动化脚本
 | wiki-to-hexo.js | v4.0 | Wiki → Hexo 格式转换 |
 | Dify | 1.13.3 | 本地 RAG 知识库 + AI 对话（可选） |
 | WikiChat | — | 网站侧边栏 AI 悬浮按钮 |
+| Live2D | Cubism 4 | 看板娘 AI 对话 + TTS 朗读 |
 | Pagefind | 1.5.x | 静态全文搜索 |
 | GitHub Actions | — | CI 自动构建与部署 |
 

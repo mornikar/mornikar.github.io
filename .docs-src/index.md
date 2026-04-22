@@ -112,7 +112,7 @@ wiki-sync.bat --dry-run
 | **Hexo** | 7.x | 静态博客生成 |
 | **hexo-theme-arknights** | fork | 明日方舟风格主题 |
 | **wiki-to-hexo.js** | v4.0 | Wiki → Hexo 格式转换 |
-| **Wiki AI 助手** | Phase 7 | 三模式 AI 对话（登录页 + 悬浮面板） |
+| **Wiki AI 助手** | Phase 7+ | 三模式 AI 对话（登录页 + 悬浮面板 + Live2D 看板娘） |
 | **Dify** | 1.13.3 | 本地 RAG 知识库 |
 | **LM Studio** | — | 本地模型推理 |
 | **Cloudflare Worker** | — | API 代理（CORS 跨域） |
