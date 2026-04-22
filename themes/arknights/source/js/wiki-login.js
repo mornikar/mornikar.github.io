@@ -12,7 +12,6 @@
 
 ;(function () {
   'use strict'
-  console.log('[wiki-login] IIFE 开始执行, readyState:', document.readyState, 'loginPage:', !!document.getElementById('wiki-login-page'))
 
   const STORAGE_KEY = 'wiki-chat-settings'
 
@@ -246,7 +245,6 @@
     return null
   }
   function saveSettings(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)) }
-  const DEFAULT_PROMPT = '你是一个基于 Wiki 知识库的 AI 助手，擅长回答关于编程、AI、LLM、RAG 等技术问题。请用中文回答，保持简洁准确。'
 
   function getDefaultSettings() {
     return { mode: 'dify', username: '', prompt: DEFAULT_PROMPT, dify: { ...DEFAULT_DIFY }, api: { endpoint: '', apiKey: '', model: '' }, direct: { endpoint: '', apiKey: '', model: '' } }
