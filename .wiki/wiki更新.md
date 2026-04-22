@@ -1,4 +1,3 @@
-
 完整的架构梳理：
 
 ---
@@ -47,15 +46,15 @@
 
 `raw/` 存放不可发布的原始材料，**不转换到博客文章**，但以下子目录有特殊处理：
 
-| 子目录 | 用途 |
-|--------|------|
-| `raw/articles/` | 主题文章笔记，带 frontmatter |
-| `raw/ML/` | 机器学习笔记 |
-| `raw/PM/` | 产品经理资料 |
-| `raw/OS/` | 操作系统笔记 |
-| `raw/skills/` | 技能笔记（flask/git/mysql/python/ubuntu/web） |
-| `raw/snippets/` | 可复用代码/嵌入模板片段 |
-| `raw/assets/` | **PDF、图片等二进制资源** |
+| 子目录             | 用途                                      |
+| --------------- | --------------------------------------- |
+| `raw/articles/` | 主题文章笔记，带 frontmatter                    |
+| `raw/ML/`       | 机器学习笔记                                  |
+| `raw/PM/`       | 产品经理资料                                  |
+| `raw/OS/`       | 操作系统笔记                                  |
+| `raw/skills/`   | 技能笔记（flask/git/mysql/python/ubuntu/web） |
+| `raw/snippets/` | 可复用代码/嵌入模板片段                            |
+| `raw/assets/`   | **PDF、图片等二进制资源**                        |
 
 ### PDF 嵌入方法
 
@@ -99,5 +98,3 @@ push 后，CI 自动：
 - ❌ `.docs-src/` — 这是项目文档站用的（mornikar.github.io/docs/），不是博客文章
 
 所有未处理的 md 文件，直接扔进 `.wiki/` 对应子目录，然后 commit + push，剩下的 CI 全自动完成。**
-
-

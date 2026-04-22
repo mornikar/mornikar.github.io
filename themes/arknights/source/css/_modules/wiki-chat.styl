@@ -141,6 +141,39 @@
     padding 1px 5px
     border-radius 3px
     font-size 0.85em
+  pre
+    background var(--theme-bg-soft)
+    border 1px solid var(--theme-border-soft)
+    border-radius 6px
+    padding 10px 12px
+    overflow-x auto
+    margin 6px 0
+    code
+      background transparent
+      padding 0
+      font-size 0.82em
+  ul, ol
+    margin 6px 0
+    padding-left 20px
+  li
+    margin 2px 0
+  blockquote
+    border-left 3px solid var(--theme-highlight)
+    margin 6px 0
+    padding 4px 10px
+    background var(--theme-unimportant-trans)
+    border-radius 0 4px 4px 0
+  a
+    color var(--theme-highlight)
+    text-decoration underline
+    &:hover
+      color var(--theme-stress)
+  p
+    margin 4px 0
+  h1, h2, h3, h4
+    margin 8px 0 4px
+    font-size 1em
+    font-weight bold
 
 // ── 打字动画 ──────────────────────────────────────────────────
 .wiki-chat-typing .wiki-chat-bubble
@@ -466,3 +499,196 @@
     border-color rgba(255,255,255,0.08)
   .wiki-mode-btn.active
     background rgba(#2bf, 0.06)
+
+// ═════════════════════════════════════════════════════════════
+// Phase 8: Live2D 看板娘嵌入 (不修改上方任何现有样式)
+// ═════════════════════════════════════════════════════════════
+
+// 默认隐藏全局浮动看板娘（只用透明度隐藏，保留 WebGL 上下文）
+#waifu
+  opacity 0 !important
+  pointer-events none !important
+#waifu-toggle
+  display none !important
+
+// Live2D 容器区域
+#wiki-live2d-area
+  height 300px
+  min-height 300px
+  flex-shrink 0
+  display flex
+  flex-direction column
+  align-items center
+  justify-content center
+  border-top 1px solid var(--theme-border-soft)
+  background linear-gradient(to bottom, rgba(0,0,0,0.05), transparent)
+  position relative
+  overflow hidden
+
+  // 移入的 waifu 元素样式覆盖
+  #waifu
+    opacity 1 !important
+    pointer-events auto !important
+    display flex !important
+    position relative
+    bottom auto !important
+    right auto !important
+    left auto !important
+    top auto !important
+    margin 0 !important
+    width 100%
+    height 100%
+    transform none !important
+    transition none !important
+    z-index 1
+    align-items center
+    justify-content center
+
+    #live2d
+      width 100% !important
+      height 100% !important
+      max-width 280px
+      max-height 280px
+      cursor default
+
+    #waifu-tips
+      display none
+
+    // 工具栏：水平排列在底部
+    #waifu-tool
+      display flex !important
+      opacity 1 !important
+      position absolute
+      bottom 4px
+      left 50%
+      transform translateX(-50%)
+      top auto
+      right auto
+      flex-direction row
+      gap 6px
+      background rgba(0,0,0,0.25)
+      border-radius 16px
+      padding 4px 10px
+      z-index 10
+      transition none
+
+      span
+        display flex
+        align-items center
+        justify-content center
+        height 22px
+        width 22px
+        margin 0
+
+      svg
+        height 16px
+        width 16px
+        fill var(--theme-highlight)
+        cursor pointer
+        transition fill .2s
+        &:hover
+          fill var(--theme-stress)
+
+// ── TTS 音色选择 ──────────────────────────────────────────────
+ wiki-tts-controls
+  position relative
+  display flex
+  align-items center
+  flex-shrink 0
+  position relative
+
+.wiki-tts-btn
+  font-size 12px
+  padding 3px 6px
+  border-radius 8px
+  border 1px solid var(--theme-border)
+  background transparent
+  color var(--theme-unimportant)
+  cursor pointer
+  transition color .2s, border-color .2s
+  font-family inherit
+  display flex
+  align-items center
+  gap 2px
+
+  &:hover
+    color var(--theme-color)
+    border-color var(--theme-color)
+
+  &.on
+    color var(--theme-highlight)
+    border-color var(--theme-highlight)
+
+  &.speaking
+    animation tts-pulse .8s infinite
+
+ wiki-tts-voice-name
+  font-size 11px
+  max-width 36px
+  overflow hidden
+  text-overflow ellipsis
+  white-space nowrap
+
+// ── TTS 音色弹出列表 ──────────────────────────────────────────
+.wiki-tts-popup
+  position absolute
+  bottom calc(100% + 4px)
+  right 0
+  left auto
+  z-index 100000
+  background var(--theme-bg-trans)
+  border 1px solid var(--theme-border)
+  border-radius 10px
+  box-shadow 0 8px 24px rgba(0,0,0,0.3)
+  min-width 100px
+  overflow hidden
+  backdrop-filter blur(12px)
+
+.wiki-tts-popup-header
+  padding 6px 12px 4px
+  font-size 11px
+  color var(--theme-unimportant)
+  border-bottom 1px solid var(--theme-border)
+  letter-spacing .5px
+
+.wiki-tts-voice-list
+  padding 4px
+  display flex
+  flex-direction column
+  gap 2px
+
+.wiki-tts-voice-item
+  font-size 12px
+  padding 5px 10px
+  border-radius 6px
+  border none
+  background transparent
+  color var(--theme-text)
+  cursor pointer
+  text-align left
+  font-family inherit
+  transition background .15s
+
+  &:hover
+    background var(--theme-btn-bg)
+
+  &.available
+    font-weight 500
+
+@keyframes tts-pulse
+  0%, 100%
+    box-shadow 0 0 0 0 rgba(40, 167, 69, 0.4)
+  50%
+    box-shadow 0 0 0 4px rgba(40, 167, 69, 0)
+@keyframes tts-pulse
+  0%, 100%
+    box-shadow 0 0 0 0 rgba(40, 167, 69, 0.4)
+  50%
+    box-shadow 0 0 0 4px rgba(40, 167, 69, 0)
+
+
+      // 隐藏聊天/关于/退出按钮（Wiki Chat 自带聊天功能）
+      #waifu-tool-chat
+      #waifu-tool-info
+      #waifu-tool-quit
+        display none !important

@@ -36,6 +36,198 @@
     '喵喵喵？稍等一下下喵…',
   ]
 
+  // ─── TTS 状态管理 ────────────────────────────────────────
+  const TTS_STORAGE_KEY = 'wiki_tts_settings'
+  let ttsEnabled = true
+  let ttsVoice = ''
+  let ttsSpeaking = false
+
+  function loadTtsSettings() {
+    try {
+      // 与 Live2D 工具栏共享 TTS 设置
+      const raw = localStorage.getItem('waifu_tts_settings')
+      if (raw) {
+        const s = JSON.parse(raw)
+        ttsEnabled = s.enabled !== false
+        ttsVoice = s.voice || ''
+      }
+    } catch (_) {}
+  }
+
+  function saveTtsSettings() {
+    try {
+      localStorage.setItem('waifu_tts_settings', JSON.stringify({
+        enabled: ttsEnabled,
+        voice: ttsVoice
+      }))
+    } catch (_) {}
+  }
+
+  async function speakText(text) {
+    // 每次朗读前重新读取设置，确保与 Live2D 工具栏同步
+    loadTtsSettings()
+    if (!ttsEnabled || !text || !window.speechSynthesis) return
+    // Chrome bug: cancel() 后立即 speak() 会导致后续播放失败
+    if (speechSynthesis.speaking || speechSynthesis.pending) {
+      speechSynthesis.cancel()
+      await new Promise(r => setTimeout(r, 100))
+    } else {
+      speechSynthesis.cancel()
+    }
+    const utter = new SpeechSynthesisUtterance(text)
+    utter.lang = 'zh-CN'
+    utter.rate = 1.0
+    utter.pitch = 1.0
+    if (ttsVoice) {
+      const voices = speechSynthesis.getVoices()
+      // 先尝试精确匹配（兼容完整 voiceURI 格式）
+      let matched = voices.find(v =>
+        (v.voiceURI || v.name) === ttsVoice || v.name === ttsVoice
+      )
+      // 精确匹配失败时，用关键字包含匹配（兼容 Live2D 工具栏保存的简短关键字如 "Yunxi"）
+      if (!matched) {
+        const matches = voices.filter(v =>
+          (v.voiceURI && v.voiceURI.includes(ttsVoice)) ||
+          (v.name && v.name.includes(ttsVoice))
+        )
+        // 优先级：Online (Natural) > Online > 其他
+        matched = matches.find(v => /online.*natural|natural.*online/i.test(v.voiceURI || v.name))
+        if (!matched) matched = matches.find(v => /online/i.test(v.voiceURI || v.name))
+        if (!matched && matches.length > 0) matched = matches[0]
+      }
+      if (matched) utter.voice = matched
+    }
+    utter.onend = utter.onerror = () => {
+      ttsSpeaking = false
+      updateTtsUi()
+    }
+    ttsSpeaking = true
+    updateTtsUi()
+    speechSynthesis.speak(utter)
+  }
+
+  function updateTtsUi() {
+    const toggle = document.getElementById('wiki-tts-toggle')
+    const voiceName = document.getElementById('wiki-tts-voice-name')
+    if (toggle) {
+      toggle.classList.toggle('on', ttsEnabled)
+      toggle.textContent = ttsEnabled ? '🔊' : '🔇'
+      if (voiceName && ttsEnabled) {
+        const label = getVoiceLabel(ttsVoice)
+        voiceName.textContent = label ? ' ' + label : ''
+      } else if (voiceName) {
+        voiceName.textContent = ''
+      }
+    }
+  }
+
+  function getVoiceLabel(voiceId) {
+    const labels = { Xiaoxiao: '晓晓', Yunxi: '云希', Yunyang: '云扬', Yunxia: '云夏', Yunjian: '云健', Xiaoyi: '小艺' }
+    return labels[voiceId] || ''
+  }
+
+  const VOICE_PRESETS = [
+    { id: 'Xiaoxiao', label: '晓晓' },
+    { id: 'Yunxi',    label: '云希' },
+    { id: 'Yunyang',  label: '云扬' },
+    { id: 'Yunxia',  label: '云夏' },
+    { id: 'Yunjian', label: '云健' },
+    { id: 'Xiaoyi',  label: '小艺' },
+  ]
+
+  let voiceMap = {}  // id -> SpeechSynthesisVoice
+
+  function buildVoicePopup() {
+    const list = document.getElementById('wiki-tts-voice-list')
+    if (!list) return
+    list.innerHTML = ''
+    const popup = document.getElementById('wiki-tts-popup')
+    VOICE_PRESETS.forEach(p => {
+      const btn = document.createElement('button')
+      btn.className = 'wiki-tts-voice-item'
+      btn.dataset.voice = p.id
+      btn.textContent = p.label
+      if (voiceMap[p.id]) btn.classList.add('available')
+      btn.addEventListener('click', () => {
+        // 统一存简短关键字（如 "Yunxi"），与 Live2D 工具栏一致
+        // speakText 中会用关键字包含匹配找到完整 voiceURI
+        ttsVoice = p.id
+        ttsEnabled = true
+        saveTtsSettings()
+        updateTtsUi()
+        hideVoicePopup()
+      })
+      list.appendChild(btn)
+    })
+  }
+
+  function showVoicePopup() {
+    const popup = document.getElementById('wiki-tts-popup')
+    if (!popup) return
+    buildVoicePopup()
+    popup.style.display = 'block'
+  }
+
+  function hideVoicePopup() {
+    const popup = document.getElementById('wiki-tts-popup')
+    if (popup) popup.style.display = 'none'
+  }
+
+  function initTts() {
+    loadTtsSettings()
+    const toggle = document.getElementById('wiki-tts-toggle')
+    if (!toggle) return
+
+    // 加载可用音色
+    const applyVoices = () => {
+      const voices = speechSynthesis.getVoices()
+      if (!voices.length) return
+      VOICE_PRESETS.forEach(p => {
+        const matched = voices.find(v =>
+          v.lang && v.lang.startsWith('zh') &&
+          (v.name.toLowerCase().includes(p.id.toLowerCase()) ||
+           v.localService)
+        )
+        if (matched) voiceMap[p.id] = matched
+      })
+      if (!ttsVoice && VOICE_PRESETS.length) {
+        // 统一存简短关键字
+        ttsVoice = VOICE_PRESETS[0].id
+        saveTtsSettings()
+      }
+      updateTtsUi()
+    }
+
+    const vs = speechSynthesis.getVoices()
+    if (vs.length) applyVoices()
+    else {
+      speechSynthesis.onvoiceschanged = applyVoices
+      setTimeout(applyVoices, 500)
+    }
+
+    // 点击切换开关 / 弹出音色列表
+    toggle.addEventListener('click', () => {
+      const popup = document.getElementById('wiki-tts-popup')
+      if (popup && popup.style.display === 'block') {
+        hideVoicePopup()
+        return
+      }
+      showVoicePopup()
+    })
+
+    // 点击其他地方关闭弹窗
+    document.addEventListener('click', e => {
+      const popup = document.getElementById('wiki-tts-popup')
+      const toggle = document.getElementById('wiki-tts-toggle')
+      if (popup && popup.style.display === 'block' &&
+          !popup.contains(e.target) && (!toggle || !toggle.contains(e.target))) {
+        hideVoicePopup()
+      }
+    })
+
+    updateTtsUi()
+  }
+
   // ─── 用户设置管理 ────────────────────────────────────────
   function loadSettings() {
     try {
@@ -62,6 +254,109 @@
 
   function getSettings() {
     return loadSettings() || getDefaultSettings()
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // Phase 8.5: RAG 页面上下文 + 全局知识库检索
+  // ═══════════════════════════════════════════════════════════
+
+  const RAG_CONFIG = {
+    pageContextSelector: '#post-content',
+    pageContextMaxLength: 3000,
+    searchXmlPath: '/search.xml',
+    includeCodeBlocks: false,
+    contextTemplate: {
+      pageContextTitle: '=== 用户当前阅读的页面 ===',
+      searchContextTitle: '=== 博客全局检索结果 ===',
+      instruction: '基于"当前阅读页面"或"全局检索"作答。补充上下文：',
+      userQuestion: '用户实际提问:',
+      truncateMsg: '[系统提示：页面内容过长已截断。请礼貌告知用户文章太长，未尽的信息需自行阅读原文。]'
+    }
+  }
+
+  let blogIndex = []
+  let blogIndexLoaded = false
+
+  // 初始化博客索引（异步加载 search.xml）
+  async function initBlogIndex() {
+    if (blogIndexLoaded) return
+    try {
+      const res = await fetch(RAG_CONFIG.searchXmlPath)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const xmlText = await res.text()
+      const parser = new DOMParser()
+      const xmlDoc = parser.parseFromString(xmlText, 'application/xml')
+      const entries = xmlDoc.querySelectorAll('entry')
+      blogIndex = Array.from(entries).map(entry => {
+        const titleNode = entry.querySelector('title')
+        const contentNode = entry.querySelector('content')
+        const urlNode = entry.querySelector('url')
+        let pureText = ''
+        if (contentNode) {
+          const rawHtml = contentNode.textContent || ''
+          const tempDoc = parser.parseFromString(rawHtml, 'text/html')
+          let noise = 'script, style, noscript, link, iframe, svg'
+          if (!RAG_CONFIG.includeCodeBlocks) noise += ', pre, figure.highlight, div.highlight'
+          tempDoc.querySelectorAll(noise).forEach(el => el.remove())
+          pureText = cleanTextContent(tempDoc.body.textContent)
+        }
+        return {
+          title: titleNode ? titleNode.textContent.trim() : '',
+          url: (() => {
+            let raw = urlNode ? urlNode.textContent.trim() : ''
+            if (!raw) return ''
+            return raw.startsWith('/') ? window.location.origin + raw : raw
+          })(),
+          content: pureText
+        }
+      })
+      blogIndexLoaded = true
+      console.log('[WikiChat] 博客索引加载完成:', blogIndex.length, '篇文章')
+    } catch (e) {
+      console.warn('[WikiChat] 无法加载 search.xml，RAG 全局检索降级:', e)
+    }
+  }
+
+  // 本地搜索博客索引
+  function searchLocalBlog(keyword) {
+    if (!blogIndex.length) return ''
+    let terms = keyword
+    const titleMatch = keyword.match(/\[(.*?)\]/)
+    if (titleMatch && titleMatch[1]) {
+      terms = titleMatch[1].trim()
+    } else {
+      terms = keyword.replace(/(帮我|找下|寻找|搜索|博客|中|有关|关于|的|文章|内容|请问|什么是|怎么)/g, '').trim() || keyword
+    }
+    const matched = blogIndex.filter(post =>
+      (post.title && post.title.includes(terms)) ||
+      (post.content && post.content.includes(terms))
+    )
+    if (!matched.length) return ''
+    return matched.slice(0, 15).map(p =>
+      `[标题: ${p.title}]\n[链接: ${p.url}]\n内容: ${p.content.substring(0, 300)}...`
+    ).join('\n\n')
+  }
+
+  // 获取当前页面上下文
+  function getCurrentPageContext() {
+    const articleDOM = document.querySelector(RAG_CONFIG.pageContextSelector)
+    if (!articleDOM) return ''
+    const titleDOM = document.querySelector('#post-title') || document.querySelector('h1') || document.querySelector('title')
+    const title = titleDOM ? titleDOM.innerText.trim() : '当前页面'
+    const cloneDOM = articleDOM.cloneNode(true)
+    let noise = 'script, style, noscript, iframe, svg, .post-outdate-notice, .clipboard-btn'
+    if (!RAG_CONFIG.includeCodeBlocks) noise += ', pre, figure.highlight, div.highlight'
+    cloneDOM.querySelectorAll(noise).forEach(el => el.remove())
+    let pureText = cleanTextContent(cloneDOM.textContent)
+    const maxLen = RAG_CONFIG.pageContextMaxLength
+    if (pureText.length > maxLen) {
+      pureText = pureText.substring(0, maxLen) + '\n\n' + RAG_CONFIG.contextTemplate.truncateMsg
+    }
+    return `[当前页面标题: ${title}]\n[页面纯净正文]: ${pureText}`
+  }
+
+  function cleanTextContent(text) {
+    return (text || '').replace(/[\n\r\t]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
   }
 
   // ─── 判断是否已登录配置 ──────────────────────────────────
@@ -96,6 +391,28 @@
   }
 
   function renderMarkdown(text) {
+    if (!text) return ''
+    // 优先使用 marked.js（CDN 加载）
+    if (typeof marked !== 'undefined' && marked.parse) {
+      try {
+        let html = marked.parse(text, { breaks: true, gfm: true })
+        // 清理空段落和多余换行
+        html = html.replace(/>\n+</g, '><').replace(/\n+$/g, '')
+        html = html.replace(/<p>[\s\u200B-\u200D\uFEFF\xA0]*<\/p>/gi, '')
+                   .replace(/<p>\s*<br\s*\/?>\s*<\/p>/gi, '')
+        // 链接新窗口打开
+        const temp = document.createElement('div')
+        temp.innerHTML = html
+        temp.querySelectorAll('a').forEach(a => {
+          a.setAttribute('target', '_blank')
+          a.setAttribute('rel', 'noopener noreferrer')
+        })
+        return temp.innerHTML
+      } catch (e) {
+        console.warn('[WikiChat] marked.js 解析失败，降级到正则:', e)
+      }
+    }
+    // 降级方案
     return text
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -154,11 +471,13 @@
   }
 
   // ─── Dify 模式对话 ──────────────────────────────────────
-  async function askDify(query, settings, timeoutMs = 60000) {
+  async function askDify(query, settings, ragContext = '', timeoutMs = 60000) {
     const difyBase = settings.dify.baseUrl.replace(/\/$/, '') + '/v1'
+    // 如果有 RAG 上下文，拼接到 query 前面
+    const enrichedQuery = ragContext ? ragContext + '\n\n' + query : query
     const body = {
       inputs: {},
-      query,
+      query: enrichedQuery,
       response_mode: 'streaming',
       conversation_id: conversationId || '',
       user: settings.username || 'wiki-visitor'
@@ -187,10 +506,17 @@
   }
 
   // ─── OpenAI 兼容模式对话（API / Direct 共用）────────────
-  async function askOpenAI(query, settings, timeoutMs = 60000) {
+  async function askOpenAI(query, settings, ragContext = '', timeoutMs = 60000) {
     const cfg = settings.mode === 'api' ? settings.api : settings.direct
-    const endpoint = cfg.endpoint.replace(/\/$/, '')
+    let endpoint = cfg.endpoint.replace(/\/$/, '')
     const model = cfg.model
+
+    // 自动修复常见 endpoint 配置错误
+    // 如果以模型名结尾（如 /glm-4.5-air），截掉模型名
+    if (endpoint.split('/').pop() === model) {
+      console.warn('[WikiChat] 检测到 endpoint 末尾包含模型名，自动修正:', endpoint)
+      endpoint = endpoint.replace(new RegExp(`/${model}$`), '')
+    }
 
     chatHistory.push({ role: 'user', content: query })
 
@@ -199,7 +525,11 @@
     }
 
     // 注入 system prompt（如果用户配置了自定义 prompt）
-    const systemPrompt = settings.prompt || DEFAULT_PROMPT
+    let systemPrompt = settings.prompt || DEFAULT_PROMPT
+    // 追加 RAG 上下文到 system prompt
+    if (ragContext) {
+      systemPrompt = systemPrompt + '\n\n' + ragContext
+    }
     const messagesWithSystem = [{ role: 'system', content: systemPrompt }, ...chatHistory]
 
     const body = {
@@ -237,12 +567,23 @@
   // ─── 统一发送入口 ────────────────────────────────────────
   async function sendMessage(query) {
     const settings = getSettings()
-    let resp
 
+    // 构建 RAG 上下文
+    const pageContext = getCurrentPageContext()
+    const searchContext = searchLocalBlog(query)
+    let ragContext = ''
+    const ct = RAG_CONFIG.contextTemplate
+    if (pageContext) ragContext += `${ct.pageContextTitle}\n${pageContext}\n\n`
+    if (searchContext) ragContext += `${ct.searchContextTitle}\n${searchContext}\n\n`
+    if (ragContext) {
+      ragContext = `${ct.instruction}\n${ragContext}${ct.userQuestion} ${query}`
+    }
+
+    let resp
     if (settings.mode === 'dify') {
-      resp = await askDify(query, settings)
+      resp = await askDify(query, settings, ragContext)
     } else {
-      resp = await askOpenAI(query, settings)
+      resp = await askOpenAI(query, settings, ragContext)
     }
 
     const bubble = appendMessage('bot', '', true)
@@ -308,6 +649,16 @@
     }
 
     bubble.closest('.wiki-chat-msg').removeAttribute('data-streaming')
+
+    // 自动 TTS 朗读 AI 回复
+    const plainText = fullText
+      .replace(/```[\s\S]*?```/g, '')
+      .replace(/`[^`]*`/g, '')
+      .replace(/#{1,6}\s[^\n]*/g, '')
+      .replace(/[*_~[\]()#>|]/g, '')
+      .replace(/\n+/g, ' ')
+      .trim()
+    if (plainText) speakText(plainText)
 
     if (settings.mode !== 'dify' && fullText) {
       chatHistory.push({ role: 'assistant', content: fullText })
@@ -461,6 +812,7 @@
   function showChatView() {
     const content = document.getElementById('wiki-chat-content')
     const inputArea = document.getElementById('wiki-chat-input-area')
+    const panel = document.getElementById('wiki-chat-panel')
     inputArea.style.display = 'flex'
     content.innerHTML = `
       <div id="wiki-chat-messages">
@@ -471,10 +823,137 @@
       <div id="wiki-chat-search-results" style="display:none"></div>
     `
     resetConversation()
+    showLive2DArea(panel, inputArea)
+  }
+
+  // ─── 显示/创建 Live2D 区域 ───────────────────────────────
+  function showLive2DArea(panel, inputArea) {
+    let area = document.getElementById('wiki-live2d-area')
+    if (!area) {
+      area = document.createElement('div')
+      area.id = 'wiki-live2d-area'
+      area.innerHTML = '<div class="wiki-live2d-loading">正在加载看板娘...</div>'
+      panel.insertBefore(area, inputArea)
+    }
+    area.style.display = 'flex'
+    waitAndMoveWaifu(area, 0)
+  }
+
+  // ─── 等待 waifu 初始化完成后移入对话窗口 ─────────────────
+  function waitAndMoveWaifu(container, attempt) {
+    const waifu = document.getElementById('waifu')
+    if (waifu) {
+      moveWaifuIntoChat(container)
+      const hint = container.querySelector('.wiki-live2d-loading')
+      if (hint) hint.remove()
+      return
+    }
+    if (attempt < 50) {
+      setTimeout(() => waitAndMoveWaifu(container, attempt + 1), 200)
+    } else {
+      const hint = container.querySelector('.wiki-live2d-loading')
+      if (hint) hint.textContent = '看板娘加载超时，请刷新页面重试'
+    }
+  }
+
+  // ─── 隐藏 Live2D 区域 ────────────────────────────────────
+  function hideLive2DArea() {
+    const area = document.getElementById('wiki-live2d-area')
+    if (area) area.style.display = 'none'
+    moveWaifuOutOfChat()
+  }
+
+  // ─── 把全局 waifu 移入对话窗口 ────────────────────────────
+  function moveWaifuIntoChat(container) {
+    const waifu = document.getElementById('waifu')
+    if (!waifu) return
+    if (waifu.parentElement !== container) {
+      container.appendChild(waifu)
+    }
+    // 清除可能干扰的内联样式，让 CSS 控制显示
+    waifu.style.display = ''
+    waifu.style.opacity = ''
+    waifu.style.pointerEvents = ''
+    bindLive2DTools()
+  }
+
+  // ─── 绑定 Live2D 工具栏按钮到 Wiki Chat ──────────────────
+  function bindLive2DTools() {
+    // 聊天按钮 → 打开/聚焦 Wiki Chat
+    const chatBtn = document.getElementById('waifu-tool-chat')
+    if (chatBtn && !chatBtn.dataset.wikiBound) {
+      chatBtn.dataset.wikiBound = 'true'
+      chatBtn.addEventListener('click', () => {
+        const panel = document.getElementById('wiki-chat-panel')
+        if (!panel.classList.contains('wiki-chat-panel--open')) {
+          document.getElementById('wiki-chat-fab').click()
+        }
+        setTimeout(() => {
+          const input = document.getElementById('wiki-chat-input')
+          if (input) input.focus()
+        }, 100)
+      })
+    }
+
+    // 一言按钮 → 从 Wiki Chat 说出来
+    const hitokotoBtn = document.getElementById('waifu-tool-hitokoto')
+    if (hitokotoBtn && !hitokotoBtn.dataset.wikiBound) {
+      hitokotoBtn.dataset.wikiBound = 'true'
+      hitokotoBtn.addEventListener('click', async () => {
+        try {
+          const res = await fetch('https://v1.hitokoto.cn')
+          const data = await res.json()
+          const msg = `${data.hitokoto} —— 「${data.from}」`
+          appendBotMessage(msg)
+        } catch (e) {
+          appendBotMessage('一言服务暂时不可用')
+        }
+      })
+    }
+  }
+
+  // ─── 在 Wiki Chat 中追加一条 Bot 消息 ─────────────────────
+  function appendBotMessage(text) {
+    const panel = document.getElementById('wiki-chat-panel')
+    const fab = document.getElementById('wiki-chat-fab')
+    // 如果面板未打开，先打开
+    if (!panel.classList.contains('wiki-chat-panel--open') && fab) {
+      fab.click()
+    }
+    // 如果当前不在聊天视图（如在设置页），切回聊天视图
+    const messages = document.getElementById('wiki-chat-messages')
+    if (!messages) {
+      showChatView()
+    }
+    const msgContainer = document.getElementById('wiki-chat-messages')
+    if (!msgContainer) return
+    const div = document.createElement('div')
+    div.className = 'wiki-chat-msg wiki-chat-msg--bot'
+    div.innerHTML = `<div class="wiki-chat-bubble">${escapeHtml(text)}</div>`
+    msgContainer.appendChild(div)
+    msgContainer.scrollTop = msgContainer.scrollHeight
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  }
+
+  // ─── 把 waifu 移回 body 隐藏 ─────────────────────────────
+  function moveWaifuOutOfChat() {
+    const waifu = document.getElementById('waifu')
+    if (!waifu) return
+    if (waifu.parentElement !== document.body) {
+      document.body.appendChild(waifu)
+    }
+    // 清除内联样式，让 CSS #waifu { opacity: 0 } 接管隐藏
+    waifu.style.display = ''
+    waifu.style.opacity = ''
+    waifu.style.pointerEvents = ''
   }
 
   // ─── 显示设置面板 ────────────────────────────────────────
   function showSettings() {
+    hideLive2DArea()
     const panel = document.getElementById('wiki-chat-panel')
     const existing = document.getElementById('wiki-chat-settings')
     if (existing) existing.remove()
@@ -641,6 +1120,8 @@
 
   // ─── 初始化 ──────────────────────────────────────────────
   function init() {
+    // 异步初始化博客索引（RAG 全局检索）
+    initBlogIndex()
     fixFooterCreditLinks()
 
     // ─── 未登录时：创建面板，点击登录按钮跳转 ───
@@ -771,6 +1252,9 @@
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') closePanel()
     })
+
+    // TTS 设置由 Live2D 工具栏统一控制，此处仅同步读取
+    loadTtsSettings()
   }
 
   if (document.readyState === 'loading') {

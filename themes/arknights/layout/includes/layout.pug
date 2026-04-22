@@ -56,11 +56,12 @@ html(lang=config.language theme-mode=htmlThemeMode)
       canvas#canvas-dust
 
     //- Phase 6: Wiki AI 对话侧边栏
+    script(defer src='https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js')
     script(defer src=url_for('/js/wiki-chat.js'))
 
-    //- Phase 8: Wiki AI 看板娘
+    //- Phase 8: Wiki AI 看板娘 (Live2D)
     if theme.kanban && theme.kanban.enable
-      script(defer src=url_for('/js/wiki-kanban.js'))
+      script(defer src=url_for('/live2d/live2d.js'))
 
     if theme.scripts && theme.scripts.length > 0
       //- scripts list from config.yml

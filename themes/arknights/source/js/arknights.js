@@ -1090,6 +1090,7 @@ class MonacoEditor {
                 language: lang,
                 theme: theme,
                 readOnly: readOnly,
+                accessibilitySupport: 'off',
                 ...options,
             });
             // store editor instance to avoid garbage collection
