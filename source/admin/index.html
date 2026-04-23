@@ -6,88 +6,134 @@
   <meta name="robots" content="noindex" />
   <title>内容管理 | Mornikar Wiki</title>
   <style>
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a1a2e; color: #eee; }
-    .login-page { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
-    .login-page h1 { font-size: 1.8em; margin-bottom: 0.3em; }
-    .login-page p { color: #999; margin-bottom: 2em; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #c9d1d9; }
+    .auth-page { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+    .auth-page h1 { font-size: 1.8em; margin-bottom: 0.3em; color: #f0f6fc; }
+    .auth-page p { color: #8b949e; margin-bottom: 2em; }
     .login-btn {
       display: inline-flex; align-items: center; gap: 10px;
       padding: 14px 32px; font-size: 16px; font-weight: 600;
-      color: #fff; background: #24292e; border: none; border-radius: 8px;
+      color: #fff; background: #238636; border: none; border-radius: 8px;
       cursor: pointer; text-decoration: none; transition: background 0.2s;
     }
-    .login-btn:hover { background: #2f363d; }
+    .login-btn:hover { background: #2ea043; }
     .login-btn svg { width: 24px; height: 24px; fill: #fff; }
-    .cms-loading { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-    .cms-loading p { font-size: 1.2em; }
-    .hidden { display: none !important; }
+    .loading { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .loading p { font-size: 1.2em; }
   </style>
 </head>
 <body>
-  <!-- 登录页 -->
-  <div id="login-page" class="login-page">
-    <h1>📝 Mornikar Wiki</h1>
-    <p>内容管理系统</p>
-    <a id="login-btn" class="login-btn" href="#">
-      <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-      Login with GitHub
-    </a>
-  </div>
 
-  <!-- CMS 加载中 -->
-  <div id="cms-loading" class="cms-loading hidden">
-    <p>⏳ 正在加载内容管理系统...</p>
-  </div>
+<div id="auth-page" class="auth-page">
+  <h1>📝 Mornikar Wiki</h1>
+  <p>内容管理系统</p>
+  <a id="login-btn" class="login-btn" href="#">
+    <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    Login with GitHub
+  </a>
+</div>
 
-  <script>
-  (function() {
-    var AUTH_KEY = 'sveltia_cms_auth';
-    var OAUTH_BASE = 'https://shy-wood-2431decap-oauth.1548324254.workers.dev';
+<div id="loading" class="loading" style="display:none">
+  <p>⏳ 正在加载内容管理系统...</p>
+</div>
 
-    // 1. 检查 URL 中是否有 token（从 OAuth 回调跳回来的）
-    var params = new URLSearchParams(window.location.search);
-    var token = params.get('token');
-    var scope = params.get('scope') || 'repo';
-    var tokenType = params.get('token_type') || 'bearer';
+<script>
+(function() {
+  // ========== 配置 ==========
+  var AUTH_KEY = 'mornikar_cms_token';
+  var OAUTH_BASE = 'https://shy-wood-2431decap-oauth.1548324254.workers.dev';
+  var CMS_SCRIPT = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
 
-    if (token) {
-      // 存储认证信息到 localStorage
-      localStorage.setItem(AUTH_KEY, JSON.stringify({
-        token: token,
-        scope: scope,
-        token_type: tokenType,
-        timestamp: Date.now()
-      }));
-      // 清除 URL 中的 token 参数（安全 + 美观）
-      var cleanUrl = window.location.origin + window.location.pathname + window.location.hash;
-      window.history.replaceState({}, '', cleanUrl);
+  // ========== 读取 token ==========
+  var authData = null;
+
+  // 优先从 URL 读取（OAuth 回调）
+  var params = new URLSearchParams(window.location.search);
+  var urlToken = params.get('token');
+  if (urlToken) {
+    authData = {
+      token: urlToken,
+      scope: params.get('scope') || 'repo',
+      token_type: params.get('token_type') || 'bearer',
+      timestamp: Date.now()
+    };
+    localStorage.setItem(AUTH_KEY, JSON.stringify(authData));
+    // 清除 URL 中的 token（安全）
+    window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+  } else {
+    // 从 localStorage 读取
+    try { authData = JSON.parse(localStorage.getItem(AUTH_KEY)); } catch(e) {}
+  }
+
+  // ========== 未认证：显示登录页 ==========
+  if (!authData || !authData.token) {
+    document.getElementById('login-btn').href = OAUTH_BASE + '/auth';
+    return; // 不加载 CMS
+  }
+
+  // ========== 已认证：加载 CMS ==========
+  var token = authData.token;
+
+  document.getElementById('auth-page').style.display = 'none';
+  document.getElementById('loading').style.display = 'flex';
+
+  // 拦截 window.open：CMS 弹窗 → 注入 token 的 message event
+  var originalOpen = window.open;
+  window.open = function(url, name, features) {
+    if (url && (url.includes('/auth') || url.includes('oauth'))) {
+      // 不开弹窗，直接发合成 message event
+      var fakeWindow = { closed: false, close: function() { this.closed = true; } };
+      setTimeout(function() {
+        // 发送 Decap CMS 期望的 OAuth 消息
+        window.dispatchEvent(new MessageEvent('message', {
+          data: {
+            type: 'oauth',
+            provider: 'github',
+            token: token,
+            scope: authData.scope || 'repo',
+            token_type: authData.token_type || 'bearer'
+          },
+          origin: OAUTH_BASE,
+          source: fakeWindow
+        }));
+        // 标记弹窗关闭
+        fakeWindow.closed = true;
+      }, 300);
+      return fakeWindow;
     }
+    return originalOpen.call(this, url, name, features);
+  };
 
-    // 2. 检查 localStorage 中是否有有效的认证信息
-    var authData = null;
-    try {
-      authData = JSON.parse(localStorage.getItem(AUTH_KEY));
-    } catch(e) {}
-
-    if (authData && authData.token) {
-      // 已认证 → 加载 Sveltia CMS
-      document.getElementById('login-page').classList.add('hidden');
-      document.getElementById('cms-loading').classList.remove('hidden');
-
-      // 把 token 注入到 Sveltia CMS 能读取的位置
-      window.__SVELTIA_CMS_AUTH__ = authData;
-
-      var script = document.createElement('script');
-      script.src = 'https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js';
-      script.onload = function() {
-        document.getElementById('cms-loading').classList.add('hidden');
-      };
-      document.body.appendChild(script);
-    } else {
-      // 未认证 → 显示登录按钮
-      document.getElementById('login-btn').href = OAUTH_BASE + '/auth';
+  // 拦截 fetch：给 GitHub API 请求加 Authorization header
+  var originalFetch = window.fetch;
+  window.fetch = function(input, init) {
+    init = init || {};
+    var url = typeof input === 'string' ? input : (input && input.url ? input.url : '');
+    if (url.indexOf('api.github.com') !== -1) {
+      init.headers = init.headers || {};
+      if (typeof init.headers === 'object' && !Array.isArray(init.headers)) {
+        if (!init.headers.Authorization && !init.headers.authorization) {
+          init.headers.Authorization = 'token ' + token;
+        }
+      }
     }
-  })();
-  </script>
+    return originalFetch.call(this, input, init);
+  };
+
+  // 加载 CMS
+  var script = document.createElement('script');
+  script.src = CMS_SCRIPT;
+  script.onload = function() {
+    document.getElementById('loading').style.display = 'none';
+    // 自动点击 CMS 的 Login 按钮（让 window.open 拦截生效）
+    setTimeout(function() {
+      var btn = document.querySelector('[class*="Login"] button, button[class*="login"], .nc-githubAuthenticationPage-button');
+      if (btn) btn.click();
+    }, 2000);
+  };
+  document.body.appendChild(script);
+
+})();
+</script>
 </body>
 </html>
