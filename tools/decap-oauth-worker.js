@@ -1,10 +1,9 @@
 /**
- * Decap/Sveltia CMS GitHub OAuth Worker
+ * CMS GitHub OAuth Worker
  *
  * 路由：
  *   GET /auth     → 重定向到 GitHub 授权页
- *   GET /callback → 用 code 换 token，重定向回 CMS（Sveltia 格式）
- *   POST /token   → 用 code 换 token，返回 JSON（API 模式）
+ *   GET /callback → 用 code 换 token，重定向回 CMS 页面（整页跳转模式）
  *
  * 环境变量：
  *   GITHUB_CLIENT_ID     — GitHub OAuth App 的 Client ID
@@ -36,7 +35,7 @@ export default {
       return Response.redirect(authUrl, 301)
     }
 
-    // GET /callback — GitHub 回调，换 token 后重定向回 CMS 同源页面
+    // GET /callback — GitHub 回调，换 token 后整页重定向回 CMS
     if (url.pathname === '/callback') {
       const code = url.searchParams.get('code')
       if (!code) {
@@ -66,70 +65,14 @@ export default {
           })
         }
 
-        // 重定向到 CMS callback 页面，带上 token
-        const cmsCallback = 'https://mornikar.github.io/admin/callback.html'
-        const redirectUrl = cmsCallback +
+        // 整页重定向回 CMS，token 放在 URL 参数中
+        const cmsUrl = 'https://mornikar.github.io/admin/'
+        const redirectUrl = cmsUrl +
           '?token=' + encodeURIComponent(data.access_token) +
           '&scope=' + encodeURIComponent(data.scope || 'repo') +
           '&token_type=' + encodeURIComponent(data.token_type || 'bearer')
 
         return Response.redirect(redirectUrl, 301)
-      } catch (err) {
-        return new Response(JSON.stringify({ error: err.message }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
-        })
-      }
-    }
-
-    // POST /token — API 模式：直接用 code 换 token 返回 JSON
-    if (url.pathname === '/token') {
-      let code
-      try {
-        const body = await request.json()
-        code = body.code
-      } catch {
-        code = url.searchParams.get('code')
-      }
-
-      if (!code) {
-        return new Response(JSON.stringify({ error: 'Missing code parameter' }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
-        })
-      }
-
-      try {
-        const response = await fetch(GITHUB_TOKEN_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: JSON.stringify({
-            client_id: env.GITHUB_CLIENT_ID,
-            client_secret: env.GITHUB_CLIENT_SECRET,
-            code: code,
-          }),
-        })
-
-        const data = await response.json()
-
-        if (data.error) {
-          return new Response(JSON.stringify({ error: data.error_description || data.error }), {
-            status: 400,
-            headers: { 'Content-Type': 'application/json', ...corsHeaders },
-          })
-        }
-
-        return new Response(JSON.stringify({
-          access_token: data.access_token,
-          scope: data.scope || 'repo',
-          token_type: data.token_type || 'bearer',
-        }), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
-        })
       } catch (err) {
         return new Response(JSON.stringify({ error: err.message }), {
           status: 500,
