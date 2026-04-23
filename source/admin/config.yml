@@ -12,8 +12,8 @@ public_folder: /images
 # 站点部署地址
 site_url: https://mornikar.github.io
 
-# 显示预览
-publish_mode: editorial_workflow
+# 暂不启用 editorial workflow（简化首次配置，直接 commit 到 source 分支）
+# publish_mode: editorial_workflow
 
 # 本地开发时可用（无需 OAuth）
 # local_backend: true

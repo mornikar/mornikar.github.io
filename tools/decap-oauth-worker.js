@@ -5,7 +5,7 @@
  * 
  * 路由：
  *   GET /auth          → 重定向到 GitHub 授权页
- *   GET /callback      → 用 code 换 access_token，回传给 CMS
+ *   GET /callback      → 用 code 换 access_token，通过 postMessage 传回 CMS
  * 
  * 环境变量（在 Cloudflare Dashboard 设置）：
  *   GITHUB_CLIENT_ID     — GitHub OAuth App 的 Client ID
@@ -19,7 +19,6 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url)
 
-    // CORS headers（所有响应都带）
     const corsHeaders = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
@@ -40,7 +39,7 @@ export default {
       return Response.redirect(authUrl, 301)
     }
 
-    // GET /callback — GitHub 回调，用 code 换 token
+    // GET /callback — GitHub 回调，用 code 换 token，通过 postMessage 传回 CMS
     if (url.pathname === '/callback') {
       const code = url.searchParams.get('code')
       if (!code) {
@@ -70,11 +69,42 @@ export default {
           })
         }
 
-        // 将 token 传回 CMS 页面
+        // 渲染 HTML 页面，通过 postMessage 将 token 传回 CMS 父窗口
         const cmsOrigin = 'https://mornikar.github.io'
-        const redirectUrl = `${cmsOrigin}/admin/?access_token=${data.access_token}&scope=${data.scope}&token_type=${data.token_type}`
+        const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>授权成功</title></head>
+<body>
+<p>正在返回管理界面...</p>
+<script>
+  // Decap CMS 要求的 postMessage 格式
+  window.opener.postMessage(
+    {
+      type: 'oauth',
+      provider: 'github',
+      token: ${JSON.stringify(data.access_token)},
+      scope: ${JSON.stringify(data.scope || 'repo')},
+      token_type: ${JSON.stringify(data.token_type || 'bearer')}
+    },
+    ${JSON.stringify(cmsOrigin)}
+  );
+  // 兼容：也发送简化格式
+  window.opener.postMessage(
+    'authorization:github:success:' + JSON.stringify({
+      token: ${JSON.stringify(data.access_token)},
+      scope: ${JSON.stringify(data.scope || 'repo')},
+      token_type: ${JSON.stringify(data.token_type || 'bearer')}
+    }),
+    '*'
+  );
+</script>
+</body>
+</html>`
 
-        return Response.redirect(redirectUrl, 301)
+        return new Response(html, {
+          status: 200,
+          headers: { 'Content-Type': 'text/html; charset=utf-8', ...corsHeaders },
+        })
       } catch (err) {
         return new Response(JSON.stringify({ error: err.message }), {
           status: 500,
