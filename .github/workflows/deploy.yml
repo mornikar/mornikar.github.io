@@ -104,6 +104,14 @@ jobs:
           echo "=== LearningEssays 页面 ==="
           ls public/LearningEssays/ 2>/dev/null | head -10 || echo "(空)"
 
+      - name: 复制 Decap CMS 管理界面到 public
+        run: |
+          mkdir -p public/admin
+          cp source/admin/index.html public/admin/
+          cp source/admin/config.yml public/admin/
+          echo "=== admin/ 文件 ==="
+          ls -la public/admin/
+
       - name: 构建项目文档 HTML
         run: |
           # .docs-src/ 是 markdown 文件，GitHub Pages 不渲染 .md
