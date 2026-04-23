@@ -1,0 +1,90 @@
+backend:
+  name: github
+  repo: mornikar/mornikar.github.io
+  branch: source
+  base_url: https://decap-oauth.1548324254.workers.dev
+  auth_endpoint: /auth
+
+# 媒体文件上传到 source/images/
+media_folder: source/images
+public_folder: /images
+
+# 站点部署地址
+site_url: https://mornikar.github.io
+
+# 显示预览
+publish_mode: editorial_workflow
+
+# 本地开发时可用（无需 OAuth）
+# local_backend: true
+
+collections:
+  # ====== Wiki 技术概念 (concepts/) ======
+  - name: concepts
+    label: "📖 技术概念"
+    folder: ".wiki/concepts"
+    create: true
+    slug: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "标题", name: title, widget: string }
+      - { label: "类型", name: type, widget: hidden, default: "concepts" }
+      - { label: "标签", name: tags, widget: list, allow_add: true,
+          hint: "从 AI, LLM, RAG, Prompt, Agent, 机器学习, 产品, 开发, 学习 中选择" }
+      - { label: "创建日期", name: created, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "更新日期", name: updated, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "别名", name: aliases, widget: list, allow_add: true, required: false, hint: "可选" }
+      - { label: "相关页面", name: related, widget: list, allow_add: true, required: false, hint: "可选" }
+      - { label: "摘要", name: summary, widget: text, required: false, hint: "一句话描述" }
+      - { label: "正文", name: body, widget: markdown }
+
+  # ====== Wiki 实体随笔 (entities/) ======
+  - name: entities
+    label: "✏️ 实体随笔"
+    folder: ".wiki/entities"
+    create: true
+    slug: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "标题", name: title, widget: string }
+      - { label: "类型", name: type, widget: hidden, default: "entities" }
+      - { label: "标签", name: tags, widget: list, allow_add: true }
+      - { label: "创建日期", name: created, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "更新日期", name: updated, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "别名", name: aliases, widget: list, allow_add: true, required: false }
+      - { label: "相关页面", name: related, widget: list, allow_add: true, required: false }
+      - { label: "摘要", name: summary, widget: text, required: false }
+      - { label: "正文", name: body, widget: markdown }
+
+  # ====== Wiki 原始资料 (raw/) ======
+  - name: raw
+    label: "📁 原始资料"
+    folder: ".wiki/raw"
+    create: true
+    slug: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "标题", name: title, widget: string }
+      - { label: "类型", name: type, widget: hidden, default: "raw" }
+      - { label: "标签", name: tags, widget: list, allow_add: true }
+      - { label: "创建日期", name: created, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "更新日期", name: updated, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "正文", name: body, widget: markdown }
+
+  # ====== Wiki 页面（根目录） ======
+  - name: wiki_pages
+    label: "📋 Wiki 页面"
+    files:
+      - label: "索引页"
+        name: index
+        file: ".wiki/index.md"
+        fields:
+          - { label: "正文", name: body, widget: markdown }
+      - label: "操作日志"
+        name: log
+        file: ".wiki/log.md"
+        fields:
+          - { label: "正文", name: body, widget: markdown }
