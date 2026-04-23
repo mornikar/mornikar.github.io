@@ -5,509 +5,808 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Wiki 内容管理 - Mornikar</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #0a0e1a;
-    color: #e0e6ed;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #111827;
+  --bg-card: #1a2235;
+  --bg-hover: #232f46;
+  --border: #1e3a5f;
+  --text-primary: #e0e6ed;
+  --text-secondary: #8899aa;
+  --text-muted: #556677;
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --accent-glow: rgba(99,102,241,0.25);
+  --green: #22c55e;
+  --red: #ef4444;
+  --orange: #f59e0b;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; }
 
-  /* 登录面板 */
-  #login-panel {
-    background: linear-gradient(145deg, #131a2b, #0d1220);
-    border: 1px solid #1e2d4a;
-    border-radius: 16px;
-    padding: 40px;
-    width: 100%;
-    max-width: 480px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 80px rgba(99,102,241,0.08);
-  }
-  #login-panel h1 {
-    font-size: 24px;
-    text-align: center;
-    margin-bottom: 8px;
-    background: linear-gradient(135deg, #818cf8, #c084fc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  #login-panel .subtitle {
-    text-align: center;
-    color: #64748b;
-    font-size: 14px;
-    margin-bottom: 32px;
-  }
-  .step {
-    background: rgba(30,45,74,0.5);
-    border-radius: 12px;
-    padding: 16px 20px;
-    margin-bottom: 16px;
-    border-left: 3px solid #6366f1;
-  }
-  .step h3 {
-    font-size: 14px;
-    color: #a5b4fc;
-    margin-bottom: 8px;
-  }
-  .step p, .step code {
-    font-size: 13px;
-    color: #94a3b8;
-    line-height: 1.6;
-  }
-  .step code {
-    background: rgba(99,102,241,0.15);
-    color: #c7d2fe;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-  }
-  a.step-link {
-    display: inline-block;
-    margin-top: 10px;
-    color: #818cf8;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.2s;
-  }
-  a.step-link:hover { color: #a5b4fc; text-shadow: 0 0 12px rgba(129,140,248,0.5); }
+/* ===== 登录页 ===== */
+#login-view {
+  display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px;
+}
+.login-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 40px; width: 100%; max-width: 480px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.login-card h1 { font-size: 24px; text-align: center; margin-bottom: 8px; color: var(--accent-hover); }
+.login-card .sub { text-align: center; color: var(--text-muted); font-size: 14px; margin-bottom: 32px; }
+.step-box { background: rgba(99,102,241,0.06); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 16px; margin-bottom: 20px; }
+.step-box h3 { font-size: 14px; color: var(--accent-hover); margin-bottom: 8px; }
+.step-box p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+.step-box code { background: rgba(99,102,241,0.15); color: #c7d2fe; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+.step-box a { display: inline-block; margin-top: 10px; color: var(--accent-hover); text-decoration: none; font-weight: 600; font-size: 14px; }
+.step-box a:hover { text-shadow: 0 0 12px var(--accent-glow); }
 
-  .token-section {
-    margin-top: 24px;
-    margin-bottom: 24px;
-  }
-  .token-section label {
-    display: block;
-    font-size: 14px;
-    color: #94a3b8;
-    margin-bottom: 8px;
-  }
-  .token-input-wrap {
-    position: relative;
-    display: flex;
-    gap: 8px;
-  }
-  .token-input-wrap input {
-    flex: 1;
-    background: #0a0e1a;
-    border: 1px solid #1e2d4a;
-    border-radius: 8px;
-    padding: 12px 16px;
-    color: #e0e6ed;
-    font-family: 'Fira Code', monospace;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .token-input-wrap input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
-  .token-input-wrap input::placeholder { color: #334155; }
+.token-wrap { display: flex; gap: 8px; margin-top: 16px; }
+.token-wrap input { flex: 1; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; color: var(--text-primary); font-family: 'Fira Code','Consolas',monospace; font-size: 14px; outline: none; transition: border-color 0.2s; }
+.token-wrap input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.token-wrap input::placeholder { color: var(--text-muted); }
+.btn { border: none; border-radius: 8px; padding: 11px 24px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.btn-primary { background: linear-gradient(135deg,var(--accent),#8b5cf6); color: white; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px var(--accent-glow); }
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+.btn-outline { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+.btn-outline:hover { border-color: var(--text-muted); color: var(--text-primary); }
+.btn-danger { background: var(--red); color: white; }
+.btn-danger:hover { opacity: 0.9; }
+.error-msg { color: var(--red); font-size: 13px; text-align: center; margin-top: 12px; display: none; padding: 10px; background: rgba(239,68,68,0.08); border-radius: 8px; border: 1px solid rgba(239,68,68,0.2); }
+.status-msg { text-align: center; font-size: 13px; color: var(--text-secondary); margin-top: 12px; }
 
-  button.btn-primary {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 28px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s;
-    white-space: nowrap;
-  }
-  button.btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(99,102,241,0.4);
-  }
-  button.btn-primary:active { transform: translateY(0); }
+/* ===== 主界面 ===== */
+#main-view { display: none; min-height: 100vh; }
+.topbar { position: sticky; top: 0; z-index: 100; background: rgba(17,24,39,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 10px 24px; display: flex; align-items: center; justify-content: space-between; }
+.topbar h2 { font-size: 16px; font-weight: 600; }
+.topbar-right { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-secondary); }
 
-  button.btn-secondary {
-    background: transparent;
-    color: #64748b;
-    border: 1px solid #1e2d4a;
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  button.btn-secondary:hover { border-color: #334155; color: #94a3b8; }
+.layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 53px); }
+.sidebar { background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 16px 0; overflow-y: auto; max-height: calc(100vh - 53px); }
+.sidebar-item { padding: 10px 20px; cursor: pointer; font-size: 14px; color: var(--text-secondary); display: flex; align-items: center; gap: 10px; transition: all 0.15s; border-left: 3px solid transparent; }
+.sidebar-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+.sidebar-item.active { background: rgba(99,102,241,0.1); color: var(--accent-hover); border-left-color: var(--accent); }
+.sidebar-item .count { margin-left: auto; background: var(--bg-hover); padding: 1px 8px; border-radius: 10px; font-size: 11px; color: var(--text-muted); }
 
-  #error-msg {
-    color: #f87171;
-    font-size: 13px;
-    text-align: center;
-    margin-top: 12px;
-    display: none;
-    padding: 10px;
-    background: rgba(248,113,113,0.08);
-    border-radius: 8px;
-    border: 1px solid rgba(248,113,113,0.2);
-  }
+.content-area { padding: 24px; overflow-y: auto; max-height: calc(100vh - 53px); }
 
-  #status-msg {
-    text-align: center;
-    font-size: 13px;
-    color: #64748b;
-    margin-top: 16px;
-  }
+/* ===== 文件列表 ===== */
+.toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.search-bar { display: flex; align-items: center; gap: 8px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; width: 320px; }
+.search-bar input { background: none; border: none; outline: none; color: var(--text-primary); font-size: 14px; width: 100%; }
+.search-bar input::placeholder { color: var(--text-muted); }
+.file-list { display: flex; flex-direction: column; gap: 6px; }
+.file-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--bg-card); border: 1px solid transparent; border-radius: 10px; cursor: pointer; transition: all 0.15s; }
+.file-row:hover { border-color: var(--border); background: var(--bg-hover); transform: translateX(4px); }
+.file-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.file-info { flex: 1; min-width: 0; }
+.file-title { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.file-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.file-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.tag { font-size: 11px; padding: 1px 8px; border-radius: 10px; background: rgba(99,102,241,0.12); color: var(--accent-hover); }
 
-  .divider {
-    text-align: center;
-    color: #334155;
-    margin: 16px 0;
-    font-size: 12px;
-  }
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+.empty-state .icon { font-size: 48px; margin-bottom: 16px; }
 
-  .footer-note {
-    text-align: center;
-    font-size: 11px;
-    color: #334155;
-    margin-top: 20px;
-  }
+/* ===== 编辑器 ===== */
+.editor-view { display: none; }
+.editor-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.editor-header h3 { font-size: 18px; }
+.editor-form { display: grid; gap: 16px; }
+.form-group label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 500; }
+.form-group input[type="text"],
+.form-group input[type="datetime-local"],
+.form-group textarea,
+.form-group select { width: 100%; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text-primary); font-size: 14px; outline: none; transition: border-color 0.2s; font-family: inherit; }
+.form-group input:focus, .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.form-group textarea { min-height: 300px; resize: vertical; line-height: 1.7; font-family: 'Fira Code','Consolas',monospace; font-size: 13px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.tags-input { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px 10px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; min-height: 42px; cursor: text; align-items: center; }
+.tags-input .tag-pill { display: inline-flex; align-items: center; gap: 4px; background: rgba(99,102,241,0.15); color: var(--accent-hover); padding: 3px 10px; border-radius: 12px; font-size: 12px; }
+.tags-input .tag-remove { cursor: pointer; opacity: 0.6; font-size: 14px; line-height: 1; }
+.tags-input .tag-remove:hover { opacity: 1; }
+.tags-input input { background: none; border: none; outline: none; color: var(--text-primary); font-size: 13px; flex: 1; min-width: 80px; }
+.editor-actions { display: flex; gap: 10px; margin-top: 24px; justify-content: flex-end; }
 
-  /* CMS 容器 */
-  #cms-root {
-    display: none;
-    width: 100%;
-    height: 100vh;
-  }
-  #cms-root iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
+/* ===== Toast ===== */
+.toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 10px; font-size: 14px; z-index: 99999; animation: slideIn 0.3s ease; display: none; }
+.toast.success { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+.toast.error { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+@keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-  /* 加载动画 */
-  .spinner {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid transparent;
-    border-top-color: currentColor;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-right: 8px;
-    vertical-align: middle;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid transparent; border-top-color: currentColor; border-radius: 50%; animation: spin 0.7s linear infinite; margin-right: 6px; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  /* 已登录状态 */
-  .logged-in-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: #131a2b;
-    border-bottom: 1px solid #1e2d4a;
-    padding: 8px 20px;
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    z-index: 10000;
-    font-size: 13px;
-    z-index: 99999;
-  }
-  .logged-in-bar .user-info { color: #94a3b8; }
-  .logged-in-bar .user-info strong { color: #a5b4fc; }
+/* ===== Modal ===== */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99998; display: none; align-items: center; justify-content: center; }
+.modal-overlay.active { display: flex; }
+.modal-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 28px; width: 90%; max-width: 420px; }
+.modal-box h3 { margin-bottom: 12px; }
+.modal-box p { color: var(--text-secondary); font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+@media (max-width: 768px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .search-bar { width: 200px; }
+  .form-row { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
-<!-- 登录面板 -->
-<div id="login-panel">
-  <h1>📝 Wiki 内容管理</h1>
-  <p class="subtitle">Mornikar Wiki · 基于 GitHub</p>
+<!-- ========== 登录视图 ========== -->
+<div id="login-view">
+  <div class="login-card">
+    <h1>📝 Wiki 内容管理</h1>
+    <p class="sub">Mornikar Wiki · 基于 GitHub API</p>
 
-  <div class="step">
-    <h3>① 创建 GitHub Token</h3>
-    <p>点击下方按钮跳转到 GitHub，创建一个 Personal Access Token：</p>
-    <p style="margin-top:6px">
-      <code>repo</code> 权限（完整仓库读写）
-    </p>
-    <a href="https://github.com/settings/tokens/new?scopes=repo&description=Mornikar%20Wiki%20CMS"
-       target="_blank" class="step-link">
-      🔑 前往 GitHub 创建 Token →
-    </a>
-  </div>
+    <div class="step-box">
+      <h3>① 创建 GitHub Token</h3>
+      <p>点击下方按钮跳转到 GitHub，创建 Personal Access Token</p>
+      <p style="margin-top:6px">需要勾选权限：<code>repo</code>（仓库读写）</p>
+      <a href="https://github.com/settings/tokens/new?scopes=repo&description=Mornikar%20Wiki%20CMS" target="_blank">🔑 前往 GitHub 创建 Token →</a>
+    </div>
 
-  <div class="token-section">
-    <label for="token-input">② 粘贴你的 Token</label>
-    <div class="token-input-wrap">
+    <label style="font-size:13px;color:var(--text-secondary);margin-bottom:6px;display:block">② 粘贴 Token</label>
+    <div class="token-wrap">
       <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxx...">
-      <button class="btn-primary" id="login-btn" onclick="doLogin()">登 录</button>
+      <button class="btn btn-primary" onclick="doLogin()">登 录</button>
+    </div>
+
+    <div class="error-msg" id="error-msg"></div>
+    <div class="status-msg" id="status-msg"></div>
+
+    <div style="text-align:center;margin-top:20px">
+      <button class="btn btn-outline btn-sm" onclick="logout()">退出登录</button>
     </div>
   </div>
+</div>
 
-  <div id="error-msg"></div>
-  <div id="status-msg"></div>
-
-  <div class="divider">或</div>
-
-  <div style="text-align:center;">
-    <button class="btn-secondary" onclick="logout()">退出登录（清除已保存的 Token）</button>
+<!-- ========== 主界面视图 ========== -->
+<div id="main-view">
+  <header class="topbar">
+    <h2>📝 Mornikar Wiki CMS</h2>
+    <div class="topbar-right">
+      <span id="user-display">--</span>
+      <button class="btn btn-outline btn-sm" onclick="logout()">退出</button>
+    </div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <main class="content-area" id="content-area">
+      <!-- 动态内容 -->
+    </main>
   </div>
-
-  <p class="footer-note">
-    Token 仅保存在浏览器 localStorage 中<br>
-    不会上传到任何第三方服务器
-  </p>
 </div>
 
-<!-- 已登录状态栏 -->
-<div class="logged-in-bar" id="logged-in-bar">
-  <span class="user-info">Mornikar Wiki CMS · <strong id="username">--</strong></span>
-  <span>
-    <button class="btn-secondary" onclick="logout()">退出</button>
-  </span>
-</div>
+<!-- ========== Toast ========== -->
+<div class="toast success" id="toast-success"></div>
+<div class="toast error" id="toast-error"></div>
 
-<!-- CMS 根容器 -->
-<div id="cms-root"></div>
+<!-- ========== 确认弹窗 ========== -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-box">
+    <h3 id="confirm-title">确认操作</h3>
+    <p id="confirm-msg"></p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-danger" id="confirm-btn">确认</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ============================================================
-// 配置
+// 配置 & 全局状态
 // ============================================================
 var CONFIG = {
-  repo: 'mornikar/mornikar.github.io',
+  owner: 'mornikar',
+  repo: 'mornikar.github.io',
   branch: 'source',
-  cmsPath: 'https://unpkg.com/decap-cms@^3/dist/decap-cms.js',
 };
+var TOKEN = localStorage.getItem('wiki-cms-token') || '';
+var USER = null;
 
-var STORAGE_KEY = 'wiki-cms-token';
-var TOKEN = null;
+// 集合配置（从 config.yml 提取）
+var COLLECTIONS = [
+  {
+    key: 'concepts',
+    icon: '📖',
+    label: '技术概念',
+    folder: '.wiki/concepts',
+    defaultType: 'concepts',
+    hasTags: true,
+  },
+  {
+    key: 'entities',
+    icon: '✏️',
+    label: '实体随笔',
+    folder: '.wiki/entities',
+    defaultType: 'entities',
+    hasTags: true,
+  },
+  {
+    key: 'raw',
+    icon: '📁',
+    label: '原始资料',
+    folder: '.wiki/raw',
+    defaultType: 'raw',
+    hasTags: true,
+  },
+  {
+    key: 'pages',
+    icon: '📋',
+    label: 'Wiki 页面',
+    files: [
+      { name: '索引页', path: '.wiki/index.md' },
+      { name: '操作日志', path: '.wiki/log.md' },
+    ],
+  },
+];
+
+var currentCollection = null;
+var currentFiles = [];
+var currentFile = null;
 
 // ============================================================
-// 工具函数
+// GitHub API 封装
 // ============================================================
-function $(id) { return document.getElementById(id); }
-
-function setError(msg) {
-  var el = $('error-msg');
-  el.textContent = msg;
-  el.style.display = msg ? 'block' : 'none';
-}
-
-function setStatus(msg, loading) {
-  var el = $('status-msg');
-  if (loading) {
-    el.innerHTML = '<span class="spinner"></span>' + msg;
-  } else {
-    el.textContent = msg;
-  }
-}
-
-function apiCall(path, options) {
-  options = options || {};
-  var headers = options.headers || {};
+function api(path, opts) {
+  opts = opts || {};
+  var headers = opts.headers || {};
   headers['Authorization'] = 'token ' + TOKEN;
   headers['Accept'] = 'application/vnd.github.v3+json';
-  options.headers = headers;
+  if (opts.body && typeof opts.body !== 'string') {
+    headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(opts.body);
+  }
+  return fetch('https://api.github.com' + path, Object.assign({}, opts, { headers }))
+    .then(function(r) {
+      if (r.status === 401 || r.status === 403) throw new Error('Token 无效或已过期');
+      if (!r.ok) return r.text().then(function(t) { throw new Error('GitHub API 错误 (' + r.status + ')'); });
+      // 204 No Content
+      if (r.status === 204) return {};
+      return r.json();
+    });
+}
 
-  return fetch('https://api.github.com' + path, options).then(function(res) {
-    if (res.status === 401 || res.status === 403) {
-      throw new Error('Token 无效或已过期，请重新生成');
-    }
-    if (!res.ok) {
-      return res.text().then(function(text) {
-        throw new Error('API 错误 (' + res.status + '): ' + text.slice(0, 200));
+function getSha(path) {
+  return api('/repos/' + CONFIG.owner + '/' + CONFIG.repo + '/contents/' + path + '?ref=' + CONFIG.branch)
+    .then(function(d) { return d.sha; });
+}
+
+function getFileContent(path) {
+  return api('/repos/' + CONFIG.owner + '/' + CONFIG.repo + '/contents/' + path + '?ref=' + CONFIG.branch);
+}
+
+/** 解析 base64 内容为文本 */
+function b64decode(str) { try { return decodeURIComponent(escape(atob(str))); } catch(e) { return atob(str || ''); } }
+function b64encode(str) { try { return btoa(unescape(encodeURIComponent(str))); } catch(e) { return btoa(str || ''); } }
+
+/** 获取最新 commit SHA */
+function getLatestCommit() {
+  return api('/repos/' + CONFIG.owner + '/' + CONFIG.repo + '/git/refs/heads/' + CONFIG.branch)
+    .then(function(r) { return r.object.sha; });
+}
+
+/** 创建 commit blob → tree → commit → update ref */
+function commitFile(path, content, message) {
+  return Promise.all([
+    getLatestCommit(),
+    getSha(path).catch(function() { return null; }), // 可能是新文件
+    api('/repos/' + CONFIG.owner + '/' + CONFIG.repo + '/git/blobs', {
+      method: 'POST',
+      body: { content: b64encode(content), encoding: 'base64' },
+    }),
+  ]).then(function(results) {
+    var commitSha = results[0];
+    var fileSha = results[1];
+    var blobSha = results[2].sha;
+
+    return api('/repos/' + CONFIG.owner + '/' + CONFIG.repo + '/git/commits/' + commitSha)
+      .then(function(commitData) {
+        var baseTree = commitData.tree.sha;
+
+        // Create tree with our new file
+        var treeItem = {
+          path: path,
+          mode: '100644',
+          type: 'blob',
+          sha: blobSha,
+        };
+
+        return api('/repos/' + CONFIG.owner + '/' + CONFIG.repo + '/git/trees', {
+          method: 'POST',
+          body: { base_tree: baseTree, tree: [treeItem] },
+        });
+      })
+      .then(function(treeResult) {
+        return api('/repos/' + CONFIG.owner + '/' + CONFIG.repo + '/git/commits', {
+          method: 'POST',
+          body: {
+            message: message || 'Wiki CMS: 更新 ' + path,
+            tree: treeResult.sha,
+            parents: [commitSha],
+            author: { name: USER.name || USER.login, email: (USER.email || '') || USER.login + '@users.noreply.github.com' },
+          },
+        });
+      })
+      .then(function(commitResult) {
+        return api('/repos/' + CONFIG.owner + '/' + CONFIG.repo + '/git/refs/heads/' + CONFIG.branch, {
+          method: 'PATCH',
+          body: { sha: commitResult.sha },
+        });
       });
+  });
+}
+
+/** 列出目录下所有文件 */
+function listDir(folder) {
+  return api('/repos/' + CONFIG.owner + '/' + CONFIG.repo + '/contents/' + folder + '?ref=' + CONFIG.branch);
+}
+
+// ============================================================
+// UI 工具
+// ============================================================
+function $(id) { return document.getElementById(id); }
+function setError(msg) { var e = $('error-msg'); e.textContent = msg; e.style.display = msg ? 'block' : 'none'; }
+function setStatus(msg, loading) {
+  var el = $('status-msg');
+  el.innerHTML = loading ? '<span class="spinner"></span>' + msg : msg;
+}
+function toast(msg, type) {
+  var el = $('toast-' + type);
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(function() { el.style.display = 'none'; }, 3500);
+}
+
+function confirmAction(title, msg, onConfirm) {
+  $('confirm-title').textContent = title;
+  $('confirm-msg').textContent = msg;
+  $('confirm-modal').classList.add('active');
+  $('confirm-btn').onclick = function() {
+    closeModal();
+    onConfirm();
+  };
+}
+function closeModal() { $('confirm-modal').classList.remove('active'); }
+
+// ============================================================
+// Front Matter 解析与生成
+// ============================================================
+function parseFrontMatter(text) {
+  text = (text || '').replace(/\r\n/g, '\n');
+  if (!text.startsWith('---')) return { data: {}, body: text };
+  var endIdx = text.indexOf('\n---', 3);
+  if (endIdx === -1) return { data: {}, body: text };
+  var fm = text.slice(3, endIdx);
+  var body = text.slice(endIdx + 4).replace(/^\n/, '');
+  var data = {};
+
+  // Simple YAML parser
+  fm.split('\n').forEach(function(line) {
+    var m = line.match(/^(\w[\w\s]*?):\s*(.*)$/);
+    if (m) {
+      var key = m[1].trim();
+      var val = m[2].trim();
+
+      // List values: [item1, item2]
+      if (val.startsWith('[') && val.endsWith(']')) {
+        data[key] = val.slice(1,-1).split(',').map(function(s){return s.trim().replace(/^['"]|['"]$/g,'');}).filter(Boolean);
+        return;
+      }
+      // Quoted string
+      if ((val[0]==='"'||val[0]==="'")&& val[val.length-1]===val[0]) val=val.slice(1,-1);
+
+      data[key] = val;
     }
-    return res.json();
+  });
+
+  return { data: data, body: body };
+}
+
+function generateFrontMatter(data, body) {
+  var lines = ['---'];
+
+  function addField(key, val) {
+    if (val === undefined || val === null || val === '') return;
+    if (Array.isArray(val)) {
+      if (val.length > 0) lines.push(key + ': [' + val.map(function(v) { return '"' + v.replace(/"/g, '\\"') + '"'; }).join(', ') + ']');
+      return;
+    }
+    lines.push(key + ': "' + String(val).replace(/"/g, '\\"') + '"');
+  }
+
+  addField('title', data.title);
+  addField('type', data.type);
+  addField('tags', data.tags);
+  addField('created', data.created);
+  addField('updated', data.updated);
+  if (data.aliases && data.aliases.length > 0) addField('aliases', data.aliases);
+  if (data.related && data.related.length > 0) addField('related', data.related);
+  if (data.summary) addField('summary', data.summary);
+
+  lines.push('---');
+  lines.push('');
+  lines.push(body || '');
+  return lines.join('\n');
+}
+
+// ============================================================
+// 视图渲染：侧边栏
+// ============================================================
+function renderSidebar() {
+  var html = '';
+  COLLECTIONS.forEach(function(col) {
+    html += '<div class="sidebar-item' + (currentCollection && currentCollection.key === col.key ? ' active' : '') +
+            '" onclick="selectCollection(\'' + col.key + '\')" data-col="' + col.key + '">' +
+            '<span>' + (col.icon||'📄') + '</span><span>' + col.label + '</span>' +
+            '<span class="count" id="count-' + col.key + '">-</span></div>';
+  });
+  $('sidebar').innerHTML = html;
+}
+
+// ============================================================
+// 视图渲染：文件列表
+// ============================================================
+function renderFileList(files, col) {
+  var html = '';
+
+  // 搜索栏
+  html += '<div class="toolbar">';
+  html += '  <div class="search-bar"><span>🔍</span><input placeholder="搜索文件..." oninput="filterFiles(this.value)" id="search-input"></div>';
+  if (col.folder) {
+    html += '  <button class="btn btn-primary btn-sm" onclick="createNewFile()">＋ 新建文章</button>';
+  }
+  html += '</div>';
+
+  if (!files || files.length === 0) {
+    html += '<div class="empty-state"><div class="icon">📂</div><p>暂无文件</p></div>';
+    $('content-area').innerHTML = html;
+    return;
+  }
+
+  html += '<div class="file-list" id="file-list-container">';
+  files.forEach(function(f, i) {
+    var meta = f.meta || {};
+    html += '<div class="file-row" onclick="openFile(\'' + col.key + '\', ' + i + ')" data-index="' + i + '">';
+    html += '  <div class="file-icon">' + (col.icon||'📄') + '</div>';
+    html += '  <div class="file-info">';
+    html += '    <div class="file-title">' + escapeHtml(meta.title || f.name.replace('.md','')) + '</div>';
+    html += '    <div class="file-meta">' + (meta.created||'') + (meta.updated?' · 更新 '+meta.updated:'') + '</div>';
+    if (meta.tags && meta.tags.length > 0) {
+      html += '<div class="file-tags">';
+      meta.tags.forEach(function(t) { html += '<span class="tag">' + t + '</span>'; });
+      html += '</div>';
+    }
+    html += '  </div>';
+    html += '  <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteFile(\'' + col.key + '\',\'' + f.path + '\')">删除</button>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  $('content-area').innerHTML = html;
+}
+
+function filterFiles(keyword) {
+  keyword = (keyword||'').toLowerCase();
+  document.querySelectorAll('#file-list-container .file-row').forEach(function(row) {
+    row.style.display = !keyword || row.textContent.toLowerCase().indexOf(keyword) >= 0 ? '' : 'none';
   });
 }
 
 // ============================================================
-// 登录流程
+// 视图渲染：编辑器
 // ============================================================
+function renderEditor(file, col, isNew) {
+  var meta = file.meta || {};
+  var html = '<div class="editor-view" style="display:block">';
 
-/** 页面加载时检查是否有保存的 token */
-function checkSavedToken() {
-  TOKEN = localStorage.getItem(STORAGE_KEY);
-  if (TOKEN && TOKEN.length > 10) {
-    // 有保存的 token，直接启动 CMS
-    setStatus('正在验证Token...');
-    verifyAndStart();
-  } else {
-    // 显示登录面板
-    $('login-panel').style.display = 'block';
+  html += '<div class="editor-header">';
+  html += '<h3>' + (isNew ? '新建文章' : '编辑：' + escapeHtml(meta.title || file.name)) + '</h3>';
+  html += '<button class="btn btn-outline btn-sm" onclick="goBack()">← 返回列表</button>';
+  html += '</div>';
+
+  html += '<form class="editor-form" onsubmit="return false;">';
+
+  html += '<div class="form-group"><label>标题 *</label>';
+  html += '<input type="text" id="edit-title" value="' + escapeHtml(meta.title||'') + '" placeholder="文章标题"></div>';
+
+  html += '<div class="form-row">';
+  html += '  <div class="form-group"><label>创建日期</label>';
+  html += '  <input type="date" id="edit-created" value="' + (meta.created||today()) + '"></div>';
+  html += '  <div class="form-group"><label>更新日期</label>';
+  html += '  <input type="date" id="edit-updated" value="' + today() + '"></div>';
+  html += '</div>';
+
+  if (col.hasTags) {
+    html += '<div class="form-group"><label>标签（回车添加）</label>';
+    html += '<div class="tags-input" id="tags-input-wrap" onclick="this.querySelector(\'input\').focus()">';
+    var tags = meta.tags || [];
+    tags.forEach(function(t) { html += '<span class="tag-pill">' + escapeHtml(t) + '<span class="tag-remove" onclick="removeTag(this)">×</span></span>'; });
+    html += '<input placeholder="输入标签后按 Enter..." onkeydown="handleTagKey(event)">';
+    html += '</div></div>';
+  }
+
+  html += '<div class="form-group"><label>摘要（可选）</label>';
+  html += '<textarea id="edit-summary" rows="2" placeholder="一句话描述...">' + escapeHtml(meta.summary||'') + '</textarea></div>';
+
+  html += '<div class="form-group"><label>正文内容（Markdown） *</label>';
+  html += '<textarea id="edit-body" rows="20" placeholder="# 正文内容..." style="min-height:400px">' + escapeHtml(meta.body||'') + '</textarea></div>';
+
+  html += '<div class="editor-actions">';
+  html += '<button class="btn btn-outline" onclick="goBack()">取消</button>';
+  html += '<button class="btn btn-primary" onclick="saveFile(\'' + col.key + '\',\'' + (file.path||'') + '\',' + !!isNew + ')">💾 保存</button>';
+  html += '</div>';
+
+  html += '</form></div>';
+
+  $('content-area').innerHTML = html;
+}
+
+// ============================================================
+// 标签输入处理
+// ============================================================
+function handleTagKey(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    var input = e.target;
+    var val = input.value.trim();
+    if (!val) return;
+    var wrap = $('#tags-input-wrap');
+
+    // Check duplicate
+    var existing = Array.from(wrap.querySelectorAll('.tag-pill')).map(function(el) { return el.childNodes[0].textContent.trim(); });
+    if (existing.indexOf(val) >= 0) { input.value = ''; return; }
+
+    var span = document.createElement('span');
+    span.className = 'tag-pill';
+    span.innerHTML = escapeHtml(val) + '<span class="tag-remove" onclick="removeTag(this)">×</span>';
+    wrap.insertBefore(span, input);
+    input.value = '';
   }
 }
-
-/** 验证 token 并启动 CMS */
-function verifyAndStart() {
-  apiCall('/user')
-    .then(function(user) {
-      console.log('[CMS] 登录成功:', user.login);
-      saveToken(TOKEN);
-      showCMS(user.login);
-    })
-    .catch(function(err) {
-      console.error('[CMS] Token 验证失败:', err);
-      setError(err.message);
-      logout(); // 清除无效 token
-      $('login-panel').style.display = 'block';
-    });
+function removeTag(el) { el.parentNode.remove(); }
+function getTags() {
+  var pills = document.querySelectorAll('#tags-input-wrap .tag-pill');
+  return Array.from(pills).map(function(el) { return el.childNodes[0].textContent.trim(); });
 }
 
-/** 点击登录按钮 */
+// ============================================================
+// 核心流程：登录
+// ============================================================
 function doLogin() {
-  var input = $('token-input');
-  var val = (input.value || '').trim();
+  var token = ($('token-input').value || '').trim();
+  if (!token) { setError('请输入 Token'); return; }
 
-  if (!val) {
-    setError('请输入 GitHub Token');
-    return;
-  }
-  if (val.indexOf('ghp_') !== 0 && val.indexOf('gho_') !== 0 && val.charAt(0) !== 'g' && val.length < 20) {
-    setError('Token 格式看起来不对，应以 ghp_ 或 gho_ 开头');
-    return;
-  }
-
-  TOKEN = val;
+  TOKEN = token;
   setError('');
   setStatus('正在验证 Token...', true);
   $('login-btn').disabled = true;
 
-  verifyAndStart();
+  api('/user').then(function(user) {
+    localStorage.setItem('wiki-cms-token', TOKEN);
+    USER = user;
+    console.log('[CMS] 登录成功:', user.login);
+    showMainView();
+  }).catch(function(err) {
+    setError(err.message);
+    setStatus('');
+    $('login-btn').disabled = false;
+  });
 }
 
-/** 保存 token */
-function saveToken(token) {
-  localStorage.setItem(STORAGE_KEY, token);
-  TOKEN = token;
-}
-
-/** 登出 */
 function logout() {
-  localStorage.removeItem(STORAGE_KEY);
-  TOKEN = null;
+  localStorage.removeItem('wiki-cms-token');
+  TOKEN = '';
+  USER = null;
   location.reload();
 }
 
-// ============================================================
-// CMS 启动
-// ============================================================
-
-function showCMS(username) {
-  // 隐藏登录面板
-  $('login-panel').style.display = 'none';
-
-  // 显示顶部栏
-  var bar = $('logged-in-bar');
-  bar.style.display = 'flex';
-  $('username').textContent = username;
-
-  // 显示 CMS 容器
-  var root = $('cms-root');
-  root.style.display = 'block';
-
-  // 注入 CMS 所需的全局配置
-  window.CMS_CONFIG = {
-    backend: {
-      name: 'github',
-      repo: CONFIG.repo,
-      branch: CONFIG.branch,
-    },
-  };
-
-  // ===== 关键：拦截所有网络请求，注入 Authorization =====
-  var origFetch = window.fetch;
-  window.fetch = function(url, options) {
-    options = options || {};
-    if (!options.headers) options.headers = {};
-    if (typeof options.headers.append === 'function') {
-      options.headers.append('Authorization', 'token ' + TOKEN);
-    } else if (options.headers instanceof Headers) {
-      options.headers.set('Authorization', 'token ' + TOKEN);
-    } else {
-      options.headers['Authorization'] = 'token ' + TOKEN;
-    }
-    console.log('[CMS Proxy] Fetch:', typeof url === 'string' ? url : url.url);
-    return origFetch.call(this, url, options);
-  };
-
-  // 拦截 XMLHttpRequest
-  var origOpen = XMLHttpRequest.prototype.open;
-  var origSend = XMLHttpRequest.prototype.send;
-  XMLHttpRequest.prototype.open = function(method, url) {
-    this._url = url;
-    this._method = method;
-    return origOpen.apply(this, arguments);
-  };
-  XMLHttpRequest.prototype.send = function() {
-    this.setRequestHeader('Authorization', 'token ' + TOKEN);
-    console.log('[CMS Proxy] XHR:', this._method, this._url);
-    return origSend.apply(this, arguments);
-  };
-
-  // ===== 关键：拦截 CMS 的 OAuth 弹窗，直接返回成功 =====
-  var realWindowOpen = window.open;
-  window.open = function(url, name, features) {
-    console.log('[CMS] 拦截弹窗:', url);
-
-    // 如果 CMS 打开的是 OAuth 相关 URL，模拟成功
-    if (url && (url.indexOf('github.com/login/oauth') > -1 ||
-                 url.indexOf('netlify.com') > -1 ||
-                 url.indexOf('auth') > -1)) {
-
-      console.log('[CMS] 模拟 OAuth 成功');
-
-      // 延迟发送成功消息给 CMS
-      setTimeout(function() {
-        // Decap CMS 格式的 postMessage
-        window.dispatchEvent(new MessageEvent('message', {
-          data: 'authorization:github:success:' + JSON.stringify({
-            token: TOKEN,
-          }),
-          origin: location.origin,
-        }));
-
-        // Sveltia CMS 格式的 postMessage
-        window.dispatchEvent(new MessageEvent('message', {
-          data: {
-            type: 'oauth',
-            provider: 'github',
-            token: TOKEN,
-          },
-          origin: location.origin,
-        }));
-      }, 300);
-
-      // 返回一个假窗口对象
-      return { closed: false, close: function() {} };
-    }
-
-    // 非 OAuth 链接，正常打开
-    return realWindowOpen.apply(this, arguments);
-  };
-
-  // 动态加载 CMS 脚本
-  console.log('[CMS] 加载 Decap CMS...');
-  setStatus('正在加载 CMS...', true);
-
-  var script = document.createElement('script');
-  script.src = CONFIG.cmsPath;
-  script.onload = function() {
-    console.log('[CMS] Decap CMS 加载完成');
-    setStatus('');
-  };
-  script.onerror = function(e) {
-    console.error('[CMS] 脚本加载失败', e);
-    setError('CMS 脚本加载失败，请刷新重试');
-  };
-  root.appendChild(script);
+function checkSavedToken() {
+  if (TOKEN && TOKEN.length > 10) {
+    setStatus('正在验证保存的 Token...', true);
+    api('/user').then(function(user) {
+      USER = user;
+      showMainView();
+    }).catch(function(err) {
+      logout();
+    });
+  }
 }
+
+function showMainView() {
+  $('login-view').style.display = 'none';
+  $('main-view').style.display = 'block';
+  $('user-display').textContent = '@' + USER.login;
+  renderSidebar();
+  selectCollection(COLLECTIONS[0].key);
+}
+
+// ============================================================
+// 核心流程：选择集合 / 加载文件
+// ============================================================
+function selectCollection(key) {
+  var col = COLLECTIONS.find(function(c) { return c.key === key; });
+  if (!col) return;
+  currentCollection = col;
+  currentFiles = [];
+
+  // Update sidebar active state
+  document.querySelectorAll('.sidebar-item').forEach(function(el) {
+    el.classList.toggle('active', el.dataset.col === key);
+  });
+
+  if (col.files) {
+    // 固定文件集合
+    loadFixedFiles(col);
+  } else {
+    // 目录集合
+    loadFolderFiles(col);
+  }
+}
+
+function loadFolderFiles(col) {
+  setStatus('加载中...', true);
+  listDir(col.folder).then(function(items) {
+    if (!Array.isArray(items)) items = [];
+    // Only .md files
+    items = items.filter(function(f) { return f.type === 'file'; });
+    return Promise.all(items.map(function(item) {
+      return getFileContent(item.path).then(function(data) {
+        var parsed = parseFrontMatter(b64decode(data.content));
+        return {
+          name: item.name,
+          path: item.path,
+          sha: data.sha,
+          meta: parsed.data,
+          rawBody: parsed.body,
+        };
+      });
+    }));
+  }).then(function(files) {
+    currentFiles = files;
+    $('count-' + col.key).textContent = files.length;
+    setStatus('');
+    renderFileList(files, col);
+  }).catch(function(err) {
+    setStatus('');
+    console.error(err);
+    toast('加载失败: ' + err.message, 'error');
+  });
+}
+
+function loadFixedFiles(col) {
+  setStatus('加载中...', true);
+  Promise.all(col.files.map(function(f) {
+    return getFileContent(f.path).then(function(data) {
+      var parsed = parseFrontMatter(b64decode(data.content));
+      return {
+        name: f.name,
+        path: f.path,
+        sha: data.sha,
+        meta: parsed.data,
+        rawBody: parsed.body,
+      };
+    }).catch(function() {
+      return { name: f.name, path: f.path, meta: {}, rawBody: '' };
+    });
+  })).then(function(files) {
+    currentFiles = files;
+    $('count-' + col.key).textContent = files.length;
+    setStatus('');
+
+    var html = '<div class="toolbar"><h3 style="font-size:16px;color:var(--text-secondary)">' + col.label + '</h3></div>';
+    html += '<div class="file-list">';
+    files.forEach(function(f, i) {
+      html += '<div class="file-row" onclick="openFile(\'' + col.key + '\', ' + i + ')">';
+      html += '<div class="file-icon">' + '📋' + '</div>';
+      html += '<div class="file-info"><div class="file-title">' + f.name + '</div>';
+      html += '<div class="file-meta">' + f.path + '</div></div></div>';
+    });
+    html += '</div>';
+    $('content-area').innerHTML = html;
+  }).catch(function(err) {
+    setStatus('');
+    toast('加载失败: ' + err.message, 'error');
+  });
+}
+
+// ============================================================
+// 核心流程：打开/创建/保存/删除文件
+// ============================================================
+function openFile(colKey, idx) {
+  var file = currentFiles[idx];
+  if (!file) return;
+  currentFile = file;
+  var col = COLLECTIONS.find(function(c) { return c.key === colKey; });
+  renderEditor(file, col, false);
+}
+
+function createNewFile() {
+  var col = currentCollection;
+  if (!col || !col.folder) return;
+  currentFile = {
+    name: '',
+    path: col.folder + '/untitled.md',
+    meta: { title: '', created: today(), updated: today(), tags: [], summary: '', body: '' },
+    rawBody: '',
+  };
+  renderEditor(currentFile, col, true);
+}
+
+function saveFile(colKey, filePath, isNew) {
+  var title = ($('#edit-title').value || '').trim();
+  if (!title) { toast('请输入标题', 'error'); return; }
+
+  var created = $('#edit-created').value || today();
+  var updated = $('#edit-updated').value || today();
+  var tags = currentCollection.hasTags ? getTags() : [];
+  var summary = ($('#edit-summary').value || '').trim();
+  var body = ($('#edit-body').value || '').trim();
+
+  var col = COLLECTIONS.find(function(c) { return c.key === colKey; });
+
+  // Generate filename from title
+  var slug = title.toLowerCase().replace(/[^\w\s\u4e00-\u9fff]/g, '').replace(/\s+/g, '-').substring(0, 50) || 'untitled';
+  var finalPath = isNew ? (col.folder + '/' + slug + '.md') : filePath;
+
+  var frontMatter = generateFrontMatter({
+    title: title,
+    type: col.defaultType || '',
+    tags: tags,
+    created: created,
+    updated: updated,
+    summary: summary,
+  }, body);
+
+  setStatus('保存中...', true);
+
+  commitFile(finalPath, frontMatter, 'Wiki CMS: ' + (isNew ? '新建' : '更新') + ' ' + title)
+    .then(function() {
+      setStatus('');
+      toast('✅ 已保存: ' + title, 'success');
+      setTimeout(function() { selectCollection(colKey); }, 800);
+    })
+    .catch(function(err) {
+      setStatus('');
+      toast('❌ 保存失败: ' + err.message, 'error');
+    });
+}
+
+function deleteFile(colKey, filePath) {
+  confirmAction('删除文件', '确定要删除此文件吗？此操作不可撤销。', function() {
+    setStatus('删除中...', true);
+    api('/repos/' + CONFIG.owner + '/' + CONFIG.repo + '/contents/' + filePath, {
+      method: 'DELETE',
+      body: { message: 'Wiki CMS: 删除 ' + filePath, sha: '', branch: CONFIG.branch },
+    }).then(function() {
+      setStatus('');
+      toast('✅ 已删除', 'success');
+      selectCollection(colKey);
+    }).catch(function(err) {
+      setStatus('');
+      toast('❌ 删除失败: ' + err.message, 'error');
+    });
+  });
+}
+
+function goBack() { selectCollection(currentCollection.key); }
+
+// ============================================================
+// 工具函数
+// ============================================================
+function escapeHtml(s) {
+  var div = document.createElement('div');
+  div.appendChild(document.createTextNode(s || ''));
+  return div.innerHTML;
+}
+function today() { return new Date().toISOString().slice(0, 10); }
 
 // ============================================================
 // 初始化
 // ============================================================
 checkSavedToken();
 </script>
-
-<script src="https://unpkg.com/decap-cms@^3/dist/decap-cms.js"></script>
 </body>
 </html>
