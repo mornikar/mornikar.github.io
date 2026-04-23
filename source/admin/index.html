@@ -82,6 +82,7 @@ body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-seri
 .topbar h2 { font-size:17px; font-weight:600; }
 .topbar-right { display:flex; align-items:center; gap:14px; font-size:13px; color:var(--text-secondary); }
 .user-avatar { width:28px; height:28px; border-radius:50%; background:var(--accent-dim); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; color:var(--accent-hover); }
+#conn-status { font-size:12px; cursor:default; padding:3px 8px; border-radius:6px; background:rgba(34,197,94,.1); }
 
 .layout { display:grid; grid-template-columns:250px 1fr; min-height:calc(100vh - 53px); }
 .sidebar { background:var(--bg-secondary); border-right:1px solid var(--border); padding:12px 0; overflow-y:auto; max-height:calc(100vh - 53px); }
@@ -235,6 +236,7 @@ body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-seri
 <button class="btn btn-outline btn-sm" onclick="toggleSidebar()">☰ 菜单</button>
 </div>
 <div class="topbar-right">
+<span id="conn-status" title="连接模式">🟢 直连</span>
 <div class="user-avatar" id="user-avatar">?</div>
 <span id="user-display">--</span>
 <button class="btn btn-outline btn-sm" onclick="logout()">退出</button>
@@ -263,12 +265,15 @@ body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-seri
 // ============================================================
 // CONFIG & STATE
 // ============================================================
-var PROXY_URL = 'https://shy-wood-2431decap-oauth.1548324254.workers.dev';
-// Fallback: direct GitHub API (will hit CORS but we try)
-var API_BASE = PROXY_URL;
-
+var GITHUB_API = 'https://api.github.com';
 var TOKEN = localStorage.getItem('wiki-cms-token') || '';
 var USER = null;
+var USE_PROXY = false; // 先尝试直连，失败后标记用代理
+
+// 代理地址（备用）
+var PROXY_URLS = [
+  'https://shy-wood-2431decap-oauth.1548324254.workers.dev',
+];
 
 var COLLECTIONS = [
   { key:'concepts', icon:'📖', label:'技术概念', folder:'.wiki/concepts', type:'concepts', color:'#6366f1' },
@@ -285,23 +290,115 @@ var currentFiles = [];
 var currentFile = null;
 
 // ============================================================ 
-// GITHUB API (through proxy)
+// GITHUB API (direct + proxy fallback)
 // ============================================================
+var _apiCallCount = 0;
+var _lastApiError = null;
+
+function buildUrl(path) {
+  return (USE_PROXY ? PROXY_URLS[0] : GITHUB_API) + path;
+}
+
 function api(method, path, body) {
   var opts = {
     method: method,
-    headers: { 'Authorization': 'token '+TOKEN, 'Accept': 'application/vnd.github.v3+json' },
+    headers: { 
+      'Authorization': 'token '+TOKEN, 
+      'Accept': 'application/vnd.github.v3+json',
+    },
   };
   if (body !== undefined && body !== null) {
     opts.headers['Content-Type'] = 'application/json';
     opts.body = JSON.stringify(body);
   }
-  return fetch(API_BASE + path, opts).then(function(r) {
-    if (r.status===401||r.status===403) throw new Error('Token 无效或已过期');
-    if (!r.ok) return r.text().then(function(t){throw new Error('API 错误 ('+r.status+'): '+(t||'').slice(0,150))});
+  
+  _apiCallCount++;
+  var callId = _apiCallCount;
+  var url = buildUrl(path);
+  console.log('[API#'+callId+'] '+method+' '+url);
+  
+  // 记录时间
+  var t0 = Date.now();
+  
+  return fetch(url, opts).then(function(r) {
+    var elapsed = Date.now() - t0;
+    console.log('[API#'+callId+'] Response: '+r.status+' ('+elapsed+'ms)');
+    
+    if (r.status===401||r.status===403) throw new Error('Token 无效或已过期（'+r.status+'）');
+    
+    if (!r.ok) {
+      return r.text().then(function(t){
+        var msg = 'GitHub API 错误 ('+r.status+')';
+        try { 
+          var j = JSON.parse(t); 
+          if(j.message) msg = j.message; 
+        } catch(e){}
+        _lastApiError = { status:r.status, message:msg, path:path };
+        throw new Error(msg + '\n路径: ' + path);
+      });
+    }
+    
     if (r.status===204) return {};
     return r.json();
+  }).catch(function(err) {
+    // 如果是网络错误且还没用过代理，尝试自动切换到代理
+    if (!USE_PROXY && isNetworkError(err)) {
+      console.warn('[API#'+callId+'] 直连失败，尝试代理模式...', err.message);
+      USE_PROXY = true;
+      // 重试一次
+      return api(method, path, body);
+    }
+    throw err;
   });
+}
+
+function isNetworkError(err) {
+  var msg = (err.message || '').toLowerCase();
+  return msg.indexOf('failed to fetch') >= 0 || 
+         msg.indexOf('networkerror') >= 0 ||
+         msg.indexOf('network') >= 0 ||
+         msg.indexOf('load failed') >= 0 ||
+         err.name === 'TypeError';
+}
+
+function testConnection(callback) {
+  // 先测试直连
+  var directHeaders = new Headers();
+  directHeaders.set('Authorization', 'token '+TOKEN);
+  directHeaders.set('Accept', 'application/vnd.github.v3+json');
+  
+  fetch(GITHUB_API+'/user', { headers: directHeaders })
+    .then(function(r) {
+      if (r.ok) {
+        console.log('[CMS] ✅ 直连 GitHub API 成功');
+        USE_PROXY = false;
+        return r.json();
+      }
+      throw new Error('HTTP '+r.status);
+    })
+    .then(function(user){callback(null, user)})
+    .catch(function(err) {
+      console.warn('[CMS] ⚠️ 直连失败:', err.message);
+      
+      // 尝试代理
+      var proxyHeaders = new Headers();
+      proxyHeaders.set('Authorization', 'token '+TOKEN);
+      proxyHeaders.set('Accept', 'application/vnd.github.v3+json');
+      
+      fetch(PROXY_URLS[0]+'/user', { headers: proxyHeaders })
+        .then(function(r2) {
+          if (r2.ok) {
+            USE_PROXY = true;
+            console.log('[CMS] ✅ 通过代理连接成功');
+            return r2.json();
+          }
+          throw new Error('HTTP '+r2.status);
+        })
+        .then(function(user){callback(null, user)})
+        .catch(function(err2) {
+          callback(new Error('直连和代理都失败了\n直连: '+err.message+'\n代理: '+err2.message));
+        });
+    });
 }
 
 function apiGET(path) { return api('GET', path); }
@@ -467,16 +564,17 @@ function doLogin(){
   if(!t){setError('请输入 Token');return}
   TOKEN=t;setError('');setStatus('验证中...',true);$('login-btn').disabled=true;
 
-  apiGET('/verify?'+Date.now())  // use verify endpoint or fallback to /user
-    .catch(function(){return apiGET('/user')})
-    .then(function(u){
-      localStorage.setItem('wiki-cms-token',TOKEN);
-      USER=u;console.log('[CMS] OK:',u.login);
-      showMainView();
-    })
-    .catch(function(err){
-      setError(err.message);setStatus('');$('login-btn').disabled=false;
-    });
+  testConnection(function(err, u){
+    $('login-btn').disabled=false;
+    setStatus('');
+    if(err){
+      setError(err.message);
+      return;
+    }
+    localStorage.setItem('wiki-cms-token',TOKEN);
+    USER=u;console.log('[CMS] 登录成功:',u.login,'(模式:'+(USE_PROXY?'代理':'直连')+')');
+    showMainView();
+  });
 }
 
 function logout(){
@@ -486,9 +584,10 @@ function logout(){
 function checkSavedToken(){
   if(TOKEN&&TOKEN.length>10){
     setStatus('验证已保存的Token...',true);
-    apiGET('/verify?'+Date.now()).catch(function(){return apiGET('/user')})
-      .then(function(u){USER=u;showMainView()})
-      .catch(function(){logout()});
+    testConnection(function(err, u){
+      if(err){console.error('[CMS] Token验证失败:',err);logout();return}
+      USER=u;showMainView();
+    });
   }
 }
 
@@ -500,6 +599,10 @@ function showMainView(){
   $('main-view').style.display='block';
   $('user-display').textContent='@'+USER.login;
   $('user-avatar').textContent=(USER.name||USER.login||'?')[0].toUpperCase();
+  // 连接状态
+  var cs=$('conn-status');
+  if(USE_PROXY){cs.textContent='🟡 代理';cs.title='通过 Cloudflare Worker 代理连接 GitHub API';}
+  else{cs.textContent='🟢 直连';cs.title='直接连接 GitHub API（最快）';}
   renderSidebar();
   selectCollection(COLLECTIONS[0].key);
 }
