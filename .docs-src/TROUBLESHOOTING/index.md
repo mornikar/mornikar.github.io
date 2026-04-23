@@ -21,6 +21,7 @@ title: 故障排查
 | GitHub Pages 404 | 分支/路径配置错误 | [§8](#8-github-pages-404) |
 | Giscus 评论不显示 | App 未安装/Discussions 未开启 | [§9](#9-giscus-评论不显示) |
 | Dify 无法访问 | Docker 未启动/端口占用 | [§10](#10-dify-无法访问) |
+| Live2D 看板娘消失 | 设置面板关闭 Bug / 移动端限制 | [§12](#12-live2d-看板娘问题) |
 
 ---
 
@@ -428,7 +429,42 @@ giscus:
 
 ---
 
-## 11. 联系方式
+## 11. Live2D 看板娘问题
+
+**症状**：看板娘不显示、设置页关闭后消失、移动端无法加载。
+
+### 排查步骤
+
+**Step 1**：确认版本
+
+v8.5 及之前版本存在两个已知 Bug：
+- 设置页关闭(✕)按钮后看板娘消失 — v8.6 已修复
+- 移动端(screen.width < 768)跳过 Live2D 初始化 — v8.6 已修复
+
+更新到 v8.6+ 即可解决。
+
+**Step 2**：检查 Live2D 是否加载
+
+在浏览器 Console 中执行：
+```javascript
+document.querySelector('#waifu') ? 'Live2D 已加载' : 'Live2D 未加载'
+```
+
+**Step 3**：移动端确认
+
+- 移动端看板娘在 Wiki 聊天面板内显示，不在页面左下角浮动
+- 打开聊天面板即可看到看板娘区域
+
+**Step 4**：检查浏览器 Console 错误
+
+常见错误：
+- `CubismCore not found` — live2dcubismcore.js 加载失败
+- `model3.json 404` — 模型文件路径错误
+- `Canvas is already in use` — 重复初始化
+
+---
+
+## 12. 联系方式
 
 如果以上方法都无法解决问题：
 
