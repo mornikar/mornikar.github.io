@@ -16,6 +16,8 @@ on:
       - '.github/workflows/**'
       - '*.md'
       - '.docs-src/**'     # 项目文档源文件
+      - 'source/admin/**'  # Decap CMS 管理界面
+      - 'tools/**'         # 工具脚本（OAuth Worker 等）
   workflow_dispatch:
     inputs:
       mode:
