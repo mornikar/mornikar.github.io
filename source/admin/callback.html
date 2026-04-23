@@ -8,7 +8,6 @@
 <p style="font-family:sans-serif;text-align:center;margin-top:40px">授权成功，正在返回管理界面...</p>
 <script>
 (function() {
-  // 从 URL 参数读取 OAuth token
   var params = new URLSearchParams(window.location.search);
   var token = params.get('token');
   var scope = params.get('scope') || 'repo';
@@ -19,36 +18,43 @@
     return;
   }
 
-  // 和 CMS 页面同源（都是 mornikar.github.io），postMessage 可靠
-  if (window.opener) {
-    // Decap CMS v3 标准格式
-    window.opener.postMessage({
-      type: 'oauth',
-      provider: 'github',
+  // 同时存储到 localStorage 作为备份
+  try {
+    localStorage.setItem('sveltia_cms_oauth', JSON.stringify({
       token: token,
       scope: scope,
-      token_type: tokenType
-    }, window.location.origin);
+      token_type: tokenType,
+      timestamp: Date.now()
+    }));
+  } catch(e) {}
 
-    // 兼容旧版格式
-    window.opener.postMessage(
-      'authorization:github:success:' + JSON.stringify({
+  if (window.opener) {
+    // Decap CMS v3 / Sveltia CMS 标准格式
+    try {
+      window.opener.postMessage({
+        type: 'oauth',
+        provider: 'github',
         token: token,
         scope: scope,
         token_type: tokenType
-      }),
-      '*'
-    );
+      }, 'https://mornikar.github.io');
+    } catch(e) {}
 
-    // 短暂延迟后关闭弹窗
+    // 兼容旧版格式
+    try {
+      window.opener.postMessage(
+        'authorization:github:success:' + JSON.stringify({
+          token: token,
+          scope: scope,
+          token_type: tokenType
+        }),
+        '*'
+      );
+    } catch(e) {}
+
     setTimeout(function() { window.close(); }, 1000);
   } else {
-    // 没有 opener（直接访问），存入 localStorage 并跳转
-    localStorage.setItem('decap_cms_oauth', JSON.stringify({
-      token: token,
-      scope: scope,
-      token_type: tokenType
-    }));
+    // 没有 opener，重定向回 CMS 主页
     window.location.href = '/admin/';
   }
 })();
