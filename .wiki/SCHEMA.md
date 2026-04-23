@@ -110,6 +110,8 @@ summary: 一句话描述                 # 可选，用于 index 和 meta
 ```
 Wiki 编辑（.wiki/ 目录下的 .md 文件）
         ↓
+  wiki-compile.js（AI 编译 raw/ → concepts/entities/）  ← Phase 1 新增
+        ↓
   wiki-to-hexo.js（增量检测）
         ↓
   source/_posts/（Hexo Markdown）
@@ -118,6 +120,70 @@ Wiki 编辑（.wiki/ 目录下的 .md 文件）
         ↓
   hexo deploy → GitHub Pages
 ```
+
+## AI 编译流程（Phase 1 新增）
+
+```
+raw/ 中的原始素材
+        ↓
+  AI 读取 + 编译
+        ↓
+  concepts/ 或 entities/ 中的结构化 wiki 页面
+        ↓
+  自动生成 frontmatter（title, type, tags, summary）
+  自动插入 [[WikiLink]] 交叉引用
+        ↓
+  wiki-to-hexo.js 正常转换
+```
+
+### 编译配置
+
+在 `.wiki/compile-config.json` 中配置 AI 接口：
+
+```json
+{
+  "apiKey": "your-api-key",
+  "endpoint": "https://open.bigmodel.cn/api/paas/v4",
+  "model": "glm-4-flash"
+}
+```
+
+或设置环境变量：`WIKI_COMPILE_API_KEY` / `WIKI_COMPILE_ENDPOINT` / `WIKI_COMPILE_MODEL`
+
+### 编译命令
+
+```bash
+# 增量编译（只处理新增/变更的 raw 文件）
+node scripts/wiki-compile.js
+
+# 强制全量编译
+node scripts/wiki-compile.js --force
+
+# 预览模式
+node scripts/wiki-compile.js --dry-run
+
+# 编译指定文件
+node scripts/wiki-compile.js --file .wiki/raw/AI_Agent/AI稳定上线工程化.md
+
+# 运行测试
+node scripts/wiki-compile.js --test
+```
+
+### raw 子目录到 layer 的映射
+
+| raw 子目录 | 编译目标 | 说明 |
+|-----------|---------|------|
+| `AI_Agent/` | concepts | AI Agent 相关概念 |
+| `articles/AI产品方案/` | entities | 产品方案随笔 |
+| `articles/AI行业分析/` | concepts | 行业分析概念 |
+| `articles/AI部署/` | concepts | 部署技术概念 |
+| `articles/多模态/` | concepts | 多模态概念 |
+| `articles/随笔/` | entities | 个人随笔 |
+| `ML/` | concepts | 机器学习概念 |
+| `PM/` | entities | 产品经理随笔 |
+| `OS/` | entities | 操作系统随笔 |
+| `skills/` | entities | 技能笔记 |
+| `snippets/` | entities | 代码片段 |
 
 ## 脚本用法
 

@@ -1,234 +1,159 @@
 /**
- * ════════════════════════════════════════════════════════
- *  Mornikar Wiki CMS — 统一 Worker（v2）
- *  
- *  功能：
- *  ① 托管 CMS 前端页面（/ 和 /admin）
- *  ② 代理 GitHub API 请求（/api/github/*）
- *  ③ 处理图片上传（/api/upload）
- *  ④ 零跨域：前端和API在同一Worker域名下
+ * Wiki CMS Proxy Worker
  * 
- *  部署：Cloudflare Dashboard → Workers → Edit Code → 粘贴 → Deploy
- *  环境变量：GITHUB_CLIENT_SECRET（可选，用于 OAuth 备用方案）
- * ════════════════════════════════════════════════════════
+ * 功能：
+ *  1. GitHub API 代理（解决 CORS）
+ *  2. 图片上传到 GitHub 仓库
+ * 
+ * 部署后 CMS 通过 /api/gh/* 调用 GitHub API，/api/upload 上传图片
  */
 
 const GITHUB_API = 'https://api.github.com';
+const OWNER = 'mornikar';
+const REPO = 'mornikar.github.io';
+const BRANCH = 'source';
 
-// ======== CORS Headers ========
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
   'Access-Control-Allow-Headers': '*',
-  'Access-Control-Max-Age': '86400',
 };
 
-// ======== CMS HTML（自动从 GitHub 获取） ========
-let cachedHtml = null;
-const CMS_RAW_URL = 'https://raw.githubusercontent.com/mornikar/mornikar.github.io/source/source/admin/index.html';
-const CACHE_TTL = 5 * 60 * 1000; // 缓存5分钟
-let cacheTime = 0;
-
-async function getCmsHtml() {
-  // 内存缓存
-  if (cachedHtml && (Date.now() - cacheTime) < CACHE_TTL) return new Response(cachedHtml, {
-    headers: { 'Content-Type': 'text/html; charset=utf-8', ...corsHeaders },
-  });
-
-  try {
-    console.log('[CMS] Fetching latest from GitHub...');
-    const resp = await fetch(CMS_RAW_URL);
-    if (!resp.ok) throw new Error('GitHub raw fetch failed: ' + resp.status);
-    
-    cachedHtml = await resp.text();
-    cacheTime = Date.now();
-    
-    return new Response(cachedHtml, {
-      headers: { 
-        'Content-Type': 'text/html; charset=utf-8',
-        ...corsHeaders,
-        'X-CMS-Cache': 'fresh',
-      },
-    });
-  } catch (err) {
-    console.error('[CMS] Failed to fetch from GitHub:', err.message);
-    
-    // 返回一个带跳转提示的页面
-    return new Response(`<!DOCTYPE html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Wiki CMS</title>
-<style>body{background:#080c16;color:#7a8ba8;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif;text-align:center;padding:20px}
-.box{max-width:460px}.spin{width:36px;height:36px;border:3px solid #1e3054;border-top:#6366f1;border-radius:50%;animation:s .8s linear infinite;margin:20px auto}
-@keyframes s{to{transform:rotate(360deg)}}a{color:#818cf8;font-size:18px}</style></head>
-<body><div class="box">
-<div class="spin"></div>
-<h2 style="margin-bottom:12px;color:#d0dae8">Wiki 内容管理系统</h2>
-<p style="margin-bottom:24px">正在从 GitHub 加载最新版本...</p>
-<p id="err" style="color:#ef4444;display:none;margin-bottom:16px"></p>
-<div id="fallback" style="display:none">
-<p style="margin-bottom:16px">无法从 GitHub 自动加载。</p>
-<p>请手动打开以下地址：</p>
-<a href="https://mornikar.github.io/admin/" target="_blank">mornikar.github.io/admin/</a></div>
-<script>
-fetch('/health').then(function(r){return r.json()})
-  .then(function(d){console.log('Worker OK:',d)})
-  .catch(function(){
-    document.getElementById('err').textContent='Worker 连接失败，请检查部署';
-    document.getElementById('fallback').style.display='block';
-    document.querySelector('.spin').style.display='none';
-  });
-setTimeout(function(){document.getElementById('fallback').style.display='block';},8000);
-</script></div></body></html>`, {
-      headers: { 'Content-Type': 'text/html; charset=utf-8' },
-    });
-  }
-}
-
 export default {
-  async fetch(request, env) {
+  async fetch(request) {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    // ─── CORS Preflight ───
+    // CORS preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: corsHeaders });
     }
 
-    // ─── Health Check ───
+    // Health check
     if (path === '/health' || path === '/health/') {
-      return jsonResponse({ status: 'ok', service: 'wiki-cms-worker-v2', time: new Date().toISOString() });
+      return json({ 
+        status: 'ok', 
+        service: 'wiki-cms-proxy-v3', 
+        time: new Date().toISOString() 
+      });
     }
 
-    // ─── Static Assets (CSS/JS/Icons) ───
-    if (path.startsWith('/assets/') || path === '/favicon.ico') {
-      return handleStaticAsset(path);
+    // GitHub API proxy: /api/gh/*
+    if (path.startsWith('/api/gh/') || path.startsWith('/api/github/')) {
+      const apiPath = path.replace(/^\/api\/(gh|github)\//, '/') + url.search;
+      return proxyGitHub(request, apiPath);
     }
 
-    // ─── CMS Page (/ or /admin) ───
-    if (path === '/' || path === '/admin' || path === '/admin/' || path === '/index.html') {
-      // 尝试从 KV 获取最新版本
-      if (env && env.CMS_HTML) {
-        try {
-          const stored = await env.CMS_HTML.get('index');
-          if (stored) {
-            return new Response(stored, {
-              headers: { 'Content-Type': 'text/html; charset=utf-8', ...corsHeaders },
-            });
-          }
-        } catch(e) { /* KV not configured, fallback */ }
-      }
-      return getCmsHtml();
-    }
-
-    // ─── GitHub API Proxy (/api/github/*) ───
-    if (path.startsWith('/api/github/') || path === '/api/github' || path.startsWith('/api/github')) {
-      const apiPath = path.replace(/^\/api\/github/, '') || '/';
-      const search = url.search;
-      return proxyToGitHub(request, apiPath + search);
-    }
-
-    // ─── Upload Endpoint (/api/upload) ───
+    // Image upload: /api/upload
     if (path === '/api/upload' || path === '/api/upload/') {
-      return handleUpload(request, env);
+      return handleUpload(request);
     }
 
-    // ─── Fallback: 404 ───
-    return new Response(JSON.stringify({ error: 'Not Found', path: path }), {
+    // Default: redirect to wiki admin page (optional)
+    // Or just return 404
+    return new Response('Wiki CMS Proxy - Not Found: ' + path, { 
       status: 404,
-      headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      headers: { 'Content-Type': 'text/plain', ...corsHeaders }
     });
   },
 };
 
-// ============================================================
-// GitHub API Proxy
-// ============================================================
-async function proxyToGitHub(request, ghPath) {
-  const targetUrl = GITHUB_API + ghPath;
-  
+// ======== GitHub API Proxy ========
+async function proxyGitHub(request, ghPath) {
   try {
-    // 构建请求头（转发原始请求头，替换 Host）
+    // Build headers from request, forward auth etc
     const headers = new Headers();
-    for (const [key, value] of request.headers.entries()) {
-      if (!['host', 'connection', 'content-length'].includes(key.toLowerCase())) {
+    for (const [key, value] of request.headers) {
+      // Skip host header
+      if (key.toLowerCase() !== 'host') {
         headers.set(key, value);
       }
     }
 
-    const response = await fetch(targetUrl, {
+    console.log('[Proxy] ' + request.method + ' ' + GITHUB_API + ghPath);
+
+    const response = await fetch(GITHUB_API + ghPath, {
       method: request.method,
       headers: headers,
-      body: ['GET', 'HEAD'].includes(request.method.toUpperCase()) ? undefined : await request.arrayBuffer(),
+      body: ['GET', 'HEAD'].includes(request.method) ? undefined : await request.arrayBuffer(),
     });
 
-    // 构建响应
+    // Build response with CORS headers
     const respHeaders = { ...corsHeaders };
-    
-    // 转发关键响应头
-    const forwardHeaders = [
-      'content-type', 'x-ratelimit-limit', 'x-ratelimit-remaining',
-      'x-ratelimit-reset', 'x-ratelimit-used', 'etag', 'cache-control',
-      'location', 'link'
-    ];
-    for (const h of forwardHeaders) {
-      const v = response.headers.get(h);
-      if (v) respHeaders[h] = v;
+
+    // Forward content-type
+    const contentType = response.headers.get('content-type');
+    if (contentType) {
+      respHeaders['Content-Type'] = contentType;
     }
 
-    const body = await response.arrayBuffer();
+    // Forward rate limit info
+    for (const h of ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-ratelimit-reset', 'x-ratelimit-used']) {
+      const val = response.headers.get(h);
+      if (val) respHeaders[h] = val;
+    }
 
+    // Return response body as-is (could be JSON, could be binary)
+    const body = await response.arrayBuffer();
+    
     return new Response(body, {
       status: response.status,
       statusText: response.statusText,
       headers: respHeaders,
     });
-
   } catch (err) {
-    console.error('[Proxy] Error:', err.message);
-    return jsonResponse({
+    console.error('[Proxy Error]', err.message);
+    return json({
       error: 'Proxy Error',
       message: err.message,
-      target: targetUrl,
     }, 502);
   }
 }
 
-// ============================================================
-// Image Upload Handler
-// ============================================================
-async function handleUpload(request, env) {
-  if (request.method !== 'POST') {
-    return jsonResponse({ error: 'Method not allowed' }, 405);
+// ======== Image Upload ========
+async function handleUpload(req) {
+  if (req.method !== 'POST') {
+    return json({ error: 'Method not allowed. Use POST.' }, 405);
   }
 
   try {
-    const formData = await request.formData();
+    const formData = await req.formData();
     const file = formData.get('file');
-    const token = formData.get('token') || request.headers.get('Authorization')?.replace('token ', '');
-    const path = formData.get('path') || 'source/images/wiki/';
+    const token = formData.get('token');
 
-    if (!file) return jsonResponse({ error: 'No file provided' }, 400);
-
-    const ext = file.name.split('.').pop().toLowerCase();
-    const allowed = ['png','jpg','jpeg','gif','webp','svg','ico','bmp'];
-    if (!allowed.includes(ext)) {
-      return jsonResponse({ error: 'File type not allowed: .' + ext }, 400);
-    }
-    if (file.size > 10 * 1024 * 1024) {
-      return jsonResponse({ error: 'File too large (max 10MB)' }, 400);
+    if (!file) {
+      return json({ error: 'No file provided. Use field name "file".' }, 400);
     }
 
-    // Convert to base64
-    const arrayBuffer = await file.arrayBuffer();
-    const b64 = uint8ArrayToBase64(new Uint8Array(arrayBuffer));
-    
-    const filename = 'img_' + Date.now() + '.' + ext;
-    const filePath = (path.endsWith('/') ? path : path + '/') + filename;
+    if (!token) {
+      return json({ error: 'No token provided. Use field name "token".' }, 400);
+    }
 
-    // Use GitHub Contents API to create file
-    const putUrl = GITHUB_API + '/repos/mornikar/mornikar.github.io/contents/' + filePath;
+    // Determine extension
+    const fileName = file.name || 'image.png';
+    const ext = fileName.split('.').pop().toLowerCase() || 'png';
+    const allowedExt = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'ico', 'bmp'];
     
-    const putResp = await fetch(putUrl, {
+    if (!allowedExt.includes(ext)) {
+      return json({ error: 'Unsupported file type: .' + ext }, 400);
+    }
+
+    // Generate filename
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).slice(2, 6);
+    const safeName = 'img_' + timestamp + '_' + random + '.' + ext;
+
+    // Target path in repo
+    const targetPath = 'source/images/wiki/' + safeName;
+
+    // Read file as ArrayBuffer then convert to base64
+    const buffer = await file.arrayBuffer();
+    const base64 = arrayBufferToBase64(buffer);
+
+    console.log('[Upload] ' + safeName + ' (' + buffer.byteLength + ' bytes) → ' + targetPath);
+
+    // Push to GitHub via API
+    const githubResp = await fetch(GITHUB_API + '/repos/' + OWNER + '/' + REPO + '/contents/' + targetPath, {
       method: 'PUT',
       headers: {
         'Authorization': 'token ' + token,
@@ -236,61 +161,55 @@ async function handleUpload(request, env) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        message: 'CMS: upload image ' + filename,
-        content: b64,
-        branch: 'source',
+        message: 'CMS: upload image ' + safeName,
+        content: base64,
+        branch: BRANCH,
       }),
     });
 
-    const result = await putResp.json();
+    const result = await githubResp.json();
 
-    if (!putResp.ok) {
-      return jsonResponse({
+    if (!githubResp.ok) {
+      console.error('[Upload Failed]', githubResp.status, result);
+      return json({
         error: 'GitHub upload failed',
-        githubError: result.message || 'Unknown error',
-      }, putResp.status);
+        github: result.message || JSON.stringify(result),
+      }, githubResp.status);
     }
 
-    // Return the public URL
-    const publicUrl = '/images/wiki/' + filename;
-    
-    return jsonResponse({
+    console.log('[Upload OK] ' + safeName);
+
+    return json({
       success: true,
-      filename: filename,
-      path: filePath,
-      url: publicUrl,
-      downloadUrl: result.content?.download_url || '',
-      size: file.size,
+      filename: safeName,
+      path: targetPath,
+      url: '/images/wiki/' + safeName,
+      size: buffer.byteLength,
+      download_url: result.content && result.content.download_url,
     });
 
   } catch (err) {
-    console.error('[Upload] Error:', err.message);
-    return jsonResponse({ error: 'Upload failed: ' + err.message }, 500);
+    console.error('[Upload Error]', err);
+    return json({
+      error: 'Upload failed',
+      message: err.message,
+    }, 500);
   }
 }
 
-// ============================================================
-// Static Asset Handler
-// ============================================================
-async function handleStaticAsset(path) {
-  // For now, return 404 — in production, serve from R2/KV/bundle
-  return new Response(JSON.stringify({ error: 'Asset not found', path }), {
-    status: 404,
-    headers: { 'Content-Type': 'application/json', ...corsHeaders },
-  });
-}
-
-// ============================================================
-// Helpers
-// ============================================================
-function jsonResponse(data, status = 200) {
+// ======== Helpers ========
+function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json', ...corsHeaders },
+    status: status,
+    headers: {
+      'Content-Type': 'application/json',
+      ...corsHeaders,
+    },
   });
 }
 
-function uint8ArrayToBase64(bytes) {
+function arrayBufferToBase64(buffer) {
+  const bytes = new Uint8Array(buffer);
   let binary = '';
   for (let i = 0; i < bytes.length; i++) {
     binary += String.fromCharCode(bytes[i]);

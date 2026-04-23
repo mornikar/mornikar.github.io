@@ -60,6 +60,17 @@ if not defined DRY_RUN (
 )
 
 echo.
+echo [2.5/7] AI 编译 raw 素材到 wiki 页面...
+if not defined DRY_RUN (
+    node scripts\wiki-compile.js 2>nul
+    if errorlevel 1 (
+        echo [警告] AI 编译失败（可能 API 未配置），继续后续步骤
+    )
+) else (
+    node scripts\wiki-compile.js --dry-run 2>nul
+)
+
+echo.
 echo [3/7] 转换 Wiki 到 Hexo...
 if defined DRY_RUN (
     call node scripts\wiki-to-hexo.js --dry-run

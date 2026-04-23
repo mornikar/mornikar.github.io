@@ -7,6 +7,7 @@ on:
     paths:
       - '.wiki/**'
       - 'scripts/wiki-to-hexo.js'
+      - 'scripts/wiki-compile.js'
       - 'scripts/build_docs_html.js'
       - 'scripts/compile_css.js'
       - 'scripts/copy-assets.js'
@@ -56,6 +57,18 @@ jobs:
           MODE="${{ github.event.inputs.mode || 'normal' }}"
           echo "mode=$MODE" >> $GITHUB_OUTPUT
           echo "当前模式: $MODE"
+
+      - name: AI 编译 raw 素材
+        if: ${{ secrets.WIKI_COMPILE_API_KEY != '' }}
+        run: |
+          cat > .wiki/compile-config.json << EOF
+          {
+            "apiKey": "${{ secrets.WIKI_COMPILE_API_KEY }}",
+            "endpoint": "${{ secrets.WIKI_COMPILE_ENDPOINT }}",
+            "model": "${{ secrets.WIKI_COMPILE_MODEL }}"
+          }
+          EOF
+          node scripts/wiki-compile.js || echo "AI 编译跳过（API 未配置）"
 
       - name: 转换 Wiki 到 Hexo
         run: |

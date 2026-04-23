@@ -1,56 +1,8 @@
-﻿# Dependencies
-node_modules/
-
-# Build output
+﻿node_modules/
 public/
-.deploy*/
-
-# Logs
-*.log
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Wiki (don't track temp files)
-.wiki/*.tmp
-
-# Environment
-.env
-.env.local
-
-# Hexo
+.deploy_git/
 db.json
-node_modules/
-
-# Generated site output (at repo root level)
-# These are hexo public_dir outputs — never commit generated static files
-*.html
-!source/admin/index.html    # Decap CMS 管理界面（例外）
-!source/admin/callback.html # Decap CMS OAuth 回调页（例外）
-sitemap.*
-favicon.ico
-.nojekyll
-404.html
-sw.js
-offline.js
-1/
-2025/
-about/
-archives/
-audio/
-categories/
-
-font/
-icons/
-img/
-js/
-lib/
-search/
-tags/
+*.log
+.wiki-meta.json
+.wiki-compile-meta.json
+.wiki/compile-config.json
