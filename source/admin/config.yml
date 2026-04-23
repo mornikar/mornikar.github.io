@@ -2,7 +2,7 @@ backend:
   name: github
   repo: mornikar/mornikar.github.io
   branch: source
-  base_url: https://decap-oauth.1548324254.workers.dev
+  base_url: https://shy-wood-2431decap-oauth.1548324254.workers.dev
   auth_endpoint: /auth
 
 # 媒体文件上传到 source/images/
