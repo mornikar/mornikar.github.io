@@ -33,6 +33,7 @@ node_modules/
 # These are hexo public_dir outputs — never commit generated static files
 *.html
 !source/admin/index.html    # Decap CMS 管理界面（例外）
+!source/admin/callback.html # Decap CMS OAuth 回调页（例外）
 sitemap.*
 favicon.ico
 .nojekyll

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>授权回调</title>
+</head>
+<body>
+<p style="font-family:sans-serif;text-align:center;margin-top:40px">授权成功，正在返回管理界面...</p>
+<script>
+(function() {
+  // 从 URL 参数读取 OAuth token
+  var params = new URLSearchParams(window.location.search);
+  var token = params.get('token');
+  var scope = params.get('scope') || 'repo';
+  var tokenType = params.get('token_type') || 'bearer';
+
+  if (!token) {
+    document.body.innerHTML = '<p style="color:red;text-align:center;margin-top:40px">授权失败：未收到 token</p>';
+    return;
+  }
+
+  // 和 CMS 页面同源（都是 mornikar.github.io），postMessage 可靠
+  if (window.opener) {
+    // Decap CMS v3 标准格式
+    window.opener.postMessage({
+      type: 'oauth',
+      provider: 'github',
+      token: token,
+      scope: scope,
+      token_type: tokenType
+    }, window.location.origin);
+
+    // 兼容旧版格式
+    window.opener.postMessage(
+      'authorization:github:success:' + JSON.stringify({
+        token: token,
+        scope: scope,
+        token_type: tokenType
+      }),
+      '*'
+    );
+
+    // 短暂延迟后关闭弹窗
+    setTimeout(function() { window.close(); }, 1000);
+  } else {
+    // 没有 opener（直接访问），存入 localStorage 并跳转
+    localStorage.setItem('decap_cms_oauth', JSON.stringify({
+      token: token,
+      scope: scope,
+      token_type: tokenType
+    }));
+    window.location.href = '/admin/';
+  }
+})();
+</script>
+</body>
+</html>
