@@ -3,6 +3,7 @@
 > Append-only。每次 wiki-to-hexo.js 成功运行后自动追加记录。
 
 ## 2026
+- 2026-04-23 10:12:10 | PM | [[图库资源]](raw\PM\图库资源.md) → AIGC笔记随笔/
 - 2026-04-21 23:50:36 | PM | [[图库资源]](raw\PM\图库资源.md) → AIGC笔记随笔/
 - 2026-04-18 17:22:45 | concepts | [[AI模型优化训练方向]](concepts\AI模型优化训练方向.md) → LearningNote/
 - 2026-04-18 17:22:45 | concepts | [[RAG检索增强生成]](concepts\RAG检索增强生成.md) → LearningNote/

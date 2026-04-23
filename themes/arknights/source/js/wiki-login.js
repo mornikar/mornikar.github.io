@@ -255,7 +255,7 @@
   function setupAutoSave() {
     const autoSave = () => {
       const s = getSettings()
-      const mode = s.mode
+      const mode = currentMode
       const prompt = document.getElementById('wiki-cfg-prompt')?.value.trim() || DEFAULT_PROMPT
       const partial = { mode, prompt, dify: s.dify, api: s.api, direct: s.direct }
 

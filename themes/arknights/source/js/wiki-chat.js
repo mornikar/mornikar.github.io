@@ -513,7 +513,9 @@
 
     // 自动修复常见 endpoint 配置错误
     // 如果以模型名结尾（如 /glm-4.5-air），截掉模型名
-    if (endpoint.split('/').pop() === model) {
+    // 仅当最后一段包含常见模型命名特征时才触发修复，避免误判正常路径
+    const lastSegment = endpoint.split('/').pop()
+    if (lastSegment === model && /[a-zA-Z]/.test(lastSegment) && lastSegment.length > 3) {
       console.warn('[WikiChat] 检测到 endpoint 末尾包含模型名，自动修正:', endpoint)
       endpoint = endpoint.replace(new RegExp(`/${model}$`), '')
     }
@@ -977,6 +979,10 @@
 
     document.getElementById('wiki-settings-close').addEventListener('click', () => {
       settingsPanel.remove()
+      // 恢复 Live2D 看板娘（showSettings 隐藏了它）
+      const panel = document.getElementById('wiki-chat-panel')
+      const inputArea = document.getElementById('wiki-chat-input-area')
+      if (panel && inputArea) showLive2DArea(panel, inputArea)
     })
 
     // ─── 自动保存配置 ────────────────────────────────────────

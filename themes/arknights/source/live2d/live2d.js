@@ -71,12 +71,11 @@ if (typeof window.live2d_initialized === 'undefined') {
             })
             .catch(err => console.error("Live2D 配置读取失败 (live2d.json):", err));
     }
-    if (screen.width >= 768) {
-        if (document.readyState === 'complete') {
-            initLive2d();
-        } else {
-            window.addEventListener('load', initLive2d);
-        }
+    // 始终初始化 Live2D（移动端在 Wiki Chat 面板中显示，不再按屏幕宽度跳过）
+    if (document.readyState === 'complete') {
+        initLive2d();
+    } else {
+        window.addEventListener('load', initLive2d);
     }
 
     function loadExternalResource(url, type) {
