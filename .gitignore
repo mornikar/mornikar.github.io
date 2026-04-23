@@ -32,6 +32,7 @@ node_modules/
 # Generated site output (at repo root level)
 # These are hexo public_dir outputs — never commit generated static files
 *.html
+!source/admin/index.html    # Decap CMS 管理界面（例外）
 sitemap.*
 favicon.ico
 .nojekyll
