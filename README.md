@@ -14,6 +14,7 @@
 |------|------|
 | 📝 **Wiki 管理** | 把 Markdown 丢进 `.wiki/` 目录，push 即发布 |
 | 🔗 **WikiLink 双向链接** | `[[文章标题]]` 自动高亮，鼠标悬停预览 |
+| 🌐 **3D 球体导航** | WebGL2 InfiniteMenu 交互式导航页，拖拽旋转浏览 |
 | 🤖 **AI 对话侧边栏** | 网站右下角悬浮按钮，接入 Dify RAG 知识库 |
 | 🐱 **Live2D 看板娘** | 页面左侧阿丽露模型，可对话、换装、TTS 朗读 |
 | 🎙️ **TTS 朗读** | AI 回复自动朗读，多音色切换，猫女仆人设 |
@@ -87,6 +88,8 @@ themes/arknights/         ← 明日方舟风格主题
   source/live2d/          ← Live2D 看板娘 + AI 对话
   source/js/wiki-chat.js  ← AI 对话面板 + TTS
   source/js/wiki-login.js ← 登录页特效 + 配置
+  source/js/infinite-menu.js ← WebGL2 3D 球体导航
+  source/css/infinite-menu.css ← 球体导航样式
 scripts/                   ← 自动化脚本
 ```
 
@@ -104,6 +107,7 @@ scripts/                   ← 自动化脚本
 | Dify | 1.13.3 | 本地 RAG 知识库 + AI 对话（可选） |
 | WikiChat | — | 网站侧边栏 AI 悬浮按钮 |
 | Live2D | Cubism 4 | 看板娘 AI 对话 + TTS 朗读 |
+| WebGL2 + gl-matrix | 3.4.3 | InfiniteMenu 3D 球体导航 |
 | Pagefind | 1.5.x | 静态全文搜索 |
 | GitHub Actions | — | CI 自动构建与部署 |
 
@@ -155,6 +159,16 @@ scripts/                   ← 自动化脚本
 ---
 
 ## 📋 更新日志
+
+### v8.8 — 2026-04-25
+
+**新功能：**
+- ✨ InfiniteMenu 3D 球体导航页（`/infinite-menu/`）— 基于 WebGL2 + gl-matrix 的交互式导航
+  - 拖拽旋转球体浏览菜单项，松手自动吸附到最近项
+  - 停止时显示标题、描述和跳转按钮
+  - 旋转时有弹性拉伸变形 + 深度透明度渐变
+  - 像素级移植 ReactBits InfiniteMenu 组件到 Vanilla JS
+- ✨ 导航栏新增 "∞导航" 入口
 
 ### v8.7 — 2026-04-24
 
