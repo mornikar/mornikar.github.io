@@ -19,6 +19,7 @@
 | 🎙️ **TTS 朗读** | AI 回复自动朗读，多音色切换，猫女仆人设 |
 | 🔍 **静态全文搜索** | Pagefind，无需服务器，离线可用 |
 | 🎨 **Arknights 明日方舟主题** | 自定义 CSS，蓝色系卡片风格 |
+| 📝 **在线内容管理 CMS** | 自建 Wiki CMS v4，GitHub OAuth 一键登录 + Markdown 编辑 + 图片上传 |
 | ⚡ **CI 全自动发布** | push → 2 分钟内上线，无需手动操作 |
 
 ---
@@ -75,6 +76,13 @@ git add . && git commit -m "更新文章" && git push
 └── MIGRATION/            ← Wiki 格式规范
 
 source/_posts/            ← Hexo 文章（由脚本自动生成，无需手动编辑）
+source/admin/             ← 📝 在线内容管理 CMS（Wiki CMS v4）
+  ├── index.html          ← 自建 CMS 管理界面（OAuth + Token 双模式登录）
+  ├── callback.html       ← OAuth 回调页面
+  └── config.yml          ← Decap CMS 标准配置
+tools/                    ← Cloudflare Workers
+  ├── wiki-cms-unified-worker.js  ← 统一 Worker v4（OAuth + API代理 + 图片上传）
+  └── README.md           ← Worker 部署说明
 themes/arknights/         ← 明日方舟风格主题
   source/live2d/          ← Live2D 看板娘 + AI 对话
   source/js/wiki-chat.js  ← AI 对话面板 + TTS
@@ -91,6 +99,8 @@ scripts/                   ← 自动化脚本
 | Hexo | 7.x | 静态博客生成 |
 | hexo-theme-arknights | fork | 明日方舟风格主题 |
 | wiki-to-hexo.js | v4.0 | Wiki → Hexo 格式转换 |
+| Wiki CMS | v4 | 在线内容管理（OAuth + Token 双模式登录） |
+| Cloudflare Workers | — | GitHub API 代理 + OAuth 认证 + 图片上传 |
 | Dify | 1.13.3 | 本地 RAG 知识库 + AI 对话（可选） |
 | WikiChat | — | 网站侧边栏 AI 悬浮按钮 |
 | Live2D | Cubism 4 | 看板娘 AI 对话 + TTS 朗读 |
@@ -145,6 +155,17 @@ scripts/                   ← 自动化脚本
 ---
 
 ## 📋 更新日志
+
+### v8.7 — 2026-04-24
+
+**新功能：**
+- ✨ Wiki CMS v4：GitHub OAuth 一键登录 + 手动 Token 双模式
+- ✨ 统一 Cloudflare Worker（OAuth 认证 + API 代理 + 图片上传合一）
+- ✨ CMS 集合路径对齐到实际 `_posts/` 子目录（AIGC / 学习随笔 / 学习笔记 / 机器学习 / 云环境）
+- ✨ callback.html 支持 popup + 整页跳转双模式 OAuth 回调
+- ✨ 新增「所有文章」递归视图
+- 🔧 `config.yml` 集合路径与自建 CMS 统一
+- 🔧 旧 Worker 文件标记为待废弃
 
 ### v8.6 — 2026-04-24
 

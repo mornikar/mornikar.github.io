@@ -103,3 +103,37 @@ title: Wiki AI 助手
 ### 如何关闭？
 
 在设置面板中选择关闭，或联系网站管理员配置 `_config.yml`。
+
+---
+
+## 📝 在线内容管理 CMS
+
+博客内容可通过在线 CMS 管理，访问 `/admin/` 即可打开。
+
+### 登录方式
+
+| 方式 | 说明 |
+|------|------|
+| **GitHub OAuth 一键登录** | 点击「GitHub 一键登录」按钮，授权后自动登录 |
+| **手动输入 Token** | 生成 GitHub Personal Access Token（需 `repo` 权限），粘贴登录 |
+
+### 功能
+
+- 📂 集合浏览 — 按分类浏览文章（AIGC / 学习随笔 / 学习笔记 / 机器学习 / 云环境）
+- ✏️ Markdown 编辑 — 在线编辑文章内容，支持实时预览
+- 🏷️ 标签管理 — 添加/删除标签
+- 📷 图片上传 — 拖拽上传图片到 GitHub 仓库
+- 📄 新建文章 — 在指定分类下创建新文章
+- 🗑️ 删除文章 — 确认后删除（不可撤销）
+
+### 架构
+
+```
+浏览器 → Cloudflare Worker（统一 Worker v4）
+           ├── /auth     → GitHub OAuth 授权
+           ├── /callback → OAuth 回调
+           ├── /api/gh/* → GitHub API 代理（解决 CORS）
+           └── /api/upload → 图片上传
+```
+
+> 💡 所有 API 请求通过 Cloudflare Worker 代理，Token 仅存储在浏览器本地。
