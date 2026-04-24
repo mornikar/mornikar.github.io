@@ -199,8 +199,13 @@ html, body { height: 100%; background: var(--bg-primary); color: var(--text-prim
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 </style>
 
-<!-- Marked.js for Markdown parsing -->
+<!-- Marked.js for Markdown parsing (多重备用 CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  if (!window.marked) {
+    document.write('<script src="https://unpkg.com/marked/marked.min.js"><\/script>');
+  }
+</script>
 </head>
 <body>
 
@@ -881,8 +886,11 @@ function openFile(path, sha) {
     .then(function(data) {
       if (!data.content) throw new Error('无法获取文件内容');
       
-      // Decode base64
-      var content = atob(data.content.replace(/\n/g, ''));
+      // Decode base64 (支持 UTF-8 中文)
+      var raw = atob(data.content.replace(/\n/g, ''));
+      var bytes = new Uint8Array(raw.length);
+      for (var i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+      var content = new TextDecoder('utf-8').decode(bytes);
       
       currentFile = { path: path, sha: data.sha, name: data.name };
       isNewFile = false;
