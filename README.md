@@ -2,7 +2,7 @@
 
 # Mornikar's Blog
 
-**LLM Wiki 知识管理 · Hexo 静态生成 · GitHub Pages 托管**
+**LLM Wiki 知识管理 · Hexo 静态生成 · GitHub Pages 托管 · 自研CMS 在线编辑 · 嵌入Live2D+TTS+LLM+DifyRAG**
 
 [![博客](https://img.shields.io/badge/博客-mornikar.github.io-00b4d8?style=flat-square)](https://mornikar.github.io)
 [![文档](https://img.shields.io/badge/文档-在线查阅-48bfe3?style=flat-square)](https://mornikar.github.io/docs/)
@@ -167,7 +167,7 @@ scripts/                   ← 自动化脚本
 | Dify 1.13.3 | 本地 RAG 知识库 + AI 对话 |
 | Live2D Cubism 4 | 看板娘 AI 对话 + TTS |
 | Pagefind 1.5.x | 静态全文搜索 |
-| Decap CMS v4 | 在线内容编辑 |
+| Decap CMS v4 | 在线内容编辑 自研发|
 | GitHub Actions | CI 自动构建与部署 |
 
 ---
@@ -231,6 +231,6 @@ https://mornikar.github.io 上线（2~3 分钟）
 
 <div align="center">
 
-**MIT License** — 欢迎 Fork、借鉴、魔改。
+**MIT License** 
 
 </div>
