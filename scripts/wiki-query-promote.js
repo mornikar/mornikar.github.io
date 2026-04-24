@@ -96,8 +96,8 @@ async function main() {
 
     const config = loadAIConfig();
     if (!config) {
-        console.error('❌ 未配置 AI，无法执行查询提升');
-        process.exit(1);
+        console.log('ℹ️ 未配置 AI，跳过查询提升');
+        return;
     }
 
     // 确保 queries 目录存在
@@ -248,4 +248,6 @@ ${body}
     console.log('\n✨ ' + (DRY_RUN ? 'Dry-run 完成！' : '查询提升完成！'));
 }
 
-main().catch(e => { console.error('❌ 查询提升失败:', e.message); process.exit(1); });
+if (require.main === module) {
+    main().catch(e => { console.error('❌ 查询提升失败:', e.message); process.exit(1); });
+}
