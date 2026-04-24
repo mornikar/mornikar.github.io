@@ -141,12 +141,16 @@ export default {
 // ======== GitHub API Proxy ========
 async function proxyGitHub(request, ghPath) {
   try {
+    // 需要从原始请求中过滤掉的头（避免压缩编码问题和安全头冲突）
+    const skipHeaders = new Set(['host', 'accept-encoding', 'cf-connecting-ip', 'cf-ipcountry', 'cf-ray', 'cf-visitor']);
     const headers = new Headers();
     for (const [key, value] of request.headers) {
-      if (key.toLowerCase() !== 'host') {
+      if (!skipHeaders.has(key.toLowerCase())) {
         headers.set(key, value);
       }
     }
+    // 强制 GitHub 返回未压缩的 JSON
+    headers.set('Accept-Encoding', 'identity');
 
     console.log('[Proxy] ' + request.method + ' ' + GITHUB_API + ghPath);
 
