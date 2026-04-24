@@ -1,6 +1,6 @@
 <div align="center">
 
-# Mornikar's Blog
+# Mornikar's Personal Station
 
 **LLM Wiki 知识管理 · Hexo 静态生成 · GitHub Pages 托管 · 自研CMS 在线编辑 · 嵌入Live2D+TTS+LLM+DifyRAG**
 
