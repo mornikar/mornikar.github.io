@@ -15,6 +15,39 @@ block content
     const countTime = page['post-count'] !== false && theme.post.time === true && min2read !== undefined ? min2read(content) : null
     const vercount = page.vercount !== false && theme.vercount.enable
   #post-bg
+    // CMS 编辑按钮（对齐标题右上角）
+    a.cms-edit-btn(href= page.hexo_path ? '/admin/?edit=' + encodeURIComponent(page.hexo_path) : (page.source_path ? '/admin/?wiki=' + encodeURIComponent(page.source_path) : '#'), title='编辑此文章', target='_blank', rel='noopener')
+      svg(viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='2', stroke-linecap='round', stroke-linejoin='round')
+        path(d='M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z')
+    style.
+      .cms-edit-btn {
+        position: absolute;
+        top: 22px;
+        right: 30px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        padding: 6px;
+        border: 1px solid rgba(34, 187, 255, 0.25);
+        border-radius: 6px;
+        color: rgba(34, 187, 255, 0.5);
+        text-decoration: none;
+        transition: all 0.2s;
+        background: rgba(34, 187, 255, 0.05);
+        z-index: 10;
+      }
+      .cms-edit-btn:hover {
+        color: #2bf;
+        border-color: #2bf;
+        background: rgba(34, 187, 255, 0.12);
+        transform: scale(1.1);
+      }
+      .cms-edit-btn svg {
+        width: 16px;
+        height: 16px;
+      }
     #post-title
       h1= page.title
         // Phase 3: Wiki 来源标记
@@ -62,39 +95,6 @@ block content
           |📚 来自 LLM Wiki: 
           = page.source_path
     #post-content
-      // CMS 编辑按钮（内容区右上角）
-      a.cms-edit-btn(href= page.hexo_path ? '/admin/?edit=' + encodeURIComponent(page.hexo_path) : (page.source_path ? '/admin/?wiki=' + encodeURIComponent(page.source_path) : '#'), title='编辑此文章', target='_blank', rel='noopener')
-        svg(viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='2', stroke-linecap='round', stroke-linejoin='round')
-          path(d='M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z')
-      style.
-        .cms-edit-btn {
-          position: absolute;
-          top: 12px;
-          right: 12px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 32px;
-          height: 32px;
-          padding: 6px;
-          border: 1px solid rgba(34, 187, 255, 0.25);
-          border-radius: 6px;
-          color: rgba(34, 187, 255, 0.5);
-          text-decoration: none;
-          transition: all 0.2s;
-          background: rgba(34, 187, 255, 0.05);
-          z-index: 10;
-        }
-        .cms-edit-btn:hover {
-          color: #2bf;
-          border-color: #2bf;
-          background: rgba(34, 187, 255, 0.12);
-          transform: scale(1.1);
-        }
-        .cms-edit-btn svg {
-          width: 16px;
-          height: 16px;
-        }
       if excerptConf || encrypted
         != page.content
       else
