@@ -20,6 +20,12 @@
  *   GITHUB_CLIENT_SECRET — GitHub OAuth App 的 Client Secret
  */
 
+// 清理 BOM 和空白字符（PowerShell 管道可能注入 UTF-8 BOM）
+function cleanSecret(val) {
+  if (!val) return val;
+  return val.replace(/^\uFEFF+/, '').trim();
+}
+
 const GITHUB_API = 'https://api.github.com';
 const GITHUB_AUTHORIZE_URL = 'https://github.com/login/oauth/authorize';
 const GITHUB_TOKEN_URL = 'https://github.com/login/oauth/access_token';
@@ -61,7 +67,7 @@ export default {
     if (path === '/auth') {
       const scope = 'repo';
       const redirectUri = `${url.origin}/callback`;
-      const authUrl = `${GITHUB_AUTHORIZE_URL}?client_id=${env.GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&response_type=code`;
+      const authUrl = `${GITHUB_AUTHORIZE_URL}?client_id=${cleanSecret(env.GITHUB_CLIENT_ID)}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&response_type=code`;
       return Response.redirect(authUrl, 301);
     }
 
@@ -80,8 +86,8 @@ export default {
             'Accept': 'application/json',
           },
           body: JSON.stringify({
-            client_id: env.GITHUB_CLIENT_ID,
-            client_secret: env.GITHUB_CLIENT_SECRET,
+            client_id: cleanSecret(env.GITHUB_CLIENT_ID),
+            client_secret: cleanSecret(env.GITHUB_CLIENT_SECRET),
             code: code,
           }),
         });

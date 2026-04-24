@@ -1,0 +1,8 @@
+name = "wiki-cms-unified"
+main = "wiki-cms-unified-worker.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+# 环境变量请在 Cloudflare Dashboard 中配置，不要硬编码在代码中
+# GITHUB_CLIENT_ID = ""
+# GITHUB_CLIENT_SECRET = ""
