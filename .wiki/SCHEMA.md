@@ -1,6 +1,6 @@
 # LLM Wiki Schema — Mornikar's Blog
 
-> 基于 Karpathy's LLM Wiki 模式，v3.0
+> 基于 Karpathy's LLM Wiki 模式，v3.1（wiki-to-hexo v4.2）
 
 ## 目录结构
 
@@ -259,11 +259,24 @@ Hexo permalink 配置为 `:year/:month/:day/:title/`，其中 `:title` 来自 **
 /:year/:month/:day/:category/:hexoDate-:safeTitle/
 ```
 
+**slugify 清洗规则**（v4.2）：
+
+1. 去 YAML 值引号：`"标题"` → `标题`
+2. 特殊字符替换：`_` → `-`、`+` → `-`、`#` → 删除
+3. 非安全字符删除：只保留字母、数字、中文、`-`
+4. 合并连续横线：`A--B` → `A-B`
+5. 去首尾横线：`-标题-` → `标题`
+
+**WikiLink URL 来源**（v4.2 变更）：
+- **旧**：wiki-chat.js 客户端 slugify(title) 拼 URL
+- **新**：统一读取 wiki-index.json 的 `url` 字段（单一数据源）
+
 示例：
 - Wiki 文件：`.wiki/concepts/RAG检索增强生成.md`（frontmatter `created: 2025-09-12`）
 - Hexo 文件：`source/_posts/LearningNote/2025-09-12-RAG检索增强生成.md`
 - **正确 URL**：`/2025/09/12/LearningNote/2025-09-12-RAG检索增强生成/`
 - ~~错误 URL~~：~~`/2025/09/12/RAG检索增强生成/`~~（缺 category + 日期前缀，会 404！）
+- ~~错误 URL~~：~~`/2025/09/12/LearningNote/2025-09-12--RAG检索增强生成-/`~~（双横线+尾横线，v4.2 已修复）
 
 ### 知识图谱
 
@@ -287,11 +300,14 @@ wiki-chat 面板中的交互式力导向图：
 # 普通转换（增量，跳过未变更文件）
 node scripts/wiki-to-hexo.js
 
-# 强制全量转换
+# 强制全量转换（自动清理含双横线的旧文件）
 node scripts/wiki-to-hexo.js --force
 
 # 预览模式（不写入文件）
 node scripts/wiki-to-hexo.js --dry-run
+
+# 数据质量检查（检查 URL 异常和重复）
+node scripts/wiki-to-hexo.js --test
 ```
 
 ## Dify 知识库同步

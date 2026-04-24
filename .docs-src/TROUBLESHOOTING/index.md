@@ -22,6 +22,9 @@ title: 故障排查
 | Giscus 评论不显示 | App 未安装/Discussions 未开启 | [§9](#9-giscus-评论不显示) |
 | Dify 无法访问 | Docker 未启动/端口占用 | [§10](#10-dify-无法访问) |
 | Live2D 看板娘消失 | 设置面板关闭 Bug / 移动端限制 | [§12](#12-live2d-看板娘问题) |
+| URL 含双横线/转义字符 | slugify 清洗不完整 | [§13](#13-url-异常双横线转义字符) |
+| WikiLink 跳转 404 | 客户端和服务端 URL 不一致 | [§14](#14-wikilink-跳转-404) |
+| CMS 保存 wiki 文件格式错误 | 保存时被包装 Hexo frontmatter | [§15](#15-cms-保存-wiki-文件格式错误) |
 
 ---
 
@@ -472,3 +475,151 @@ document.querySelector('#waifu') ? 'Live2D 已加载' : 'Live2D 未加载'
 2. **查看 Wiki 日志**：`.wiki/log.md`
 3. **搜索已知问题**：检查本文档其他章节是否已有记录
 4. **联系维护者**：通过 GitHub Issue 反馈
+
+---
+
+## 13. URL 异常（双横线/转义字符）
+
+**症状**：文章 URL 中出现 `--`（双横线）、`\_`（下划线转义）、首尾多余横线。
+
+**示例**：
+- ❌ `/2026/04/18/LearningNote/2026-04-18--Matplotlib基础-/`
+- ✅ `/2026/04/18/LearningNote/2026-04-18-Matplotlib基础/`
+
+### 排查步骤
+
+**Step 1**：确认 wiki-to-hexo.js 版本
+
+```powershell
+# 检查脚本头部版本号
+Get-Content scripts/wiki-to-hexo.js -TotalCount 5 | Select-String "version"
+```
+
+版本应为 **v4.2+**。旧版本的 `slugify()` 不清洗首尾横线和下划线。
+
+**Step 2**：强制重新生成
+
+```powershell
+# --force 会自动清理含双横线的旧文件
+node scripts/wiki-to-hexo.js --force
+```
+
+**Step 3**：重建 Hexo
+
+```powershell
+npx hexo clean
+npx hexo generate
+```
+
+**Step 4**：验证 wiki-index.json
+
+```powershell
+# 检查 URL 字段是否干净
+Select-String -Path source/wiki-index.json -Pattern '"url":' | Select-String "\-\-|\\_"
+```
+
+如果输出为空，说明所有 URL 已修复。
+
+**Step 5**：推送部署
+
+```powershell
+git add -A
+git commit -m "fix: URL卫生修复"
+git push origin source
+```
+
+### 根因
+
+| 问题 | 根因 | v4.2 修复 |
+|------|------|-----------|
+| 双横线 `--` | parseFrontmatter 不去引号 → slugify 输入含引号 | 自动去引号 |
+| 尾横线 `-` | slugify 不去首尾横线 | 自动去首尾横线 |
+| `\_` 转义 | title 中含 `_` 但未转 `-` | 自动 `_` → `-` |
+
+---
+
+## 14. WikiLink 跳转 404
+
+**症状**：点击 WikiLink `[[页面名]]` 跳转后显示 404。
+
+### 排查步骤
+
+**Step 1**：确认 wiki-index.json 存在且格式正确
+
+```javascript
+// 浏览器 Console 执行
+fetch('/wiki-index.json').then(r => r.json()).then(d => console.log(d.length, 'entries'))
+```
+
+**Step 2**：确认目标页面在索引中
+
+```javascript
+// 搜索目标页面
+fetch('/wiki-index.json').then(r => r.json()).then(d => d.filter(e => e.title.includes('搜索词')).forEach(e => console.log(e.title, e.url)))
+```
+
+**Step 3**：检查 URL 格式
+
+URL 应为 `/YYYY/MM/DD/Category/YYYY-MM-DD-标题/` 格式，不能有双横线或转义字符。
+
+**Step 4**：清浏览器缓存
+
+v4.2 更改了 WikiLink 的 URL 来源（从客户端计算改为读取 wiki-index.json），旧缓存的 wiki-chat.js 可能还在用旧逻辑。
+
+| 操作 | 快捷键 |
+|------|--------|
+| 强制刷新 | `Ctrl + Shift + R` |
+| 清所有缓存 | Settings → Clear browsing data |
+
+### 根因
+
+| 版本 | URL 来源 | 一致性 |
+|------|---------|--------|
+| v4.0-v4.1 | wiki-chat.js 客户端 slugify(title) | ❌ 可能和服务端不一致 |
+| **v4.2** | **wiki-index.json 的 url 字段** | ✅ 单一数据源 |
+
+---
+
+## 15. CMS 保存 wiki 文件格式错误
+
+**症状**：在 CMS 中编辑 `.wiki/` 下的文件后，保存时被额外包装了 Hexo 格式的 frontmatter。
+
+**示例**：
+```yaml
+# 错误：wiki 文件被双重包装
+---
+title: 页面标题
+date: 2026-04-25  # ← 不应该有，wiki 文件用 created/updated
+category: xxx      # ← 不应该有
+tags: [...]
+---
+---
+title: 页面标题    # ← 这是原始 wiki frontmatter
+type: concepts
+tags: [...]
+created: 2026-04-25
+updated: 2026-04-25
+---
+```
+
+### 排查步骤
+
+**Step 1**：确认 CMS 版本
+
+访问 `https://mornikar.github.io/admin/`，检查是否能看到 Wiki 集合（📚 Wiki 概念、✍️ Wiki 随笔等）。
+
+如果没有 Wiki 集合，说明 CMS 版本过旧。
+
+**Step 2**：确认保存的文件内容
+
+在 GitHub 上查看对应文件，确认 frontmatter 格式正确。
+
+**Step 3**：手动修复
+
+如果文件已被错误包装，删除多余的 Hexo frontmatter 块，只保留 wiki 格式的 frontmatter。
+
+### 预防
+
+v4.2 的 CMS 会根据集合类型自动选择保存逻辑：
+- **Posts 集合**：自动包装 Hexo frontmatter
+- **Wiki 集合**：原样保存，不包装

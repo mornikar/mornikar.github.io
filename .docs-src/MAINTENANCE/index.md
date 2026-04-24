@@ -271,14 +271,101 @@ giscus:
 
 ---
 
-## 九、本地命令速查
+## 九、CMS 管理面板
+
+### 9.1 访问方式
+
+访问 `https://mornikar.github.io/admin/` 进入自定义 CMS 面板（GitHub OAuth 登录）。
+
+### 9.2 文章集合
+
+| 集合 | 目录 | 新建文件名格式 |
+|------|------|---------------|
+| AIGC 笔记随笔 | `source/_posts/AIGC笔记随笔/` | `YYYY-MM-DD-标题` |
+| 学习随笔 | `source/_posts/LearningEssays/` | `YYYY-MM-DD-标题` |
+| 学习笔记 | `source/_posts/LearningNote/` | `YYYY-MM-DD-标题` |
+| 机器学习 | `source/_posts/机器学习/` | `YYYY-MM-DD-标题` |
+| 云环境 | `source/_posts/云环境/` | `YYYY-MM-DD-标题` |
+| 所有文章 | `source/_posts/` | `YYYY-MM-DD-标题` |
+
+### 9.3 Wiki 集合（v4.2 新增）
+
+| 集合 | 目录 | 新建文件名格式 |
+|------|------|---------------|
+| 📚 Wiki 概念 | `.wiki/concepts/` | 无日期前缀 |
+| ✍️ Wiki 随笔 | `.wiki/entities/` | 无日期前缀 |
+| 📥 素材·文章 | `.wiki/raw/articles/` | 无日期前缀 |
+| 📥 素材·ML | `.wiki/raw/ML/` | 无日期前缀 |
+| 📥 素材·PM | `.wiki/raw/PM/` | 无日期前缀 |
+| 🔍 审计反馈 | `.wiki/audit/` | `AUDIT-YYYY-NNN` |
+
+### 9.4 保存逻辑差异
+
+| 集合类型 | 保存行为 |
+|----------|---------|
+| Posts 集合 | 自动包装 Hexo frontmatter（title/date/category/tags） |
+| Wiki 集合 | 原样保存，不包装 Hexo frontmatter（wiki 文件自有 title/tags/created/updated 格式） |
+
+---
+
+## 十、URL 卫生规范（v4.2 新增）
+
+### 10.1 slugify 自动清洗
+
+`wiki-to-hexo.js` 的 `slugify()` 函数会自动执行以下清洗：
+
+| 清洗规则 | 输入示例 | 输出 |
+|----------|---------|------|
+| 去 YAML 值引号 | `"LLMWiki_VS_RAG调研"` | `LLMWiki_VS_RAG调研` |
+| `_` → `-` | `LLMWiki_VS_RAG调研` | `LLMWiki-VS-RAG调研` |
+| `+` → `-` | `C++基础` | `C-基础` |
+| 去首尾横线 | `-标题-` | `标题` |
+| 合并连续横线 | `A--B---C` | `A-B-C` |
+| 去 `#` 符号 | `C#笔记` | `C笔记` |
+
+### 10.2 WikiLink URL 来源
+
+**重要变更**：WikiLink 的 URL 现在统一使用 `wiki-index.json` 中的 `url` 字段，不再客户端拼接。
+
+```
+旧流程：wiki-chat.js 中 slugify(title) → 拼 URL（可能和服务端不一致）
+新流程：wiki-to-hexo.js 生成 wiki-index.json（含 url 字段）→ wiki-chat.js 读取 url
+```
+
+### 10.3 URL 格式
+
+```
+正确格式：/YYYY/MM/DD/Category/YYYY-MM-DD-标题/
+错误格式：/YYYY/MM/DD/Category/--标题-/    ← 双横线+尾横线
+错误格式：/YYYY/MM/DD/Category/标题\_转义/  ← 下划线转义残留
+```
+
+### 10.4 定期数据质量检查
+
+```powershell
+# 1. 检查 wiki-index.json 中有无 URL 异常
+node scripts/wiki-to-hexo.js --test
+
+# 2. 检查 hexo generate 文件数是否稳定（约 240）
+npx hexo clean && npx hexo generate 2>&1 | Select-String "files generated"
+
+# 3. 强制重建（自动清理含双横线的旧文件）
+node scripts/wiki-to-hexo.js --force
+```
+
+---
+
+## 十一、本地命令速查
 
 | 命令 | 说明 |
 |------|------|
 | `wiki-sync.bat` | 一键同步：清理→转换→生成→搜索→提交→推送 |
 | `wiki-sync.bat --dry-run` | 预览转换结果（不修改文件） |
-| `node scripts/wiki-to-hexo.js` | 仅执行 Wiki → Hexo 转换 |
+| `node scripts/wiki-to-hexo.js` | 仅执行 Wiki → Hexo 转换（增量） |
+| `node scripts/wiki-to-hexo.js --force` | 强制全量转换 + 自动清理旧文件 |
 | `node scripts/wiki-to-hexo.js --dry-run` | 预览转换结果 |
+| `node scripts/wiki-to-hexo.js --test` | 数据质量检查 |
+| `node scripts/wiki-compile.js` | AI 编译 raw → concepts/entities |
 | `node scripts/compile_css.js` | 手动编译 Stylus CSS |
 | `node tools/sync-wiki-to-dify.js` | 同步 Wiki 到 Dify |
 | `hexo server` | 本地预览（端口 4000） |

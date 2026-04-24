@@ -195,11 +195,11 @@ git push origin source
 
 ## 六、Wiki → Hexo 转换逻辑
 
-### 脚本功能（wiki-to-hexo.js v4.0）
+### 脚本功能（wiki-to-hexo.js v4.2）
 
 | 功能 | 说明 |
 |------|------|
-| WikiLink 转换 | `[[X]]` → `/YYYY/MM/DD/X/` |
+| WikiLink 转换 | `[[X]]` → 读取 wiki-index.json 的 url 字段 |
 | frontmatter 转换 | Wiki 格式 → Hexo 格式（添加 `date`、`layout` 等） |
 | 分类映射 | Wiki 目录 → Hexo categories |
 | 标签保留 | `tags` 字段原样保留 |
@@ -207,6 +207,44 @@ git push origin source
 | 增量同步 | 仅处理 changed/new 文件 |
 | 冲突检测 | 检测同名文件并提示 |
 | 日志维护 | 更新 `log.md` 和 `index.md` |
+| URL 卫生 | parseFrontmatter 去引号 + slugify 全自动清洗 |
+| Force 清理 | `--force` 自动删除含双横线的旧文件 |
+| 数据质量 | `--test` 检查 URL 异常和重复 |
+
+### URL 生成规范（v4.2）
+
+**核心原则**：URL 只由 `wiki-to-hexo.js` 的 `slugify()` 生成，所有其他组件（wiki-chat.js、CMS 等）都读取 `wiki-index.json` 的 `url` 字段。
+
+#### slugify 清洗规则
+
+按顺序执行：
+
+1. **去 YAML 值引号**：`"标题"` → `标题`（parseFrontmatter 阶段）
+2. **特殊字符替换**：`_` → `-`、`+` → `-`、`#` → 删除
+3. **非安全字符删除**：只保留字母、数字、中文、`-`
+4. **合并连续横线**：`A--B---C` → `A-B-C`
+5. **去首尾横线**：`-标题-` → `标题`
+
+#### URL 格式
+
+```
+/ :year / :month / :day / :category / :hexoDate-:safeTitle /
+
+示例：
+  源文件：.wiki/concepts/LLMWiki_VS_RAG调研.md（created: 2026-04-18）
+  Hexo文件：source/_posts/LearningNote/2026-04-18-LLMWiki-VS-RAG调研.md
+  最终 URL：/2026/04/18/LearningNote/2026-04-18-LLMWiki-VS-RAG调研/
+
+错误 URL（v4.2 已修复）：
+  /2026/04/18/LearningNote/2026-04-18--LLMWiki\_VS\_RAG调研-/  ← 双横线 + \_转义 + 尾横线
+```
+
+#### WikiLink URL 来源
+
+| 版本 | 来源 | 问题 |
+|------|------|------|
+| v4.0-v4.1 | wiki-chat.js 客户端 slugify(title) | 和服务端 slugify 不一致 |
+| **v4.2** | **wiki-index.json 的 url 字段** | **单一数据源，一致性保证** |
 
 ### 输出文件格式
 
@@ -233,3 +271,34 @@ categories: LearningNote            # ← 由目录映射
 | WikiLink 404 | 目标页面不存在 | 确认目标文件名完全匹配 |
 | 分类不对 | `type` 与目录名不一致 | `type` 必须等于所在目录名 |
 | 文章重复 | 手动创建了同名文件 | 删除 `source/_posts/` 中的文件，由脚本管理 |
+| URL 含双横线 | slugify 旧版本未清洗 | 运行 `node scripts/wiki-to-hexo.js --force` 自动清理 |
+| URL 含 `\_` 转义 | title 中有下划线 | v4.2 的 slugify 自动将 `_` 转 `-`，重新 generate 即可 |
+| WikiLink 跳转 404 | 客户端 slugify 和服务端不一致 | v4.2 已改用 wiki-index.json 的 url 字段，清浏览器缓存 |
+
+---
+
+## 八、CMS 管理面板（v4.2 新增）
+
+### 访问
+
+`https://mornikar.github.io/admin/`（GitHub OAuth 登录）
+
+### 集合分类
+
+**Posts 集合**（自动包装 Hexo frontmatter）：
+- AIGC 笔记随笔、学习随笔、学习笔记、机器学习、云环境、所有文章
+
+**Wiki 集合**（原样保存，不包装 frontmatter）：
+- 📚 Wiki 概念、✍️ Wiki 随笔、📥 素材（文章/ML/PM）、🔍 审计反馈
+
+### 新建文件规则
+
+| 类型 | 文件名格式 | frontmatter |
+|------|-----------|-------------|
+| Posts | `YYYY-MM-DD-标题.md` | 自动生成 Hexo 格式 |
+| Wiki | `标题.md`（无日期前缀） | 需手动填写 wiki 格式 |
+
+### 保存行为
+
+- **Posts 文件**：保存时自动包装 `title/date/category/tags` frontmatter
+- **Wiki 文件**：原样保存内容，不额外包装 frontmatter（wiki 文件已有自己的 `title/tags/created/updated` 格式）
