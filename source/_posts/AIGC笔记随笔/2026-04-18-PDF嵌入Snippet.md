@@ -107,6 +107,6 @@ source_path: raw\\snippets\\PDF嵌入Snippet.md
 <h4 class="wiki-backlinks-title">🔗 反向链接</h4>
 <p class="wiki-backlinks-desc">以下页面引用了本文：</p>
 <ul class="wiki-backlinks-list">
-  <li><a href="/2026/04/24/2026-04-24-log/">log</a></li>
+  <li><a href="/2026/04/24/LearningNote/2026-04-24-log/">log</a></li>
 </ul>
 </div>

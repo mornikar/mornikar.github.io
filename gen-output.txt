@@ -1,0 +1,39 @@
+﻿[32mINFO [39m Validating config
+
+🤖 Auto-Maintain 守护脚本 v1.0 (Phase 6.D)
+
+模式: LIVE
+
+📥 Step 1: Git Pull...
+  ✅ Already up to date.
+
+🔍 Step 2: Wiki Lint...
+  发现 0 个问题
+
+🔧 Step 3: Auto Fix...
+  ✅ 无需修复
+
+🤖 Step 4: AI Audit Fix (跳过，使用 --audit-fix 启用)
+
+📝 Step 5: Wiki Compile...
+  ✅ 无新文件需要编译
+
+🔄 Step 6: Wiki → Hexo...
+  ✅ 转换完成
+
+📦 Step 8: Auto Commit...
+  ✅ Committed: 🤖 auto-maintain: git pull, wiki-to-hexo
+  ✅ Pushed to source
+
+✨ Auto-maintain 完成 (11.7s)
+   git pull → wiki-to-hexo
+
+🚀 Wiki Query Promote v1.0 (Phase 6.C)
+
+node.exe : ❌ 未配置 AI，无法执行查询提升
+所在位置 行:1 字符: 1
++ & "D:\Auxiliary_means\Nodejs/node.exe" "D:\Auxiliary_means\Nodejs/nod ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (❌ 未配置 AI，无法执行查询提升:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
