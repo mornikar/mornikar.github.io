@@ -59,8 +59,14 @@ jobs:
           echo "当前模式: $MODE"
 
       - name: AI 编译 raw 素材
-        if: ${{ secrets.WIKI_COMPILE_API_KEY != '' }}
+        if: ${{ env.WIKI_COMPILE_API_KEY != '' }}
+        env:
+          WIKI_COMPILE_API_KEY: ${{ secrets.WIKI_COMPILE_API_KEY }}
         run: |
+          if [ -z "$WIKI_COMPILE_API_KEY" ]; then
+            echo "AI 编译跳过（API 未配置）"
+            exit 0
+          fi
           cat > .wiki/compile-config.json << EOF
           {
             "apiKey": "${{ secrets.WIKI_COMPILE_API_KEY }}",
@@ -122,6 +128,7 @@ jobs:
           mkdir -p public/admin
           cp source/admin/index.html public/admin/
           cp source/admin/config.yml public/admin/
+          cp source/admin/callback.html public/admin/ 2>/dev/null || true
           echo "=== admin/ 文件 ==="
           ls -la public/admin/
 
