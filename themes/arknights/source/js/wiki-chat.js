@@ -1,6 +1,15 @@
 /**
  * Wiki AI 对话侧边栏
- * Phase 7: 多模型接入 + 设置面板
+ * Phase 3: 反向链接 + 知识图谱可视化
+ *
+ * Phase 3 新增功能：
+ *   - 反向链接：利用 wiki-index.json 中的 backlinks/outlinks 构建双向关系
+ *   - 知识图谱：力导向图可视化 Wiki 页面连接关系
+ *   - 文章底部反向链接区块（由 wiki-to-hexo.js 生成）
+ *
+ * Phase 2 功能：
+ *   - Wiki 知识库检索：优先搜索 wiki-index.json 中的结构化知识
+ *   - WikiLink 渲染：AI 回复中的 [[页面名]] 自动转为可点击跳转链接
  *
  * 接入模式：
  *   1. Dify（RAG 知识库） — 通过 Cloudflare Worker 代理
@@ -257,7 +266,394 @@
   }
 
   // ═══════════════════════════════════════════════════════════
-  // Phase 8.5: RAG 页面上下文 + 全局知识库检索
+  // Phase 2: Wiki 知识库索引 + WikiLink 渲染
+  // ═══════════════════════════════════════════════════════════
+
+  let wikiIndex = []
+  let wikiIndexLoaded = false
+
+  // 加载 Wiki 知识库索引（wiki-index.json）
+  async function initWikiIndex() {
+    if (wikiIndexLoaded) return
+    try {
+      // 尝试多个路径（Hexo 生成的文件可能在 /wiki-index.json 或 /.wiki/wiki-index.json）
+      const paths = ['/wiki-index.json', '/.wiki/wiki-index.json']
+      for (const p of paths) {
+        try {
+          const res = await fetch(p)
+          if (res.ok) {
+            wikiIndex = await res.json()
+            wikiIndexLoaded = true
+            console.log('[WikiChat] Wiki 知识库索引加载完成:', wikiIndex.length, '个页面')
+            return
+          }
+        } catch (_) {}
+      }
+      console.warn('[WikiChat] Wiki 知识库索引不可用，降级到 search.xml 检索')
+    } catch (e) {
+      console.warn('[WikiChat] Wiki 索引加载失败:', e)
+    }
+  }
+
+  // 在 Wiki 知识库索引中搜索
+  function searchWikiIndex(keyword) {
+    if (!wikiIndex.length) return ''
+    // 清理搜索关键词
+    let terms = keyword
+      .replace(/(帮我|找下|寻找|搜索|博客|中|有关|关于|的|文章|内容|请问|什么是|怎么|wiki|Wiki)/g, '')
+      .trim() || keyword
+    const lowerTerms = terms.toLowerCase()
+
+    // 按相关度排序：标题完全匹配 > 标题包含 > 标签匹配 > 内容包含
+    const scored = wikiIndex.map(page => {
+      let score = 0
+      const lowerTitle = (page.title || '').toLowerCase()
+      if (lowerTitle === lowerTerms) score += 100
+      else if (lowerTitle.includes(lowerTerms)) score += 50
+      // 标签匹配
+      const tags = Array.isArray(page.tags) ? page.tags : []
+      if (tags.some(t => t.toLowerCase().includes(lowerTerms))) score += 30
+      // 摘要匹配
+      if ((page.summary || '').toLowerCase().includes(lowerTerms)) score += 20
+      // 内容片段匹配
+      if ((page.snippet || '').toLowerCase().includes(lowerTerms)) score += 10
+      return { ...page, score }
+    }).filter(p => p.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 8)
+
+    if (!scored.length) return ''
+
+    return scored.map(p => {
+      const tagStr = p.tags.length ? ` [标签: ${p.tags.join(', ')}]` : ''
+      const summary = p.summary || (p.snippet ? p.snippet.substring(0, 150) + '...' : '')
+      return `[Wiki页面: ${p.title}]${tagStr}\n层级: ${p.layer}\n摘要: ${summary}`
+    }).join('\n\n')
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // Phase 3: 知识图谱可视化
+  // ═══════════════════════════════════════════════════════════
+
+  let graphVisible = false
+  let graphAnimId = null
+
+  // 层级颜色映射
+  const LAYER_COLORS = {
+    concepts: '#ff6b6b',
+    entities: '#4ecdc4',
+    comparisons: '#45b7d1',
+    queries: '#f9ca24',
+    // raw 子目录映射
+    AI产品方案: '#a29bfe',
+    AI行业分析: '#fd79a8',
+    AI部署: '#6c5ce7',
+    多模态: '#00cec9',
+    随笔: '#ffeaa7',
+    ML: '#55a3e8',
+    OS: '#81ecec',
+    PM: '#fab1a0',
+    skills: '#74b9ff',
+    snippets: '#dfe6e9',
+  }
+
+  function getLayerColor(layer) {
+    return LAYER_COLORS[layer] || '#636e72'
+  }
+
+  /**
+   * 显示知识图谱面板
+   */
+  function showGraphView() {
+    if (!wikiIndexLoaded || !wikiIndex.length) {
+      const content = document.getElementById('wiki-chat-content')
+      content.innerHTML = `
+        <div class="wiki-graph-container">
+          <div class="wiki-graph-empty">📚 知识库索引加载中或为空，请稍后重试</div>
+        </div>`
+      return
+    }
+
+    graphVisible = true
+    const content = document.getElementById('wiki-chat-content')
+    content.innerHTML = `
+      <div class="wiki-graph-container">
+        <div class="wiki-graph-toolbar">
+          <button id="wiki-graph-back" title="返回聊天">← 返回</button>
+          <span class="wiki-graph-title">🕸 知识图谱</span>
+          <span class="wiki-graph-stats">${wikiIndex.length} 节点</span>
+        </div>
+        <canvas id="wiki-graph-canvas"></canvas>
+        <div id="wiki-graph-tooltip" style="display:none"></div>
+        <div class="wiki-graph-legend">
+          <span style="color:${LAYER_COLORS.concepts}">● concepts</span>
+          <span style="color:${LAYER_COLORS.entities}">● entities</span>
+          <span style="color:${LAYER_COLORS.ML}">● ML</span>
+          <span style="color:${LAYER_COLORS.skills}">● skills</span>
+          <span style="color:${LAYER_COLORS.PM}">● PM</span>
+        </div>
+      </div>`
+
+    // 返回聊天按钮
+    document.getElementById('wiki-graph-back').addEventListener('click', () => {
+      graphVisible = false
+      if (graphAnimId) cancelAnimationFrame(graphAnimId)
+      showChatView()
+    })
+
+    // 渲染图谱
+    renderGraph()
+  }
+
+  /**
+   * 简单力导向图渲染
+   */
+  function renderGraph() {
+    const canvas = document.getElementById('wiki-graph-canvas')
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    const container = canvas.parentElement
+    const tooltip = document.getElementById('wiki-graph-tooltip')
+
+    // 自适应画布大小
+    const dpr = window.devicePixelRatio || 1
+    function resizeCanvas() {
+      const w = container.clientWidth
+      const h = container.clientHeight - 80 // 减去 toolbar + legend
+      canvas.width = w * dpr
+      canvas.height = h * dpr
+      canvas.style.width = w + 'px'
+      canvas.style.height = h + 'px'
+      ctx.scale(dpr, dpr)
+      return { w, h }
+    }
+    const { w: W, h: H } = resizeCanvas()
+
+    // 构建图数据
+    const nodes = []
+    const edges = []
+    const titleMap = {}
+
+    // 只包含有链接关系的节点 + 随机采样一些无链接节点
+    const linkedTitles = new Set()
+    wikiIndex.forEach(p => {
+      (p.outlinks || []).forEach(t => linkedTitles.add(t))
+      ;(p.backlinks || []).forEach(t => linkedTitles.add(t))
+      if ((p.outlinks || []).length > 0 || (p.backlinks || []).length > 0) {
+        linkedTitles.add(p.title)
+      }
+    })
+
+    // 采样无链接节点（最多30个）
+    const unlinked = wikiIndex.filter(p => !linkedTitles.has(p.title))
+    const sampled = unlinked.sort(() => Math.random() - 0.5).slice(0, 30)
+
+    const displayPages = wikiIndex.filter(p => linkedTitles.has(p.title)).concat(sampled)
+
+    displayPages.forEach((page, i) => {
+      const angle = Math.random() * Math.PI * 2
+      const radius = 80 + Math.random() * Math.min(W, H) * 0.3
+      nodes.push({
+        id: i,
+        title: page.title,
+        layer: page.layer,
+        url: page.url || '',
+        x: W / 2 + Math.cos(angle) * radius,
+        y: H / 2 + Math.sin(angle) * radius,
+        vx: 0,
+        vy: 0,
+        radius: 4 + Math.min((page.outlinks || []).length + (page.backlinks || []).length, 8),
+      })
+      titleMap[page.title] = i
+    })
+
+    // 构建边（去重）
+    const edgeSet = new Set()
+    displayPages.forEach((page, i) => {
+      const targets = [...(page.outlinks || []), ...(page.backlinks || [])]
+      targets.forEach(targetTitle => {
+        const j = titleMap[targetTitle]
+        if (j !== undefined && j !== i) {
+          const key = Math.min(i, j) + '-' + Math.max(i, j)
+          if (!edgeSet.has(key)) {
+            edgeSet.add(key)
+            edges.push({ source: i, target: j })
+          }
+        }
+      })
+    })
+
+    // 力导向模拟参数
+    const REPULSION = 1200
+    const ATTRACTION = 0.005
+    const DAMPING = 0.85
+    const CENTER_PULL = 0.01
+
+    // 拖拽交互
+    let dragNode = null
+    let hoverNode = null
+
+    canvas.addEventListener('mousedown', e => {
+      const rect = canvas.getBoundingClientRect()
+      const mx = e.clientX - rect.left
+      const my = e.clientY - rect.top
+      for (const node of nodes) {
+        const dx = mx - node.x
+        const dy = my - node.y
+        if (dx * dx + dy * dy < (node.radius + 4) * (node.radius + 4)) {
+          dragNode = node
+          break
+        }
+      }
+    })
+
+    canvas.addEventListener('mousemove', e => {
+      const rect = canvas.getBoundingClientRect()
+      const mx = e.clientX - rect.left
+      const my = e.clientY - rect.top
+
+      if (dragNode) {
+        dragNode.x = mx
+        dragNode.y = my
+        dragNode.vx = 0
+        dragNode.vy = 0
+      }
+
+      // 悬浮检测
+      hoverNode = null
+      for (const node of nodes) {
+        const dx = mx - node.x
+        const dy = my - node.y
+        if (dx * dx + dy * dy < (node.radius + 4) * (node.radius + 4)) {
+          hoverNode = node
+          break
+        }
+      }
+
+      // 提示框
+      if (hoverNode && tooltip) {
+        tooltip.style.display = 'block'
+        tooltip.style.left = (mx + 15) + 'px'
+        tooltip.style.top = (my - 10) + 'px'
+        const page = displayPages[hoverNode.id]
+        const bl = (page.backlinks || []).length
+        const ol = (page.outlinks || []).length
+        tooltip.innerHTML = `<strong>${hoverNode.title}</strong><br>层级: ${hoverNode.layer}<br>入链: ${bl} | 出链: ${ol}`
+      } else if (tooltip) {
+        tooltip.style.display = 'none'
+      }
+
+      canvas.style.cursor = hoverNode ? 'pointer' : (dragNode ? 'grabbing' : 'default')
+    })
+
+    canvas.addEventListener('mouseup', () => { dragNode = null })
+    canvas.addEventListener('mouseleave', () => { dragNode = null; hoverNode = null; if (tooltip) tooltip.style.display = 'none' })
+
+    // 点击跳转
+    canvas.addEventListener('click', e => {
+      if (hoverNode && hoverNode.url) {
+        window.open(hoverNode.url, '_blank')
+      }
+    })
+
+    // 动画循环
+    function animate() {
+      if (!graphVisible) return
+
+      // 力模拟
+      for (const node of nodes) {
+        if (node === dragNode) continue
+
+        let fx = 0, fy = 0
+
+        // 中心引力
+        fx += (W / 2 - node.x) * CENTER_PULL
+        fy += (H / 2 - node.y) * CENTER_PULL
+
+        // 排斥力
+        for (const other of nodes) {
+          if (other === node) continue
+          let dx = node.x - other.x
+          let dy = node.y - other.y
+          let dist = Math.sqrt(dx * dx + dy * dy) || 1
+          if (dist < 200) {
+            const force = REPULSION / (dist * dist)
+            fx += dx / dist * force
+            fy += dy / dist * force
+          }
+        }
+
+        // 弹簧引力（沿边）
+        for (const edge of edges) {
+          let other = null
+          if (edge.source === node.id) other = nodes[edge.target]
+          else if (edge.target === node.id) other = nodes[edge.source]
+          if (!other) continue
+
+          const dx = other.x - node.x
+          const dy = other.y - node.y
+          const dist = Math.sqrt(dx * dx + dy * dy) || 1
+          fx += dx * ATTRACTION
+          fy += dy * ATTRACTION
+        }
+
+        node.vx = (node.vx + fx) * DAMPING
+        node.vy = (node.vy + fy) * DAMPING
+        node.x += node.vx
+        node.y += node.vy
+
+        // 边界约束
+        node.x = Math.max(node.radius + 5, Math.min(W - node.radius - 5, node.x))
+        node.y = Math.max(node.radius + 5, Math.min(H - node.radius - 5, node.y))
+      }
+
+      // 绘制
+      ctx.clearRect(0, 0, W, H)
+
+      // 绘制边
+      ctx.strokeStyle = 'rgba(100, 100, 100, 0.15)'
+      ctx.lineWidth = 0.5
+      for (const edge of edges) {
+        const s = nodes[edge.source]
+        const t = nodes[edge.target]
+        ctx.beginPath()
+        ctx.moveTo(s.x, s.y)
+        ctx.lineTo(t.x, t.y)
+        ctx.stroke()
+      }
+
+      // 绘制节点
+      for (const node of nodes) {
+        const isHover = hoverNode === node
+        const isConnected = hoverNode && edges.some(e =>
+          (e.source === hoverNode.id && e.target === node.id) ||
+          (e.target === hoverNode.id && e.source === node.id)
+        )
+
+        ctx.beginPath()
+        ctx.arc(node.x, node.y, isHover ? node.radius + 3 : node.radius, 0, Math.PI * 2)
+        ctx.fillStyle = getLayerColor(node.layer)
+        ctx.globalAlpha = (isHover || isConnected || !hoverNode) ? 1 : 0.25
+        ctx.fill()
+        ctx.globalAlpha = 1
+
+        // 悬浮时显示标题
+        if (isHover) {
+          ctx.font = '12px sans-serif'
+          ctx.fillStyle = '#fff'
+          ctx.textAlign = 'center'
+          ctx.fillText(node.title, node.x, node.y - node.radius - 8)
+        }
+      }
+
+      graphAnimId = requestAnimationFrame(animate)
+    }
+
+    animate()
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // Phase 8.5: RAG 页面上下文 + 全局知识库检索（原有）
   // ═══════════════════════════════════════════════════════════
 
   const RAG_CONFIG = {
@@ -392,20 +788,80 @@
 
   function renderMarkdown(text) {
     if (!text) return ''
+
+    // Phase 2: 在 Markdown 解析前，先将 WikiLink [[页面名]] 转为临时占位符
+    // 避免被 Markdown 解析器干扰
+    const wikiLinkMap = {}
+    let linkCounter = 0
+    const preprocessed = text.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (match, target, label) => {
+      const display = label || target.trim()
+      const slug = target.trim()
+      const placeholder = `__WIKILINK_${linkCounter++}__`
+
+      // 在 wiki 索引中查找页面，构建跳转链接
+      let href = null
+      if (wikiIndex.length) {
+        const lowerSlug = slug.toLowerCase()
+        // 精确匹配
+        const exact = wikiIndex.find(p => p.title.toLowerCase() === lowerSlug)
+        if (exact) {
+          // 尝试构建 Hexo 文章 URL（基于 created 日期和标题）
+          const dateStr = (exact.created || '').replace(/-/g, '/')
+          const safeTitle = slug.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, '-')
+          if (dateStr && exact.created) {
+            href = `/${dateStr}/${safeTitle}/`
+          }
+        }
+        // 模糊匹配
+        if (!href) {
+          const fuzzy = wikiIndex.find(p => p.title.toLowerCase().includes(lowerSlug) || lowerSlug.includes(p.title.toLowerCase()))
+          if (fuzzy) {
+            const dateStr = (fuzzy.created || '').replace(/-/g, '/')
+            const safeTitle = slug.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, '-')
+            if (dateStr && fuzzy.created) {
+              href = `/${dateStr}/${safeTitle}/`
+            }
+          }
+        }
+      }
+
+      // 没找到精确URL时，用标题 slug 降级
+      if (!href) {
+        const safeSlug = slug.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, '-')
+        href = `/${safeSlug}/`
+      }
+
+      wikiLinkMap[placeholder] = { display, href }
+      return `[${display}](${placeholder})`
+    })
+
     // 优先使用 marked.js（CDN 加载）
     if (typeof marked !== 'undefined' && marked.parse) {
       try {
-        let html = marked.parse(text, { breaks: true, gfm: true })
+        let html = marked.parse(preprocessed, { breaks: true, gfm: true })
         // 清理空段落和多余换行
         html = html.replace(/>\n+</g, '><').replace(/\n+$/g, '')
         html = html.replace(/<p>[\s\u200B-\u200D\uFEFF\xA0]*<\/p>/gi, '')
                    .replace(/<p>\s*<br\s*\/?>\s*<\/p>/gi, '')
+
+        // Phase 2: 将占位符替换回真正的 WikiLink
+        for (const [placeholder, info] of Object.entries(wikiLinkMap)) {
+          const encodedHref = info.href.replace(/_/g, '\\_')
+          html = html.replace(`href="${placeholder}"`, `href="${info.href}" class="wiki-link"`)
+          // 也处理 Markdown 生成的 href 编码形式
+          html = html.replace(new RegExp(`href=["']${placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["']`, 'g'), `href="${info.href}" class="wiki-link"`)
+        }
+
         // 链接新窗口打开
         const temp = document.createElement('div')
         temp.innerHTML = html
         temp.querySelectorAll('a').forEach(a => {
           a.setAttribute('target', '_blank')
           a.setAttribute('rel', 'noopener noreferrer')
+          // 给 WikiLink 添加特殊样式标识
+          if (a.classList.contains('wiki-link')) {
+            a.innerHTML = '🔗 ' + a.innerHTML
+          }
         })
         return temp.innerHTML
       } catch (e) {
@@ -413,11 +869,17 @@
       }
     }
     // 降级方案
-    return text
+    let result = preprocessed
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/`([^`]+)`/g, '<code>$1</code>')
       .replace(/\n/g, '<br>')
+
+    // 替换占位符
+    for (const [placeholder, info] of Object.entries(wikiLinkMap)) {
+      result = result.replace(`(${placeholder})`, `(<a href="${info.href}" class="wiki-link" target="_blank" rel="noopener noreferrer">🔗 ${info.display}</a>)`)
+    }
+    return result
   }
 
   // ─── Pagefind 兜底搜索 ───────────────────────────────────
@@ -572,11 +1034,21 @@
 
     // 构建 RAG 上下文
     const pageContext = getCurrentPageContext()
-    const searchContext = searchLocalBlog(query)
+
+    // Phase 2: 优先搜索 Wiki 知识库索引
+    let wikiContext = searchWikiIndex(query)
+    const searchContext = wikiContext || searchLocalBlog(query)
+
     let ragContext = ''
     const ct = RAG_CONFIG.contextTemplate
     if (pageContext) ragContext += `${ct.pageContextTitle}\n${pageContext}\n\n`
-    if (searchContext) ragContext += `${ct.searchContextTitle}\n${searchContext}\n\n`
+    // Phase 2: 标注知识来源
+    if (wikiContext) {
+      ragContext += `=== Wiki 知识库检索结果（结构化知识） ===\n${wikiContext}\n\n`
+    }
+    if (searchContext && !wikiContext) {
+      ragContext += `${ct.searchContextTitle}\n${searchContext}\n\n`
+    }
     if (ragContext) {
       ragContext = `${ct.instruction}\n${ragContext}${ct.userQuestion} ${query}`
     }
@@ -778,6 +1250,12 @@
               <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
               <polyline points="10 17 15 12 10 7"/>
               <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+          </button>
+          <button id="wiki-chat-graph-btn" title="知识图谱">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <circle cx="5" cy="6" r="3"/><circle cx="19" cy="6" r="3"/><circle cx="12" cy="19" r="3"/>
+              <line x1="7.5" y1="7.5" x2="10.5" y2="16.5"/><line x1="16.5" y1="7.5" x2="13.5" y2="16.5"/><line x1="8" y1="6" x2="16" y2="6"/>
             </svg>
           </button>
           <button id="wiki-chat-settings-btn" title="设置">
@@ -1128,6 +1606,8 @@
   function init() {
     // 异步初始化博客索引（RAG 全局检索）
     initBlogIndex()
+    // Phase 2: 异步初始化 Wiki 知识库索引
+    initWikiIndex()
     fixFooterCreditLinks()
 
     // ─── 未登录时：创建面板，点击登录按钮跳转 ───
@@ -1232,6 +1712,7 @@
 
     document.getElementById('wiki-chat-close').addEventListener('click', closePanel)
     document.getElementById('wiki-chat-settings-btn').addEventListener('click', showSettings)
+    document.getElementById('wiki-chat-graph-btn').addEventListener('click', showGraphView)
     document.getElementById('wiki-chat-login-btn').addEventListener('click', redirectToLogin)
     document.getElementById('wiki-chat-clear').addEventListener('click', () => {
       resetConversation()

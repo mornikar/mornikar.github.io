@@ -9,6 +9,7 @@
 ├── SCHEMA.md          # 本文件 — 规范定义
 ├── index.md           # 索引 — 所有页面的总览
 ├── log.md             # 操作日志 — append-only
+├── audit/             # 审计反馈 — 知识库健康检查结果（v3 新增）
 ├── raw/               # Layer 1：不可变原始材料（不发布）
 │   ├── articles/     #   主题文章（AI行业分析、AI产品方案、AI部署、多模态、随笔）
 │   ├── ML/           #   机器学习笔记
@@ -185,6 +186,86 @@ node scripts/wiki-compile.js --test
 | `skills/` | entities | 技能笔记 |
 | `snippets/` | entities | 代码片段 |
 
+## Wiki 知识库检索（Phase 2 新增）
+
+### 数据流
+
+```
+wiki-compile.js → .wiki/wiki-index.json（开发用）
+wiki-to-hexo.js → source/wiki-index.json（前端用，hexo generate 后到 public/）
+wiki-chat.js    → fetch('/wiki-index.json') → 本地知识库检索
+```
+
+### 索引内容
+
+`wiki-index.json` 包含每个 wiki 页面的：
+
+| 字段 | 说明 |
+|------|------|
+| `title` | 页面标题 |
+| `layer` | 层级（concepts/entities） |
+| `tags` | 标签列表 |
+| `summary` | 一句话摘要 |
+| `created` | 创建日期 |
+| `url` | Hexo 文章 URL（仅前端版本） |
+| `snippet` | 前 300 字纯文本片段 |
+
+### WikiLink 渲染
+
+AI 回复中的 `[[页面名]]` 会自动渲染为可点击跳转链接：
+
+- `[[RAG检索增强生成]]` → 🔗 `RAG检索增强生成`（带📚图标，链接到对应 Hexo 文章）
+- `[[RAG检索增强生成|更简洁的理解]]` → 🔗 `更简洁的理解`（自定义显示文字）
+
+### RAG 检索优先级
+
+1. **Wiki 知识库索引**（wiki-index.json）— 结构化知识，优先匹配
+2. **博客全文检索**（search.xml）— 降级兜底
+3. **页面上下文**（当前阅读的文章内容）— 辅助补充
+
+## 反向链接 + 知识图谱（Phase 3 新增）
+
+### 数据流
+
+```
+wiki-to-hexo.js 扫描 [[WikiLink]] → buildBacklinks() → 反向链接索引
+                                                    ↓
+                              wiki-index.json (backlinks/outlinks 字段)
+                                                    ↓
+                              文章底部 ← generateBacklinksHtml()
+                              知识图谱 ← wiki-chat.js showGraphView()
+```
+
+### 反向链接
+
+每篇 Hexo 文章底部自动注入「反向链接」区块：
+
+```html
+<div class="wiki-backlinks">
+  <h4 class="wiki-backlinks-title">🔗 反向链接</h4>
+  <p class="wiki-backlinks-desc">以下页面引用了本文：</p>
+  <ul class="wiki-backlinks-list">
+    <li><a href="/2025/09/12/RAG检索增强生成/">RAG检索增强生成</a></li>
+  </ul>
+</div>
+```
+
+### 知识图谱
+
+wiki-chat 面板中的交互式力导向图：
+
+- **节点** = Wiki 页面（颜色按层级区分，大小按链接数量）
+- **边** = WikiLink 连接关系
+- **交互** = 拖拽节点 / 悬浮查看详情 / 点击跳转文章
+- **图例** = concepts(红) / entities(青) / ML(蓝) / skills(蓝) / PM(橙)
+
+### wiki-index.json 增量字段（Phase 3）
+
+| 字段 | 说明 |
+|------|------|
+| `backlinks` | 引用当前页面的其他页面列表 |
+| `outlinks` | 当前页面引用的其他页面列表 |
+
 ## 脚本用法
 
 ```bash
@@ -228,3 +309,74 @@ wiki-sync.bat        # 完整流程：转换 → 构建 → 部署
 wiki-sync.bat --dry-run   # 仅预览，不写入
 wiki-sync.bat --force     # 强制全量
 ```
+
+## 审计系统（v3 新增）
+
+### 审计目录
+
+```
+.wiki/audit/
+├── README.md              # 审计格式说明
+├── AUDIT-2026-001.md      # 审计反馈文件
+├── AUDIT-2026-002.md
+└── ...
+```
+
+### 审计文件格式
+
+文件名：`AUDIT-YYYY-NNN.md`
+
+```yaml
+---
+id: AUDIT-2026-001
+target: "[[页面标题]]"
+type: quality              # quality | accuracy | completeness | outdated | duplicate | structure | dead_link
+severity: major            # critical | major | minor | suggestion
+status: open               # open | in_progress | resolved | dismissed
+comment: "问题描述"
+suggested_action: recompile # add_content | update | merge | split | delete | fix_link | recompile
+created: 2026-04-24
+resolved:
+resolved_by:
+---
+```
+
+### 审计来源
+
+| 来源 | 触发 | 生成的审计类型 |
+|------|------|---------------|
+| wiki-lint.js | 编译后 / CI | dead_link, structure |
+| AI Review | 编译后自动评估 | quality, completeness, duplicate |
+| CMS 审阅评论 | 用户提交 | accuracy, outdated |
+| wiki-chat.js | 用户反馈 | quality, completeness |
+
+### 审计生命周期
+
+```
+open → in_progress → resolved
+                    → dismissed
+```
+
+### AI 可自动处理的审计
+
+| suggested_action | AI 自动处理 | 说明 |
+|-----------------|------------|------|
+| `recompile` | ✅ | AI 重编译页面 |
+| `add_content` | ✅ | AI 补充缺失内容 |
+| `update` | ✅ | AI 更新过时内容 |
+| `merge` | ✅ | AI 合并重复页面 |
+| `split` | ✅ | AI 拆分过长页面 |
+| `fix_link` | ✅ | 自动修复死链 |
+| `delete` | ⚠️ 需人工确认 | 删除页面风险较高 |
+
+### Lint 检查（7 轮）
+
+| Pass | 检查项 | 自动修复 | 对应审计类型 |
+|------|--------|---------|-------------|
+| 1 | 死链检测 | 生成审计 | dead_link |
+| 2 | 孤儿页 | 生成审计 | structure |
+| 3 | 缺失索引 | ✅ 自动补全 | — |
+| 4 | 高频未建页 | 生成审计 | completeness |
+| 5 | 日志格式 | ✅ 自动修复 | — |
+| 6 | 审计文件格式 | ✅ 自动修复 | — |
+| 7 | 审计目标存在性 | ✅ 清理无效 | — |

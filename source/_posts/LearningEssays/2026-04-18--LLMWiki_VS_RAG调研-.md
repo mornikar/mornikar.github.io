@@ -56,3 +56,10 @@ source_path: raw\\articles\\AI行业分析\\LLMWiki_VS_RAG调研.md
 * **选 RAG 如果**：你的数据是**短暂且海量的**（如实时新闻流、全网爬虫），你不需要保留中间的推导过程，只要最终答案。
 
 * **选 LLM Wiki 如果**：你的数据是**高价值的私有知识**（如内部手册、技术文档、项目复盘），你希望团队的知识能够**沉淀、传承和复用**，且极度厌恶高昂的重复算力成本。
+<div class="wiki-backlinks">
+<h4 class="wiki-backlinks-title">🔗 反向链接</h4>
+<p class="wiki-backlinks-desc">以下页面引用了本文：</p>
+<ul class="wiki-backlinks-list">
+  <li><a href="/2026/04/23/log/">log</a></li>
+</ul>
+</div>

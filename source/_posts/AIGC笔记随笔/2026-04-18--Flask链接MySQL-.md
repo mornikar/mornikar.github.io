@@ -17,3 +17,10 @@ Copy
 mysql > SET time_zone = '+8:00'; # 此为北京时，我们所在东8区
 Copy
 mysql> flush privileges; # 立即生效
+<div class="wiki-backlinks">
+<h4 class="wiki-backlinks-title">🔗 反向链接</h4>
+<p class="wiki-backlinks-desc">以下页面引用了本文：</p>
+<ul class="wiki-backlinks-list">
+  <li><a href="/2026/04/23/log/">log</a></li>
+</ul>
+</div>

@@ -103,3 +103,10 @@ source_path: raw\\snippets\\PDF嵌入Snippet.md
 - PDF.js **完全本地运行**，无需服务器端处理
 - 手机端也可正常查看
 - 首次加载 PDF.js（约 1.6MB）后会被浏览器缓存
+<div class="wiki-backlinks">
+<h4 class="wiki-backlinks-title">🔗 反向链接</h4>
+<p class="wiki-backlinks-desc">以下页面引用了本文：</p>
+<ul class="wiki-backlinks-list">
+  <li><a href="/2026/04/23/log/">log</a></li>
+</ul>
+</div>

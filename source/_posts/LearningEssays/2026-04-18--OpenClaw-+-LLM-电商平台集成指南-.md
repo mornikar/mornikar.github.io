@@ -665,3 +665,10 @@ def get_answer(message: str):
 - A/B 测试不同 prompt
 - 收集用户反馈改进
 - 定期重新训练推荐模型
+<div class="wiki-backlinks">
+<h4 class="wiki-backlinks-title">🔗 反向链接</h4>
+<p class="wiki-backlinks-desc">以下页面引用了本文：</p>
+<ul class="wiki-backlinks-list">
+  <li><a href="/2026/04/23/log/">log</a></li>
+</ul>
+</div>

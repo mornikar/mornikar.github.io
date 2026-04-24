@@ -1,11 +1,14 @@
 /**
- * Wiki → Hexo 转换脚本 v4.0 (Phase 2 增强版)
+ * Wiki → Hexo 转换脚本 v4.2 (Phase 3: 反向链接 + 知识图谱)
  *
- * Phase 2 新增功能：
- *   - 冲突检测：检测同名文件不同内容的覆盖风险
- *   - frontmatter 增强：支持 wikiAliases / wikiTags / wikiCategory 字段
- *   - 详细错误处理与警告
- *   - 内置单元测试框架
+ * Phase 3 新增功能：
+ *   - 反向链接索引：自动构建 WikiLink 双向关系图
+ *   - 文章底部注入「反向链接」区块
+ *   - wiki-index.json 包含 backlinks/outlinks 字段（供知识图谱使用）
+ *
+ * 早期功能：
+ *   - 冲突检测、frontmatter 增强、详细错误处理、内置测试
+ *   - Phase 2: 生成 wiki-index.json 到 source/ 供前端 wiki-chat 检索
  *
  * 用法：
  *   node wiki-to-hexo.js              # 全量/增量转换
@@ -204,6 +207,114 @@ function loadWikiMeta() {
     return meta;
 }
 
+// ============ Phase 3: 反向链接构建 ============
+
+/**
+ * 构建反向链接索引
+ * 扫描所有 wiki 页面中的 [[WikiLink]]，建立双向链接关系
+ * 
+ * @returns {Object} backlinkIndex — { title: { backlinks: [...], outlinks: [...] } }
+ */
+function buildBacklinks(wikiMeta) {
+    const backlinkIndex = {};
+
+    // 初始化所有页面的链接列表
+    for (const title of Object.keys(wikiMeta)) {
+        backlinkIndex[title] = { backlinks: [], outlinks: [] };
+    }
+
+    // 扫描每个页面的 WikiLink
+    for (const [title, meta] of Object.entries(wikiMeta)) {
+        if (!fs.existsSync(meta.file)) continue;
+
+        try {
+            const content = fs.readFileSync(meta.file, 'utf-8');
+            const { body } = parseFrontmatter(content);
+
+            // 提取所有 [[WikiLink]]
+            const wikiLinkRegex = /\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g;
+            let match;
+            while ((match = wikiLinkRegex.exec(body)) !== null) {
+                const target = match[1].trim();
+
+                // 尝试匹配到已知页面
+                let targetTitle = null;
+                // 精确匹配
+                if (wikiMeta[target]) {
+                    targetTitle = target;
+                } else {
+                    // 大小写不敏感匹配
+                    const lowerTarget = target.toLowerCase();
+                    for (const t of Object.keys(wikiMeta)) {
+                        if (t.toLowerCase() === lowerTarget) {
+                            targetTitle = t;
+                            break;
+                        }
+                    }
+                    // 前缀匹配
+                    if (!targetTitle) {
+                        for (const t of Object.keys(wikiMeta)) {
+                            if (t.toLowerCase().startsWith(lowerTarget) || lowerTarget.startsWith(t.toLowerCase())) {
+                                targetTitle = t;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (targetTitle && targetTitle !== title) {
+                    // 出链：当前页面 → 目标页面
+                    if (!backlinkIndex[title].outlinks.includes(targetTitle)) {
+                        backlinkIndex[title].outlinks.push(targetTitle);
+                    }
+                    // 反向链接：目标页面 ← 当前页面
+                    if (!backlinkIndex[targetTitle]) {
+                        backlinkIndex[targetTitle] = { backlinks: [], outlinks: [] };
+                    }
+                    if (!backlinkIndex[targetTitle].backlinks.includes(title)) {
+                        backlinkIndex[targetTitle].backlinks.push(title);
+                    }
+                }
+            }
+        } catch (e) {
+            // 跳过读取失败的文件
+        }
+    }
+
+    return backlinkIndex;
+}
+
+/**
+ * 生成反向链接 HTML 区块（注入到文章底部）
+ */
+function generateBacklinksHtml(title, backlinkIndex, wikiMeta) {
+    const entry = backlinkIndex[title];
+    if (!entry || entry.backlinks.length === 0) return '';
+
+    const lines = [
+        '',
+        '<div class="wiki-backlinks">',
+        '<h4 class="wiki-backlinks-title">🔗 反向链接</h4>',
+        '<p class="wiki-backlinks-desc">以下页面引用了本文：</p>',
+        '<ul class="wiki-backlinks-list">',
+    ];
+
+    for (const bl of entry.backlinks) {
+        const blMeta = wikiMeta[bl];
+        if (blMeta) {
+            const url = `/${blMeta.hexoDate}/${slugify(bl)}/`;
+            lines.push(`  <li><a href="${url}">${bl}</a></li>`);
+        } else {
+            lines.push(`  <li>${bl}</li>`);
+        }
+    }
+
+    lines.push('</ul>');
+    lines.push('</div>');
+
+    return lines.join('\n');
+}
+
 // ============ Phase 2 新增：冲突检测 ============
 
 /** 检测 hexoPath 冲突：同名文件但内容不同 */
@@ -236,11 +347,14 @@ function detectConflicts(converted, prevMeta) {
 
             if (existingContent !== newContent && prev?.hexoMd5 !== md5File(item.wikiPath)) {
                 // 内容变更且不是来自同一个 wiki 文件
-                if (existingWikiPath !== item.wikiPath) {
+                const otherWriter = Object.entries(prevMeta).find(
+                    ([wp, meta]) => meta.hexoPath === item.hexoPath && wp !== item.wikiPath
+                );
+                if (otherWriter) {
                     conflicts.push({
                         type: 'content_overwrite',
                         wikiPath: item.wikiPath,
-                        existingWikiPath,
+                        existingWikiPath: otherWriter[0],
                         hexoPath: item.hexoPath,
                         title: item.title,
                     });
@@ -311,6 +425,13 @@ function main() {
     const prevMeta = loadMeta();
     const wikiMeta = loadWikiMeta();
 
+    // Phase 3: 构建反向链接索引
+    const backlinkIndex = buildBacklinks(wikiMeta);
+    const blCount = Object.values(backlinkIndex).filter(v => v.backlinks.length > 0).length;
+    console.log(`🔗 反向链接索引: ${blCount} 个页面被引用`);
+    const olCount = Object.values(backlinkIndex).filter(v => v.outlinks.length > 0).length;
+    console.log(`🔗 出链索引: ${olCount} 个页面有出链`);
+
     // 确保分类目录存在
     Object.values(CATEGORY_MAP).forEach(cat => {
         const catPath = path.join(POSTS_DIR, cat);
@@ -372,7 +493,7 @@ function main() {
                     continue;
                 }
 
-                const result = convertSingle(fullPath, relativePath, wikiMeta);
+                const result = convertSingle(fullPath, relativePath, wikiMeta, backlinkIndex);
                 if (result) {
                     converted.push(result);
                     stats[layer] = (stats[layer] || 0) + 1;
@@ -440,6 +561,8 @@ function main() {
         if (converted.length > 0) {
             console.log('   运行 hexo generate 构建博客');
         }
+        // Phase 2: 生成 wiki-index.json 到 source/ 供前端检索
+        generateWikiSearchIndexForFrontend();
     }
 }
 
@@ -472,7 +595,7 @@ function generateHexoContent(result, prevWikiMeta) {
     return hexoFrontmatter;
 }
 
-function convertSingle(wikiPath, relativePath, wikiMeta) {
+function convertSingle(wikiPath, relativePath, wikiMeta, backlinkIndex) {
     const content = fs.readFileSync(wikiPath, 'utf-8');
     const { frontmatter, body } = parseFrontmatter(content);
 
@@ -504,6 +627,9 @@ function convertSingle(wikiPath, relativePath, wikiMeta) {
     const related = frontmatter.related;
     const summary = frontmatter.summary || '';
 
+    // Phase 3: 生成反向链接 HTML
+    const backlinksHtml = backlinkIndex ? generateBacklinksHtml(title, backlinkIndex, wikiMeta) : '';
+
     let hexoFrontmatter = `---\ntitle : ${title}\ndate: ${hexoDate} 08:00:00\nupdated: ${hexoDate} 08:00:00\ntags: ${tags.join(', ')}\ncategory : ${category}\nsource: LLM Wiki\nsource_path: ${relativePath.replace(/\\/g, '\\\\')}\n`;
 
     if (aliases.length > 0) {
@@ -516,7 +642,7 @@ function convertSingle(wikiPath, relativePath, wikiMeta) {
         hexoFrontmatter += `description: ${summary}\n`;
     }
 
-    hexoFrontmatter += `---\n\n<!-- 此文章来自 LLM Wiki: ${relativePath} -->\n\n${bodyConverted}`;
+    hexoFrontmatter += `---\n\n<!-- 此文章来自 LLM Wiki: ${relativePath} -->\n\n${bodyConverted}${backlinksHtml}`;
 
     fs.writeFileSync(hexoPath, hexoFrontmatter, 'utf-8');
     console.log(`  ✅ ${title}`);
@@ -547,6 +673,98 @@ function updateLog(converted) {
     }
 
     fs.writeFileSync(LOG_FILE, logContent, 'utf-8');
+}
+
+// ============ Phase 2: 生成 wiki-index.json 供前端检索 ============
+
+/**
+ * 生成 wiki-index.json 到 Hexo source/ 目录
+ * 前端 wiki-chat 通过 fetch('/wiki-index.json') 加载此文件
+ * Phase 3: 包含 backlinks/outlinks 字段供知识图谱使用
+ */
+function generateWikiSearchIndexForFrontend() {
+    const index = [];
+    const sourceDir = path.join(__dirname, '..', 'source');
+
+    // Phase 3: 重建反向链接索引（用于 wiki-index.json）
+    const wikiMeta = loadWikiMeta();
+    const blIndex = buildBacklinks(wikiMeta);
+
+    function scan(dir, inRaw) {
+        if (!fs.existsSync(dir)) return;
+        const items = fs.readdirSync(dir);
+        for (const item of items) {
+            const fullPath = path.join(dir, item);
+            const stat = fs.statSync(fullPath);
+
+            if (stat.isDirectory()) {
+                if (inRaw || LAYER_DIRS.includes(item) || item === 'raw') {
+                    scan(fullPath, inRaw || item === 'raw');
+                }
+            } else if (item.endsWith('.md')) {
+                const relativePath = path.relative(WIKI_DIR, fullPath);
+                const parts = relativePath.split(path.sep);
+
+                let layer = parts[0];
+                if (layer === 'raw' && parts.length >= 3 && parts[1] === 'articles') {
+                    const fm = parseFrontmatter(fs.readFileSync(fullPath, 'utf-8')).frontmatter;
+                    layer = (fm && fm.type && LAYER_DIRS.includes(fm.type)) ? fm.type : parts[2];
+                } else if (layer === 'raw' && parts.length >= 2) {
+                    layer = parts[1];
+                }
+
+                if (!LAYER_DIRS.includes(layer) && !RAW_ARTICLE_SUBDIRS.includes(layer) && !RAW_TOP_SUBDIRS.includes(layer)) {
+                    continue;
+                }
+
+                try {
+                    const content = fs.readFileSync(fullPath, 'utf-8');
+                    const { frontmatter, body } = parseFrontmatter(content);
+                    const title = frontmatter.title || path.basename(item, '.md');
+                    const created = frontmatter.created || '';
+
+                    // 构建该页面的 Hexo URL
+                    const dateStr = created.replace(/-/g, '/');
+                    const safeTitle = slugify(title);
+                    const hexoUrl = created ? `/${dateStr}/${safeTitle}/` : '';
+
+                    // 提取纯文本片段
+                    const plainText = body
+                        .replace(/^#.+$/gm, '')
+                        .replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, '$1')
+                        .replace(/[*_~`#>|[\]()]/g, '')
+                        .replace(/\n+/g, ' ')
+                        .trim()
+                        .substring(0, 300);
+
+                    // Phase 3: 获取反向链接和出链
+                    const bl = blIndex[title] || { backlinks: [], outlinks: [] };
+
+                    index.push({
+                        title,
+                        layer,
+                        tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
+                        summary: frontmatter.summary || '',
+                        created,
+                        updated: frontmatter.updated || '',
+                        url: hexoUrl,
+                        snippet: plainText,
+                        backlinks: bl.backlinks,
+                        outlinks: bl.outlinks,
+                    });
+                } catch (e) {
+                    // 跳过解析失败的文件
+                }
+            }
+        }
+    }
+
+    scan(WIKI_DIR);
+
+    // 写入到 source/ 目录（hexo generate 会复制到 public/）
+    const outputPath = path.join(sourceDir, 'wiki-index.json');
+    fs.writeFileSync(outputPath, JSON.stringify(index, null, 2), 'utf-8');
+    console.log(`📑 生成前端索引: source/wiki-index.json (${index.length} 个页面)`);
 }
 
 function updateIndex() {
