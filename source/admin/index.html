@@ -15,7 +15,7 @@
   --bg-hover: rgba(255, 255, 255, 0.08);
   --bg-input: rgba(0, 0, 0, 0.35);
   --bg-editor: rgba(15, 15, 15, 0.75);
-  --editor-min-height: 500px;
+  --editor-min-height: 600px;
   --text-primary: #FFFFFF;
   --text-secondary: rgba(255, 255, 255, 0.75);
   --text-muted: rgba(255, 255, 255, 0.45);
@@ -142,7 +142,7 @@ html, body { min-height: 100%; background: var(--bg-primary); color: var(--text-
 .tag-mini { font-size: 10px; padding: 1px 6px; border-radius: 8px; background: rgba(255,255,255,.06); color: var(--text-muted); }
 
 /* ====== Editor Panel ====== */
-.editor-panel { position: absolute; top: 0; right: -900px; width: 880px; max-width: 100%; height: 100%; background: rgba(20, 20, 25, 0.82); backdrop-filter: blur(20px) saturate(1.1); border-left: 1px solid rgba(255, 255, 255, 0.1); z-index: 200; display: flex; flex-direction: column; transition: right .3s cubic-bezier(0.16,1,0.3,1); box-shadow: -8px 0 40px rgba(0, 0, 0, 0.6); }
+.editor-panel { position: absolute; top: 0; right: -1200px; width: 1160px; max-width: 100%; height: 100%; background: rgba(20, 20, 25, 0.82); backdrop-filter: blur(20px) saturate(1.1); border-left: 1px solid rgba(255, 255, 255, 0.1); z-index: 200; display: flex; flex-direction: column; transition: right .3s cubic-bezier(0.16,1,0.3,1); box-shadow: -8px 0 40px rgba(0, 0, 0, 0.6); }
 .editor-panel.open { right: 0; }
 .editor-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); z-index: 199; opacity: 0; pointer-events: none; transition: opacity .3s; }
 .editor-overlay.show { opacity: 1; pointer-events: auto; }
@@ -923,22 +923,23 @@ function selectCollection(key) {
     el.classList.toggle('active', el.getAttribute('data-col') === key);
   });
   
-  refreshList();
+  // Return the refreshList promise so callers can await completion
+  return refreshList();
 }
 
 // ============================================================
 // FILE LIST
 // ============================================================
 function refreshList() {
-  if (!currentCollection) return;
+  if (!currentCollection) return Promise.resolve();
   
   var col = COLLECTIONS.find(function(c) { return c.key === currentCollection; });
-  if (!col) return;
+  if (!col) return Promise.resolve();
   
   var listEl = $('file-list');
   listEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted)"><span class="loading-spinner"></span>加载中...</div>';
   
-  api('GET', '/repos/' + OWNER + '/' + REPO + '/contents/' + col.folder + '?ref=' + BRANCH)
+  return api('GET', '/repos/' + OWNER + '/' + REPO + '/contents/' + col.folder + '?ref=' + BRANCH)
     .then(function(files) {
       // 如果是 "所有文章" 集合或含子目录的 wiki 集合，需要递归获取
       if (col.key === 'posts' || col.key.indexOf('wiki-raw-') === 0) {
@@ -1479,16 +1480,14 @@ function handleEditParam() {
   var targetPath = editPath || wikiPath;
   
   // 确定要选择的集合
+  var collectionKey = 'posts';
   if (editPath) {
     // hexo_path: source/_posts/Category/YYYY-MM-DD-slug.md
-    var collectionKey = 'posts'; // 默认 "所有文章"
     if (editPath.indexOf('AIGC') >= 0) collectionKey = 'aigc';
     else if (editPath.indexOf('LearningEssays') >= 0) collectionKey = 'essay';
     else if (editPath.indexOf('LearningNote') >= 0) collectionKey = 'learn';
     else if (editPath.indexOf('机器学习') >= 0) collectionKey = 'ml';
     else if (editPath.indexOf('云环境') >= 0) collectionKey = 'cloud';
-    
-    selectCollection(collectionKey);
   } else if (wikiPath) {
     // wiki_path: .wiki/concepts/xxx.md 或 .wiki/entities/xxx.md
     if (wikiPath.indexOf('concepts') >= 0) collectionKey = 'wiki-concepts';
@@ -1497,19 +1496,16 @@ function handleEditParam() {
     else if (wikiPath.indexOf('raw/ML') >= 0) collectionKey = 'wiki-raw-ml';
     else if (wikiPath.indexOf('raw/PM') >= 0) collectionKey = 'wiki-raw-pm';
     else if (wikiPath.indexOf('audit') >= 0) collectionKey = 'wiki-audit';
-    else collectionKey = 'posts';
-    
-    selectCollection(collectionKey);
   }
   
-  // 等待文件列表加载后，查找并打开目标文件
-  setTimeout(function() {
+  // 选择集合并等待文件列表加载完成，然后查找并打开目标文件
+  selectCollection(collectionKey).then(function() {
     var found = currentFiles.find(function(f) { return f.path === targetPath; });
     if (found) {
       openFile(found.path, found.sha);
       toast('已打开编辑: ' + found.name, 'info');
     } else {
-      // 文件可能还没加载到列表，尝试直接打开
+      // 文件可能在其他集合中，或者列表未加载到，尝试直接通过 API 打开
       toast('正在查找文件...', 'info');
       api('GET', '/repos/' + OWNER + '/' + REPO + '/contents/' + targetPath + '?ref=' + BRANCH)
         .then(function(data) {
@@ -1522,7 +1518,7 @@ function handleEditParam() {
           toast('文件未找到: ' + targetPath, 'error');
         });
     }
-  }, 1500);
+  });
 }
 
 </script>
