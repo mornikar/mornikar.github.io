@@ -116,7 +116,9 @@ export default {
 
     // GitHub API proxy: /api/gh/* or /api/github/*
     if (path.startsWith('/api/gh/') || path.startsWith('/api/github/')) {
-      const apiPath = path.replace(/^\/api\/(gh|github)\//, '/') + url.search;
+      let apiPath = path.replace(/^\/api\/(gh|github)\//, '/') + url.search;
+      // GitHub API 不接受路径末尾的斜杠，会导致 404
+      apiPath = apiPath.replace(/\/+(\?|$)/, '$1');
       return proxyGitHub(request, apiPath);
     }
 
@@ -131,9 +133,14 @@ export default {
     }
 
     // Default 404
-    return new Response('Wiki CMS Unified Worker — Not Found: ' + path, {
+    return new Response(JSON.stringify({
+      error: 'Not Found',
+      path: path,
+      hint: 'Available routes: /auth, /callback, /api/gh/*, /api/upload, /api/verify, /health',
+      timestamp: new Date().toISOString(),
+    }), {
       status: 404,
-      headers: { 'Content-Type': 'text/plain', ...corsHeaders },
+      headers: { 'Content-Type': 'application/json', ...corsHeaders },
     });
   },
 };
