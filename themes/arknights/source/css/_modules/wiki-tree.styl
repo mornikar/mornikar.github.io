@@ -1,0 +1,80 @@
+// Wiki 目录树样式
+// Phase 3.A 新增
+
+#wiki-tree
+  margin-top 1rem
+  padding 0.5rem
+  border-radius 4px
+
+.wiki-tree-title
+  font-size 1rem
+  font-weight 600
+  margin 0 0 0.5rem 0
+  color var(--color-text, #fff)
+
+.wiki-tree-group
+  margin-bottom 0.5rem
+
+  &.collapsed
+    .wiki-tree-list
+      display none
+    .wiki-tree-toggle
+      transform rotate(-90deg)
+
+.wiki-tree-group-title
+  font-size 0.85rem
+  font-weight 600
+  color var(--color-accent, #ff6b6b)
+  cursor pointer
+  padding 0.3rem 0
+  display flex
+  align-items center
+  justify-content space-between
+  user-select none
+
+  &:hover
+    opacity 0.8
+
+.wiki-tree-toggle
+  font-size 0.7rem
+  transition transform 0.2s
+
+.wiki-tree-list
+  list-style none
+  padding 0
+  margin 0
+
+.wiki-tree-item
+  padding 0.2rem 0 0.2rem 0.8rem
+  font-size 0.8rem
+  line-height 1.4
+  display flex
+  align-items center
+  gap 0.3rem
+
+  &.current
+    a
+      color var(--color-accent, #ff6b6b)
+      font-weight 600
+    &::before
+      content "▸ "
+      color var(--color-accent, #ff6b6b)
+
+  a
+    color var(--color-link, #4ecdc4)
+    text-decoration none
+    overflow hidden
+    text-overflow ellipsis
+    white-space nowrap
+    flex 1
+
+    &:hover
+      text-decoration underline
+
+.wiki-tree-tag
+  font-size 0.65rem
+  padding 0 0.3rem
+  border-radius 2px
+  background rgba(255, 255, 255, 0.1)
+  color var(--color-text-muted, #888)
+  flex-shrink 0

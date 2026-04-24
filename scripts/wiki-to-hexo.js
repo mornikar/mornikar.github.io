@@ -315,6 +315,65 @@ function generateBacklinksHtml(title, backlinkIndex, wikiMeta) {
     return lines.join('\n');
 }
 
+/**
+ * Phase 3.B: 生成相关文章 HTML 区块
+ * 优先使用 frontmatter related，降级用同标签文章
+ */
+function generateRelatedPostsHtml(title, frontmatter, wikiMeta, backlinkIndex) {
+    const related = [];
+    const MAX_RELATED = 5;
+
+    // 1. 优先用 frontmatter related
+    if (frontmatter.related) {
+        const relatedList = Array.isArray(frontmatter.related) ? frontmatter.related : [frontmatter.related];
+        for (const r of relatedList) {
+            if (related.length >= MAX_RELATED) break;
+            const rMeta = wikiMeta[r];
+            if (rMeta) {
+                const url = `/${rMeta.hexoDate}/${slugify(r)}/`;
+                related.push({ title: r, url, source: 'related' });
+            }
+        }
+    }
+
+    // 2. 降级：用同标签文章
+    if (related.length < MAX_RELATED && frontmatter.tags) {
+        const tags = Array.isArray(frontmatter.tags) ? frontmatter.tags : [frontmatter.tags];
+        for (const [t, meta] of Object.entries(wikiMeta)) {
+            if (related.length >= MAX_RELATED) break;
+            if (t === title) continue; // 排除自身
+            if (related.some(r => r.title === t)) continue; // 排除已在 related 中的
+
+            const metaTags = Array.isArray(meta.tags) ? meta.tags : [];
+            const hasCommonTag = tags.some(tag => metaTags.includes(tag));
+            if (hasCommonTag) {
+                const url = `/${meta.hexoDate}/${slugify(t)}/`;
+                related.push({ title: t, url, source: 'tags' });
+            }
+        }
+    }
+
+    if (related.length === 0) return '';
+
+    const lines = [
+        '',
+        '<div class="wiki-related">',
+        '<h4 class="wiki-related-title">📖 相关文章</h4>',
+        '<div class="wiki-related-cards">',
+    ];
+
+    for (const r of related) {
+        lines.push(`  <a href="${r.url}" class="wiki-related-card">`);
+        lines.push(`    <span class="wiki-related-card-title">${r.title}</span>`);
+        lines.push(`  </a>`);
+    }
+
+    lines.push('</div>');
+    lines.push('</div>');
+
+    return lines.join('\n');
+}
+
 // ============ Phase 2 新增：冲突检测 ============
 
 /** 检测 hexoPath 冲突：同名文件但内容不同 */
@@ -631,6 +690,8 @@ function convertSingle(wikiPath, relativePath, wikiMeta, backlinkIndex) {
 
     // Phase 3: 生成反向链接 HTML
     const backlinksHtml = backlinkIndex ? generateBacklinksHtml(title, backlinkIndex, wikiMeta) : '';
+    // Phase 3.B: 生成相关文章 HTML
+    const relatedHtml = generateRelatedPostsHtml(title, frontmatter, wikiMeta, backlinkIndex);
 
     let hexoFrontmatter = `---\ntitle : ${title}\ndate: ${hexoDate} 08:00:00\nupdated: ${hexoDate} 08:00:00\ntags: ${tags.join(', ')}\ncategory : ${category}\nsource: LLM Wiki\nsource_path: ${relativePath.replace(/\\/g, '\\\\')}\n`;
 
@@ -644,7 +705,7 @@ function convertSingle(wikiPath, relativePath, wikiMeta, backlinkIndex) {
         hexoFrontmatter += `description: ${summary}\n`;
     }
 
-    hexoFrontmatter += `---\n\n<!-- 此文章来自 LLM Wiki: ${relativePath} -->\n\n${bodyConverted}${backlinksHtml}`;
+    hexoFrontmatter += `---\n\n<!-- 此文章来自 LLM Wiki: ${relativePath} -->\n\n${bodyConverted}${backlinksHtml}${relatedHtml}`;
 
     fs.writeFileSync(hexoPath, hexoFrontmatter, 'utf-8');
     console.log(`  ✅ ${title}`);

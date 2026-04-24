@@ -1,83 +1,81 @@
-// Phase 3: WikiLink 高亮样式
-// 为 wiki 来源的文章中的内部链接添加特殊样式
+// Wiki 相关文章样式
+// Phase 3.B 新增
 
-// Wiki 来源标记的文章中的链接
-.post-source-wiki
-  #post-content
-    a
-      // 普通链接样式
-      color var(--theme-highlight)
-      text-decoration none
-      border-bottom 1px solid transparent
-      transition all .2s ease
-      &:hover
-        color var(--theme-subcolor)
-        border-bottom-color var(--theme-subcolor)
+.wiki-related
+  margin-top 1.5rem
+  padding 1rem
+  border-top 1px solid var(--color-border, rgba(255,255,255,0.1))
 
-// WikiLink 样式：带有 📚 图标标记的内部链接
-.wiki-link
+.wiki-related-title
+  font-size 1rem
+  font-weight 600
+  margin 0 0 0.8rem 0
+  color var(--color-text, #fff)
+
+.wiki-related-cards
+  display grid
+  grid-template-columns repeat(auto-fill, minmax(200px, 1fr))
+  gap 0.6rem
+
+.wiki-related-card
+  display block
+  padding 0.6rem 0.8rem
+  border 1px solid var(--color-border, rgba(255,255,255,0.1))
+  border-radius 4px
+  text-decoration none
+  transition all 0.2s
+
+  &:hover
+    border-color var(--color-accent, #ff6b6b)
+    background rgba(255, 107, 107, 0.05)
+    transform translateY(-1px)
+
+.wiki-related-card-title
+  font-size 0.85rem
+  color var(--color-link, #4ecdc4)
+  line-height 1.4
+  display -webkit-box
+  -webkit-line-clamp 2
+  -webkit-box-orient vertical
+  overflow hidden
+
+// WikiLink Badge 完善
+// Phase 3.C 新增
+
+a[href].wiki-link
   position relative
-  padding-left 18px
-  &:before
-    content '📚'
-    position absolute
-    left 0
-    top 50%
-    transform translateY(-50%)
+  display inline-flex
+  align-items center
+  gap 2px
+  padding 0 3px
+  border-radius 3px
+  background rgba(78, 205, 196, 0.08)
+  color var(--color-link, #4ecdc4)
+  text-decoration none
+  font-weight 500
+  transition all 0.15s
+
+  &::before
+    content "📚"
     font-size 0.75em
     opacity 0.7
 
-// Wiki 来源标记
-.wiki-badge
-  display inline-flex
-  align-items center
-  gap 4px
-  background-color var(--theme-unimportant-2)
-  color var(--theme-text-light)
-  padding 2px 8px
-  border-radius 3px
-  font-size 0.85em
-  font-family BenderLight, sans-serif
-  margin-left 10px
-  vertical-align middle
-  &:before
-    content '📖'
-    font-size 0.9em
+  &:hover
+    background rgba(78, 205, 196, 0.15)
+    text-decoration none
 
-// Wiki 来源信息行样式
-.wiki-source-info
-  margin-top 5px
-  font-size 0.85em
-  color var(--theme-unimportant)
-
-// 反向链接区块样式
-.wiki-backlinks
-  margin-top 30px
-  padding 15px
-  background-color var(--theme-bg-trans1)
-  border 1px solid var(--theme-border)
-  border-left 3px solid var(--theme-highlight)
-  h4
-    margin 0 0 10px 0
-    color var(--theme-text-light)
-    font-size 1em
-  ul
-    margin 0
-    padding-left 20px
-    list-style-type disc
-    li
-      margin 5px 0
-      a
-        color var(--theme-highlight)
-        &:hover
-          color var(--theme-subcolor)
-          text-decoration underline
-
-// 深色/浅色主题适配
-if hexo-config('darkmode.enable') is not false
-  [data-theme='dark']
-    .wiki-link
-      &:before
-        opacity 0.9
-    .wiki-badge
-      background-color var(--theme-unimportant)
+  &[title]:hover::after
+    content attr(title)
+    position absolute
+    bottom 100%
+    left 50%
+    transform translateX(-50%)
+    padding 4px 8px
+    border-radius 3px
+    background var(--color-bg, #222)
+    color var(--color-text, #fff)
+    font-size 0.75rem
+    font-weight 400
+    white-space nowrap
+    z-index 100
+    box-shadow 0 2px 8px rgba(0,0,0,0.3)
