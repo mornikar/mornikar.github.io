@@ -251,3 +251,4 @@ ${body}
 if (require.main === module) {
     main().catch(e => { console.error('❌ 查询提升失败:', e.message); process.exit(1); });
 }
+
