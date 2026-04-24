@@ -1,0 +1,191 @@
+/* InfiniteMenu - 3D Sphere Navigation Page Styles */
+/* Adapted from ReactBits InfiniteMenu for Hexo Arknights theme */
+
+#infinite-menu-mount {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  min-height: 500px;
+  overflow: hidden;
+  background: #000;
+  border-radius: 4px;
+  margin: 0 auto;
+}
+
+#infinite-grid-menu-canvas {
+  cursor: grab;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  outline: none;
+  display: block;
+}
+
+#infinite-grid-menu-canvas:active {
+  cursor: grabbing;
+}
+
+.infinite-menu-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.face-title {
+  user-select: none;
+  position: absolute;
+  font-weight: 900;
+  font-size: 3rem;
+  left: 1.6em;
+  top: 50%;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(82, 39, 255, 0.6), 0 2px 8px rgba(0, 0, 0, 0.8);
+  position: absolute;
+  top: 50%;
+  transform: translate(20%, -50%);
+}
+
+.face-title.active {
+  opacity: 1;
+  transform: translate(20%, -50%);
+  pointer-events: auto;
+  transition: 0.5s ease;
+}
+
+.face-title.inactive {
+  pointer-events: none;
+  opacity: 0;
+  transition: 0.1s ease;
+}
+
+.face-description {
+  user-select: none;
+  position: absolute;
+  max-width: 10ch;
+  top: 50%;
+  font-size: 1.2rem;
+  color: #ccc;
+  right: 1%;
+  transform: translate(0, -50%);
+}
+
+.face-description.active {
+  opacity: 1;
+  transform: translate(-90%, -50%);
+  pointer-events: auto;
+  transition: 0.5s ease;
+}
+
+.face-description.inactive {
+  pointer-events: none;
+  transform: translate(-60%, -50%);
+  opacity: 0;
+  transition: 0.1s ease;
+}
+
+.action-button {
+  position: absolute;
+  left: 50%;
+  z-index: 10;
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  background: #5227ff;
+  border: 5px solid #000;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(82, 39, 255, 0.5);
+  pointer-events: auto;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.action-button:hover {
+  background: #6b3cff;
+  box-shadow: 0 0 30px rgba(82, 39, 255, 0.8);
+}
+
+.action-button-icon {
+  user-select: none;
+  position: relative;
+  color: #fff;
+  top: 2px;
+  font-size: 26px;
+}
+
+.action-button.active {
+  bottom: 3.8em;
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+  transition: 0.5s ease;
+}
+
+.action-button.inactive {
+  bottom: -80px;
+  transform: translateX(-50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.1s ease;
+}
+
+/* Page header area */
+.infinite-menu-header {
+  text-align: center;
+  padding: 2rem 1rem 1rem;
+}
+
+.infinite-menu-header h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--color-text, #fff);
+  margin: 0;
+}
+
+.infinite-menu-header p {
+  color: var(--color-sub, #999);
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+}
+
+/* Hint bar at bottom */
+.infinite-menu-hint {
+  text-align: center;
+  padding: 1rem;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.infinite-menu-hint span {
+  opacity: 0.6;
+}
+
+/* Responsive */
+@media (max-width: 1500px) {
+  .face-title,
+  .face-description {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  #infinite-menu-mount {
+    height: 70vh;
+    min-height: 400px;
+  }
+
+  .action-button {
+    width: 48px;
+    height: 48px;
+    border-width: 3px;
+  }
+
+  .action-button-icon {
+    font-size: 20px;
+  }
+}

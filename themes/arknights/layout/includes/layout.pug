@@ -66,6 +66,11 @@ html(lang=config.language theme-mode=htmlThemeMode)
     if _page.path && _page.path.indexOf('login') === 0
       script(src=url_for('/js/wiki-login.js'))
 
+    //- Phase 9: InfiniteMenu 3D 球体导航（仅 /infinite-menu/ 页面加载）
+    if _page.path && _page.path.indexOf('infinite-menu') === 0
+      link(rel='stylesheet', href=url_for('/css/infinite-menu.css'))
+      script(src=url_for('/js/infinite-menu.js') type='module')
+
     //- Phase 8: Wiki AI 看板娘 (Live2D)
     if theme.kanban && theme.kanban.enable
       script(defer src=url_for('/live2d/live2d.js'))
