@@ -22,7 +22,7 @@
 
 ## 关于
 
-这是一个自生长的技术博客系统——不只是写文章，而是让知识**自动关联、自动索引、自我维护**。
+这是一个自生长的技术personal station，wiki系统——不只是写文章，而是让知识**自动关联、自动索引、自我维护**。
 
 把 Markdown 丢进 `.wiki/` 目录，推送后自动编译为 Hexo 文章，自动建立交叉链接和搜索索引，2 分钟内上线。
 
@@ -137,8 +137,8 @@ git add . && git commit -m "更新文章" && git push
 
 ```
 .wiki/                     ← 在这里写文章
-├── concepts/              ← 技术概念笔记 → 博客「学习笔记」
-├── entities/              ← 实体随笔 → 博客「学习随笔」
+├── concepts/              ← 技术概念笔记 → 「学习笔记」
+├── entities/              ← 实体随笔 → 「学习随笔」
 ├── comparisons/           ← 对比分析
 ├── queries/               ← 问答笔记
 └── raw/                   ← 原始存档（不发布）
@@ -161,7 +161,7 @@ scripts/                   ← 自动化脚本
 
 | 技术 | 用途 |
 |:-----|:-----|
-| Hexo 7.x | 静态博客生成 |
+| Hexo 7.x | 静态personal station生成 |
 | hexo-theme-arknights | 明日方舟风格主题 |
 | wiki-to-hexo.js v4.2 | Wiki → Hexo 格式转换 |
 | Dify 1.13.3 | 本地 RAG 知识库 + AI 对话 |
@@ -195,7 +195,7 @@ https://mornikar.github.io 上线（2~3 分钟）
 
 | 文档 | 说明 |
 |:-----|:-----|
-| [安装部署](https://mornikar.github.io/docs/INSTALL/) | 从零部署自己的博客 |
+| [安装部署](https://mornikar.github.io/docs/INSTALL/) | 从零部署自己的personal station |
 | [系统架构](https://mornikar.github.io/docs/PROJECT/) | 目录结构、组件关系、主题定制 |
 | [AI 助手](https://mornikar.github.io/docs/AI_CHAT/) | Wiki AI 对话助手使用指南 |
 | [日常维护](https://mornikar.github.io/docs/MAINTENANCE/) | Wiki 编辑、Dify 同步、Tailscale |
