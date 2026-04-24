@@ -6,6 +6,7 @@ tags: wiki, Flask, Python, Web
 category : AIGC笔记随笔
 source: LLM Wiki
 source_path: raw\\skills\\flask\\Flask链接MySQL.md
+hexo_path: source/_posts/AIGC笔记随笔/2026-04-18-Flask链接MySQL.md
 ---
 
 <!-- 此文章来自 LLM Wiki: raw\skills\flask\Flask链接MySQL.md -->

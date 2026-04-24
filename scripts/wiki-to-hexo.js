@@ -679,7 +679,7 @@ function generateHexoContent(result, prevWikiMeta) {
     const related = frontmatter.related;
     const summary = frontmatter.summary || '';
 
-    let hexoFrontmatter = `---\ntitle : ${frontmatter.title || result.title}\ndate: ${hexoDate} 08:00:00\nupdated: ${hexoDate} 08:00:00\ntags: ${tags.join(', ')}\ncategory : ${category}\nsource: LLM Wiki\nsource_path: ${result.relativePath.replace(/\\/g, '\\\\')}\n`;
+    let hexoFrontmatter = `---\ntitle : ${frontmatter.title || result.title}\ndate: ${hexoDate} 08:00:00\nupdated: ${hexoDate} 08:00:00\ntags: ${tags.join(', ')}\ncategory : ${category}\nsource: LLM Wiki\nsource_path: ${result.relativePath.replace(/\\/g, '\\\\')}\nhexo_path: ${result.hexoPath ? path.relative(path.join(__dirname, '..'), result.hexoPath).replace(/\\/g, '/') : ''}\n`;
 
     if (aliases.length > 0) {
         hexoFrontmatter += `aliases: ${aliases.join(', ')}\n`;
@@ -733,7 +733,7 @@ function convertSingle(wikiPath, relativePath, wikiMeta, backlinkIndex) {
     // Phase 3.B: 生成相关文章 HTML
     const relatedHtml = generateRelatedPostsHtml(title, frontmatter, wikiMeta, backlinkIndex);
 
-    let hexoFrontmatter = `---\ntitle : ${title}\ndate: ${hexoDate} 08:00:00\nupdated: ${hexoDate} 08:00:00\ntags: ${tags.join(', ')}\ncategory : ${category}\nsource: LLM Wiki\nsource_path: ${relativePath.replace(/\\/g, '\\\\')}\n`;
+    let hexoFrontmatter = `---\ntitle : ${title}\ndate: ${hexoDate} 08:00:00\nupdated: ${hexoDate} 08:00:00\ntags: ${tags.join(', ')}\ncategory : ${category}\nsource: LLM Wiki\nsource_path: ${relativePath.replace(/\\/g, '\\\\')}\nhexo_path: ${path.relative(path.join(__dirname, '..'), hexoPath).replace(/\\/g, '/')}\n`;
 
     if (aliases.length > 0) {
         hexoFrontmatter += `aliases: ${aliases.join(', ')}\n`;

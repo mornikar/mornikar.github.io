@@ -868,6 +868,8 @@ function checkSavedToken() {
       USER = u;
       setConnStatus('● 已连接', 'ok');
       showMainView();
+      // Token 登录后处理 edit 参数
+      handleEditParam();
     }).catch(function(err) {
       console.warn('[CMS] 已保存 Token 无效:', err.message);
       logout();
@@ -1449,6 +1451,8 @@ document.addEventListener('keydown', function(e) {
       setConnStatus('● 已连接 (OAuth)', 'ok');
       showMainView();
       toast('GitHub OAuth 登录成功', 'success');
+      // OAuth 登录后处理 edit 参数
+      handleEditParam();
     }).catch(function(err) {
       showError('OAuth Token 验证失败: ' + err.message);
       logout();
@@ -1458,6 +1462,68 @@ document.addEventListener('keydown', function(e) {
     checkSavedToken();
   }
 })();
+
+// ============================================================
+// EDIT PARAM — 从博客跳转过来自动打开编辑
+// ============================================================
+function handleEditParam() {
+  var params = new URLSearchParams(window.location.search);
+  var editPath = params.get('edit');
+  var wikiPath = params.get('wiki');
+  
+  if (!editPath && !wikiPath) return;
+  
+  // 清除 URL 参数（保持干净）
+  window.history.replaceState({}, document.title, window.location.pathname);
+  
+  var targetPath = editPath || wikiPath;
+  
+  // 确定要选择的集合
+  if (editPath) {
+    // hexo_path: source/_posts/Category/YYYY-MM-DD-slug.md
+    var collectionKey = 'posts'; // 默认 "所有文章"
+    if (editPath.indexOf('AIGC') >= 0) collectionKey = 'aigc';
+    else if (editPath.indexOf('LearningEssays') >= 0) collectionKey = 'essay';
+    else if (editPath.indexOf('LearningNote') >= 0) collectionKey = 'learn';
+    else if (editPath.indexOf('机器学习') >= 0) collectionKey = 'ml';
+    else if (editPath.indexOf('云环境') >= 0) collectionKey = 'cloud';
+    
+    selectCollection(collectionKey);
+  } else if (wikiPath) {
+    // wiki_path: .wiki/concepts/xxx.md 或 .wiki/entities/xxx.md
+    if (wikiPath.indexOf('concepts') >= 0) collectionKey = 'wiki-concepts';
+    else if (wikiPath.indexOf('entities') >= 0) collectionKey = 'wiki-entities';
+    else if (wikiPath.indexOf('raw/articles') >= 0) collectionKey = 'wiki-raw-articles';
+    else if (wikiPath.indexOf('raw/ML') >= 0) collectionKey = 'wiki-raw-ml';
+    else if (wikiPath.indexOf('raw/PM') >= 0) collectionKey = 'wiki-raw-pm';
+    else if (wikiPath.indexOf('audit') >= 0) collectionKey = 'wiki-audit';
+    else collectionKey = 'posts';
+    
+    selectCollection(collectionKey);
+  }
+  
+  // 等待文件列表加载后，查找并打开目标文件
+  setTimeout(function() {
+    var found = currentFiles.find(function(f) { return f.path === targetPath; });
+    if (found) {
+      openFile(found.path, found.sha);
+      toast('已打开编辑: ' + found.name, 'info');
+    } else {
+      // 文件可能还没加载到列表，尝试直接打开
+      toast('正在查找文件...', 'info');
+      api('GET', '/repos/' + OWNER + '/' + REPO + '/contents/' + targetPath + '?ref=' + BRANCH)
+        .then(function(data) {
+          if (data.sha) {
+            openFile(targetPath, data.sha);
+            toast('已打开编辑', 'success');
+          }
+        })
+        .catch(function(err) {
+          toast('文件未找到: ' + targetPath, 'error');
+        });
+    }
+  }, 1500);
+}
 
 </script>
   </div><!-- /.app-glass -->

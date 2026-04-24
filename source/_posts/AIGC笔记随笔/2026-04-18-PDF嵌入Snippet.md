@@ -6,6 +6,7 @@ tags: PDF, 嵌入, Snippet, wiki
 category : AIGC笔记随笔
 source: LLM Wiki
 source_path: raw\\snippets\\PDF嵌入Snippet.md
+hexo_path: source/_posts/AIGC笔记随笔/2026-04-18-PDF嵌入Snippet.md
 ---
 
 <!-- 此文章来自 LLM Wiki: raw\snippets\PDF嵌入Snippet.md -->

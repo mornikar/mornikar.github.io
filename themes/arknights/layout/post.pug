@@ -20,6 +20,38 @@ block content
         // Phase 3: Wiki 来源标记
         if page.source === 'LLM Wiki'
           span.wiki-badge Wiki
+        // CMS 编辑按钮
+        a.cms-edit-btn(href= page.hexo_path ? '/admin/?edit=' + encodeURIComponent(page.hexo_path) : (page.source_path ? '/admin/?wiki=' + encodeURIComponent(page.source_path) : '#'), title='编辑此文章', target='_blank', rel='noopener')
+          svg(viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='2', stroke-linecap='round', stroke-linejoin='round')
+            path(d='M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z')
+      // CMS 编辑按钮样式
+      style.
+        .cms-edit-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 28px;
+          height: 28px;
+          margin-left: 10px;
+          padding: 4px;
+          border: 1px solid rgba(254, 225, 2, 0.3);
+          border-radius: 6px;
+          color: rgba(254, 225, 2, 0.5);
+          text-decoration: none;
+          vertical-align: middle;
+          transition: all 0.2s;
+          background: transparent;
+        }
+        .cms-edit-btn:hover {
+          color: #fee201;
+          border-color: #fee201;
+          background: rgba(254, 225, 2, 0.08);
+          transform: scale(1.1);
+        }
+        .cms-edit-btn svg {
+          width: 14px;
+          height: 14px;
+        }
       if (dateConf || updatedConf || countWord || countTime || vercount) && page.title && page['post-info'] !== false
         #post-info
           - var first = true

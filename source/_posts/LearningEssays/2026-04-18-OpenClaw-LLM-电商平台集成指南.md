@@ -6,6 +6,7 @@ tags: wiki, AI部署, Dify, OpenClaw, 私有化
 category : LearningEssays
 source: LLM Wiki
 source_path: raw\\articles\\AI部署\\OpenClaw电商集成.md
+hexo_path: source/_posts/LearningEssays/2026-04-18-OpenClaw-LLM-电商平台集成指南.md
 ---
 
 <!-- 此文章来自 LLM Wiki: raw\articles\AI部署\OpenClaw电商集成.md -->
