@@ -11,7 +11,10 @@
     "clean": "hexo clean",
     "deploy": "hexo deploy",
     "server": "hexo server",
-    "generate": "hexo generate"
+    "generate": "hexo generate",
+    "test": "jest --verbose",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "hexo": "^7.3.0",
@@ -30,6 +33,7 @@
   "devDependencies": {
     "hexo-cli": "^4.3.2",
     "hexo-renderer-pug": "^3.0.0",
+    "jest": "^30.3.0",
     "pagefind": "^1.5.2",
     "playwright": "^1.59.1",
     "stylus": "^0.62.0"
