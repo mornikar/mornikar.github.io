@@ -523,7 +523,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18-OpenClaw-+-LLM-电商平台集成指南/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-OpenClaw-LLM-电商平台集成指南/",
     "snippet": "bash\r \r pip install openclaw-python-sdk\r pip install langchain\r pip install openai   或 anthropic, cohere\r \r \r pip install pinecone-client\r \r pip install qdrant-client\r \r pip install chromadb\r \r \r pip install pandas numpy\r pip install faiss-cpu   或 faiss-gpu\r \r \r \r \r \r python\r from langchain.embeddin",
     "backlinks": [
       "log"

@@ -181,7 +181,7 @@ function convertWikiLinks(body, wikiMeta) {
 
 function slugify(title) {
     return title
-        .replace(/[\\/:*?"<>|]/g, '-')   // 非法字符替换为横线
+        .replace(/[\\/:*?"<>|+]/g, '-')  // 非法字符和+号替换为横线
         .replace(/\s+/g, '-')             // 空格替换为横线
         .replace(/_+/g, '-')              // 下划线替换为横线（避免URL中\_转义问题）
         .replace(/-+/g, '-')              // 连续横线合并为一条
@@ -497,11 +497,32 @@ function processFrontmatterEnhancements(frontmatter, layer, wikiMeta) {
 // ============ 主逻辑 ============
 
 function main() {
-    console.log('\n🚀 Wiki → Hexo 转换脚本 v4.0 (Phase 2)\n');
+    console.log('\n🚀 Wiki → Hexo 转换脚本 v4.2 (Phase 7: URL卫生修复)\n');
     if (DRY_RUN) console.log('🔍 [Dry-run 模式] 仅预览，不写入文件\n');
 
     const prevMeta = loadMeta();
     const wikiMeta = loadWikiMeta();
+
+    // Phase 7: force 模式下清理旧文件（文件名含双横线或尾横线的残留）
+    if (FORCE && !DRY_RUN) {
+        let cleanedCount = 0;
+        function cleanOldFiles(dir) {
+            if (!fs.existsSync(dir)) return;
+            const items = fs.readdirSync(dir);
+            for (const item of items) {
+                const full = path.join(dir, item);
+                const stat = fs.statSync(full);
+                if (stat.isDirectory()) {
+                    cleanOldFiles(full);
+                } else if (item.endsWith('.md') && /\d{4}-\d{2}-\d{2}--/.test(item)) {
+                    fs.unlinkSync(full);
+                    cleanedCount++;
+                }
+            }
+        }
+        cleanOldFiles(POSTS_DIR);
+        if (cleanedCount > 0) console.log(`🧹 清理旧文件: ${cleanedCount} 个含双横线的残留文件\n`);
+    }
 
     // Phase 3: 构建反向链接索引
     const backlinkIndex = buildBacklinks(wikiMeta);

@@ -194,7 +194,448 @@
       "type": "entities",
       "title": "OpenClaw + LLM 电商平台集成指南",
       "action": "→ LearningEssays",
-      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-OpenClaw-+-LLM-电商平台集成指南/"
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-OpenClaw-LLM-电商平台集成指南/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "Skill封装与优化",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Skill封装与优化/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "电商AI_Claw方案",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-电商AI-Claw方案/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "电商自动化Skills",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-电商自动化Skills/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "多模态AI笔记",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-多模态AI笔记/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "AIGC随笔",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-AIGC随笔/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "随笔",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-随笔/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "PM",
+      "title": "企业适用大模型场景参考",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-企业适用大模型场景参考/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "PM",
+      "title": "内容推荐与增长业务",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-内容推荐与增长业务/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "PM",
+      "title": "图库资源",
+      "action": "→ AIGC",
+      "url": "/2026/04/24/AIGC笔记随笔/2026-04-24-图库资源/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "PM",
+      "title": "复盘临时文档",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-复盘临时文档/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "PM",
+      "title": "广告复盘",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-广告复盘/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "PM",
+      "title": "数据分析与数据产品经理",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-数据分析与数据产品经理/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "PM",
+      "title": "简历业务盘点",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-简历业务盘点/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "PM",
+      "title": "面试修改意见参考",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-面试修改意见参考/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Flask基础",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Flask基础/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Flask基础（二）",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Flask基础（二）/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Flask数据操作",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Flask数据操作/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Flask数据迁移",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Flask数据迁移/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Flask注意点",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Flask注意点/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Flask虚拟环境",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Flask虚拟环境/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Flask链接MySQL",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Flask链接MySQL/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Git基础命令",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Git基础命令/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "MySQL操作分类",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-MySQL操作分类/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "MySQL笔记",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-MySQL笔记/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Conda启动命令",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Conda启动命令/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Conda基础命令",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Conda基础命令/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Conda必要操作",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Conda必要操作/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Conda环境导入",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Conda环境导入/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Conda环境导入2",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Conda环境导入2/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Conda环境导入3",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Conda环境导入3/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Pip环境导出导入",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Pip环境导出导入/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Vim常用命令",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Vim常用命令/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "DRF框架",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-DRF框架/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "skills",
+      "title": "Restful风格HTTP接口",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/LearningNote/2026-04-18-Restful风格HTTP接口/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "snippets",
+      "title": "PDF嵌入Snippet",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-PDF嵌入Snippet/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "concepts",
+      "title": "AI模型优化训练方向",
+      "action": "→ LearningNote",
+      "url": "/2025/09/12/LearningNote/2025-09-12-AI模型优化训练方向/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "concepts",
+      "title": "RAG检索增强生成",
+      "action": "→ LearningNote",
+      "url": "/2025/09/12/LearningNote/2025-09-12-RAG检索增强生成/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "Hexo博客升级记录",
+      "action": "→ LearningEssays",
+      "url": "/2025/09/12/LearningEssays/2025-09-12-Hexo博客升级记录/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "AI工作流",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-AI工作流/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "AI工作流 工作流",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-AI工作流-工作流/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "AI本地部署想法",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-AI本地部署想法/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "AI稳定上线工程化",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-AI稳定上线工程化/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "PRD模板-小说国际化",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-PRD模板-小说国际化/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "PRD模板通用版",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-PRD模板通用版/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "企业适用大模型全场景参考（复习版）",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-企业适用大模型全场景参考（复习版）/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "内容推荐与增长业务（复习版）",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-内容推荐与增长业务（复习版）/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "广告复盘",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-广告复盘/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "数据分析与产品经理",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-数据分析与产品经理/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "简历业务盘点",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-简历业务盘点/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "修改意见",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-修改意见/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "AIGC指标梳理",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-AIGC指标梳理/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "AIGC架构面试八股文",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-AIGC架构面试八股文/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "AI产品经理学习路线",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-AI产品经理学习路线/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "AI模型优化训练指标",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-AI模型优化训练指标/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "ChatGPT各版本差异调研",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-ChatGPT各版本差异调研/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "LLMWiki_VS_RAG调研",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-LLMWiki-VS-RAG调研/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "大模型解构",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-大模型解构/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "CharGLM3部署",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-CharGLM3部署/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "Dialoqbase部署",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Dialoqbase部署/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "Dify工作流搭建",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Dify工作流搭建/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "Dify私有化部署",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Dify私有化部署/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "OpenClaw Skills市场",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-OpenClaw-Skills市场/"
+    },
+    {
+      "date": "2026-04-24",
+      "type": "entities",
+      "title": "OpenClaw + LLM 电商平台集成指南",
+      "action": "→ LearningEssays",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-OpenClaw-LLM-电商平台集成指南/"
     },
     {
       "date": "2026-04-24",
