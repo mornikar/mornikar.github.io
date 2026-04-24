@@ -76,6 +76,21 @@ jobs:
           EOF
           node scripts/wiki-compile.js || echo "AI 编译跳过（API 未配置）"
 
+      - name: AI 自动审阅
+        if: ${{ env.WIKI_COMPILE_API_KEY != '' }}
+        env:
+          WIKI_COMPILE_API_KEY: ${{ secrets.WIKI_COMPILE_API_KEY }}
+        run: |
+          if [ -z "$WIKI_COMPILE_API_KEY" ]; then
+            echo "AI 审阅跳过（API 未配置）"
+            exit 0
+          fi
+          node scripts/wiki-compile.js --review || echo "AI 审阅跳过"
+
+      - name: Wiki Lint 健康检查
+        run: |
+          node scripts/wiki-lint.js --audit || true
+
       - name: 转换 Wiki 到 Hexo
         run: |
           MODE=${{ steps.mode.outputs.mode }}

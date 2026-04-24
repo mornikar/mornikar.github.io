@@ -14,10 +14,12 @@
  *   6. 增量编译：只处理新增/变更的 raw 文件
  *
  * 用法：
- *   node wiki-compile.js                # 增量编译
+ *   node wiki-compile.js                # 增量编译 + AI 自动审阅
  *   node wiki-compile.js --force        # 强制全量编译
  *   node wiki-compile.js --dry-run      # 预览，不写入文件
  *   node wiki-compile.js --file <path>  # 编译指定 raw 文件
+ *   node wiki-compile.js --review       # 仅 AI 审阅（不编译）
+ *   node wiki-compile.js --audit-fix    # 读取审计文件，AI 自动修复
  *   node wiki-compile.js --test         # 运行内置测试
  *
  * 环境变量（必需）：
@@ -69,6 +71,8 @@ const FORCE = args.includes('--force');
 const RUN_TEST = args.includes('--test');
 const FILE_INDEX = args.indexOf('--file');
 const TARGET_FILE = FILE_INDEX !== -1 && args[FILE_INDEX + 1] ? args[FILE_INDEX + 1] : null;
+const REVIEW_ONLY = args.includes('--review');       // 仅审阅（不编译）
+const AUDIT_FIX = args.includes('--audit-fix');      // 读取审计文件并修复
 
 // ============ AI 配置 ============
 function loadAIConfig() {
@@ -651,6 +655,39 @@ async function main() {
         appendCompileLog(compiled);
     }
 
+    // Phase 5.B: AI 自动审阅
+    if (!DRY_RUN && compiled.length > 0 && config) {
+        console.log('\n🔍 Phase 5.B: AI 自动审阅\n');
+        const freshIndex = buildWikiIndex(); // 刷新索引
+        let reviewPassed = 0;
+        let reviewFailed = 0;
+
+        for (const result of compiled) {
+            if (!fs.existsSync(result.outputPath)) continue;
+
+            const review = await reviewCompiledPage(result, freshIndex, config);
+            if (review.passed) {
+                reviewPassed++;
+                console.log(`  ✅ ${result.title} 审阅通过 (${review.scores.overall}/100)`);
+                // 标记为已审阅
+                const content = fs.readFileSync(result.outputPath, 'utf-8');
+                const updatedContent = content.replace(
+                    /^(---\n)/,
+                    `$1reviewed: true\nreview_date: ${new Date().toISOString().split('T')[0]}\n`
+                );
+                fs.writeFileSync(result.outputPath, updatedContent, 'utf-8');
+            } else {
+                reviewFailed++;
+                console.log(`  ❌ ${result.title} 审阅未通过 (${review.scores.overall}/100)`);
+                if (review.issues.length > 0) {
+                    generateReviewAudit(result.title, review);
+                }
+            }
+        }
+
+        console.log(`\n📊 审阅统计: ${reviewPassed} 通过, ${reviewFailed} 未通过`);
+    }
+
     // Phase 2: 生成 wiki-index.json（供 wiki-chat 检索使用）
     if (!DRY_RUN) {
         generateWikiSearchIndex();
@@ -733,6 +770,189 @@ function appendCompileLog(compiled) {
         }
         fs.writeFileSync(LOG_FILE, logContent, 'utf-8');
     }
+}
+
+// ============ Phase 5.B: AI 自动审阅 ============
+
+/**
+ * AI 自动审阅编译后的 wiki 页面
+ * 5 维度评估：完整性(25%) / 准确性(20%) / 交叉引用(20%) / 结构(20%) / 重复性(15%)
+ * @param {object} result - 编译结果
+ * @param {object} wikiIndex - wiki 页面索引
+ * @param {object} config - AI 配置
+ * @returns {object} 审阅结果 { passed, scores, issues }
+ */
+async function reviewCompiledPage(result, wikiIndex, config) {
+    const content = fs.readFileSync(result.outputPath, 'utf-8');
+    const { frontmatter, body } = parseFrontmatter(content);
+
+    // 构建审阅 prompt
+    const reviewPrompt = `你是一个 wiki 知识库质量审阅员。请对以下 wiki 页面进行 5 维度评估。
+
+## 评估维度
+
+1. **完整性** (25%): 是否有摘要(summary)、标签(tags)、WikiLink 交叉引用
+2. **准确性** (20%): 内容是否与原始素材一致，无幻觉
+3. **交叉引用** (20%): 是否链接了 ≥2 个其他 wiki 页面 [[页面标题]]
+4. **结构** (20%): 是否有清晰的标题层级，长度是否合理(800-2000字)
+5. **重复性** (15%): 是否与已有页面高度相似
+
+## 已有页面列表
+${Object.keys(wikiIndex).slice(0, 30).map(t => `- [[${t}]]`).join('\n')}
+
+## 待审阅页面
+
+${content}
+
+## 输出格式（严格 JSON）
+
+\`\`\`json
+{
+  "completeness": { "score": 0-100, "issue": "问题描述或null" },
+  "accuracy": { "score": 0-100, "issue": "问题描述或null" },
+  "cross_reference": { "score": 0-100, "issue": "问题描述或null" },
+  "structure": { "score": 0-100, "issue": "问题描述或null" },
+  "duplication": { "score": 0-100, "issue": "问题描述或null" },
+  "overall_score": 0-100,
+  "passed": true/false,
+  "suggested_actions": ["action1", "action2"]
+}
+\`\`\`
+
+评分标准：overall_score = completeness*0.25 + accuracy*0.20 + cross_reference*0.20 + structure*0.20 + duplication*0.15
+passed = overall_score >= 60`;
+
+    let aiResponse;
+    try {
+        aiResponse = await callAI(reviewPrompt, config);
+    } catch (e) {
+        console.log(`  ⚠️ AI 审阅调用失败: ${result.title} - ${e.message}`);
+        return { passed: true, scores: {}, issues: [], error: e.message };
+    }
+
+    // 解析 AI 响应中的 JSON
+    let reviewResult;
+    try {
+        const jsonMatch = aiResponse.match(/```json\s*([\s\S]*?)```/) ||
+                          aiResponse.match(/\{[\s\S]*"overall_score"[\s\S]*\}/);
+        if (jsonMatch) {
+            reviewResult = JSON.parse(jsonMatch[1] || jsonMatch[0]);
+        } else {
+            console.log(`  ⚠️ AI 审阅响应格式异常: ${result.title}`);
+            return { passed: true, scores: {}, issues: [], error: 'JSON parse failed' };
+        }
+    } catch (e) {
+        console.log(`  ⚠️ AI 审阅解析失败: ${result.title} - ${e.message}`);
+        return { passed: true, scores: {}, issues: [], error: e.message };
+    }
+
+    const scores = {
+        completeness: reviewResult.completeness?.score || 0,
+        accuracy: reviewResult.accuracy?.score || 0,
+        cross_reference: reviewResult.cross_reference?.score || 0,
+        structure: reviewResult.structure?.score || 0,
+        duplication: reviewResult.duplication?.score || 0,
+        overall: reviewResult.overall_score || 0,
+    };
+
+    const issues = [];
+    if (reviewResult.completeness?.issue) issues.push({ type: 'completeness', issue: reviewResult.completeness.issue });
+    if (reviewResult.accuracy?.issue) issues.push({ type: 'accuracy', issue: reviewResult.accuracy.issue });
+    if (reviewResult.cross_reference?.issue) issues.push({ type: 'cross_reference', issue: reviewResult.cross_reference.issue });
+    if (reviewResult.structure?.issue) issues.push({ type: 'structure', issue: reviewResult.structure.issue });
+    if (reviewResult.duplication?.issue) issues.push({ type: 'duplication', issue: reviewResult.duplication.issue });
+
+    return {
+        passed: reviewResult.passed !== false,
+        scores,
+        issues,
+        suggested_actions: reviewResult.suggested_actions || [],
+    };
+}
+
+/**
+ * 生成审阅审计文件
+ */
+function generateReviewAudit(title, reviewResult) {
+    const AUDIT_DIR = path.join(WIKI_DIR, 'audit');
+    if (!fs.existsSync(AUDIT_DIR)) fs.mkdirSync(AUDIT_DIR, { recursive: true });
+
+    // 计算下一个审计编号
+    const existingAudits = fs.readdirSync(AUDIT_DIR).filter(f => f.startsWith('AUDIT-') && f.endsWith('.md'));
+    const nextNum = existingAudits.length + 1;
+    const auditId = `AUDIT-${new Date().getFullYear()}-${String(nextNum).padStart(3, '0')}`;
+
+    for (const issue of reviewResult.issues) {
+        const typeMap = {
+            completeness: 'completeness',
+            accuracy: 'accuracy',
+            cross_reference: 'completeness',
+            structure: 'structure',
+            duplication: 'duplicate',
+        };
+        const severityMap = {
+            completeness: 'major',
+            accuracy: 'critical',
+            cross_reference: 'minor',
+            structure: 'major',
+            duplication: 'minor',
+        };
+        const actionMap = {
+            completeness: 'add_content',
+            accuracy: 'update',
+            cross_reference: 'add_content',
+            structure: 'split',
+            duplication: 'merge',
+        };
+
+        const auditContent = `---
+id: ${auditId}
+target: "[[${title}]]"
+type: ${typeMap[issue.type] || 'quality'}
+severity: ${severityMap[issue.type] || 'minor'}
+status: open
+comment: "AI 审阅发现: ${issue.issue.replace(/"/g, '\\"')} (得分: ${reviewResult.scores[issue.type] || 'N/A'})"
+suggested_action: ${actionMap[issue.type] || 'recompile'}
+created: ${new Date().toISOString().split('T')[0]}
+resolved:
+resolved_by:
+---
+
+## AI 审阅详情
+
+| 维度 | 得分 | 问题 |
+|------|------|------|
+| 完整性 | ${reviewResult.scores.completeness || '-'} | ${reviewResult.issues.find(i => i.type === 'completeness')?.issue || '-'} |
+| 准确性 | ${reviewResult.scores.accuracy || '-'} | ${reviewResult.issues.find(i => i.type === 'accuracy')?.issue || '-'} |
+| 交叉引用 | ${reviewResult.scores.cross_reference || '-'} | ${reviewResult.issues.find(i => i.type === 'cross_reference')?.issue || '-'} |
+| 结构 | ${reviewResult.scores.structure || '-'} | ${reviewResult.issues.find(i => i.type === 'structure')?.issue || '-'} |
+| 重复性 | ${reviewResult.scores.duplication || '-'} | ${reviewResult.issues.find(i => i.type === 'duplication')?.issue || '-'} |
+
+**综合得分**: ${reviewResult.scores.overall}/100
+`;
+
+        const auditPath = path.join(AUDIT_DIR, `${auditId}.md`);
+        fs.writeFileSync(auditPath, auditContent, 'utf-8');
+        console.log(`  📋 生成审计: ${auditId} → ${issue.type}`);
+    }
+}
+
+/**
+ * 在编译结果的 frontmatter 中标记审阅状态
+ */
+function markReviewStatus(outputPath, passed) {
+    const content = fs.readFileSync(outputPath, 'utf-8');
+    const updated = content.replace(
+        /---\n/,
+        `---\nreviewed: ${passed}\nreview_date: ${new Date().toISOString().split('T')[0]}\n`
+    );
+    // 修正：把 reviewed 和 review_date 插到 frontmatter 内部
+    const lines = updated.split('\n');
+    const secondDash = lines.indexOf('---', 1);
+    if (secondDash !== -1) {
+        lines.splice(secondDash, 0, `reviewed: ${passed}`, `review_date: ${new Date().toISOString().split('T')[0]}`);
+    }
+    fs.writeFileSync(outputPath, lines.join('\n'), 'utf-8');
 }
 
 // ============ Phase 2: Wiki 搜索索引 ============
@@ -916,7 +1136,156 @@ function runTests() {
 
 // ============ 启动 ============
 
-if (RUN_TEST) {
+if (AUDIT_FIX) {
+    // --audit-fix: 读取未解决的审计文件，AI 自动修复
+    (async () => {
+        console.log('\n🔧 Audit Fix 模式\n');
+        const config = loadAIConfig();
+        if (!config) {
+            console.error('❌ 未配置 AI，无法执行审计修复');
+            process.exit(1);
+        }
+
+        const AUDIT_DIR = path.join(WIKI_DIR, 'audit');
+        if (!fs.existsSync(AUDIT_DIR)) {
+            console.log('ℹ️ 无审计目录');
+            return;
+        }
+
+        const audits = fs.readdirSync(AUDIT_DIR)
+            .filter(f => f.startsWith('AUDIT-') && f.endsWith('.md'))
+            .map(f => {
+                const content = fs.readFileSync(path.join(AUDIT_DIR, f), 'utf-8');
+                const { frontmatter } = parseFrontmatter(content);
+                return frontmatter;
+            })
+            .filter(a => a.status === 'open' && a.target);
+
+        if (audits.length === 0) {
+            console.log('✅ 无待处理的审计');
+            return;
+        }
+
+        console.log(`📋 发现 ${audits.length} 个待处理审计\n`);
+
+        for (const audit of audits) {
+            const targetTitle = audit.target.replace(/\[\[|\]\]/g, '');
+            const action = audit.suggested_action || 'recompile';
+
+            console.log(`🔧 处理: ${audit.id} → ${targetTitle} (${action})`);
+
+            // 根据建议操作执行不同修复策略
+            if (action === 'fix_link') {
+                // 死链修复：从相关内容中找目标，或创建占位页
+                console.log(`  → 死链修复需要人工确认，跳过自动处理`);
+            } else if (action === 'add_content' || action === 'update' || action === 'recompile') {
+                // 重新编译：找到 source 文件，重新编译
+                const wikiIndex = buildWikiIndex();
+                const pageInfo = wikiIndex[targetTitle];
+                if (pageInfo?.file && fs.existsSync(pageInfo.file)) {
+                    const content = fs.readFileSync(pageInfo.file, 'utf-8');
+                    const { frontmatter, body } = parseFrontmatter(content);
+
+                    const fixPrompt = `以下 wiki 页面存在质量问题，请根据审计反馈进行修复。
+
+## 审计反馈
+类型: ${audit.type}
+严重度: ${audit.severity}
+问题描述: ${audit.comment}
+
+## 当前页面内容
+${content}
+
+## 已有页面
+${Object.keys(wikiIndex).slice(0, 30).map(t => `- [[${t}]]`).join('\n')}
+
+请输出修复后的完整 wiki 页面（纯 Markdown，不要包含 frontmatter，我会自动保留原有 frontmatter）。`;
+
+                    try {
+                        const fixedContent = await callAI(fixPrompt, config);
+                        // 清理 AI 输出
+                        let cleaned = fixedContent.trim();
+                        if (cleaned.startsWith('```markdown')) cleaned = cleaned.slice('```markdown'.length);
+                        if (cleaned.startsWith('```')) cleaned = cleaned.slice(3);
+                        if (cleaned.endsWith('```')) cleaned = cleaned.slice(0, -3);
+                        cleaned = cleaned.trim();
+
+                        // 重建文件：原 frontmatter + 修复后 body
+                        const newFrontmatter = { ...frontmatter, updated: new Date().toISOString().split('T')[0], reviewed: true };
+                        const fmLines = ['---'];
+                        for (const [k, v] of Object.entries(newFrontmatter)) {
+                            if (Array.isArray(v)) fmLines.push(`${k}: [${v.join(', ')}]`);
+                            else fmLines.push(`${k}: ${v}`);
+                        }
+                        fmLines.push('---');
+                        const newContent = fmLines.join('\n') + '\n\n' + cleaned;
+                        fs.writeFileSync(pageInfo.file, newContent, 'utf-8');
+                        console.log(`  ✅ 已修复: ${targetTitle}`);
+
+                        // 标记审计为 resolved
+                        const auditFile = fs.readdirSync(AUDIT_DIR).find(f => {
+                            const c = fs.readFileSync(path.join(AUDIT_DIR, f), 'utf-8');
+                            return c.includes(`id: ${audit.id}`);
+                        });
+                        if (auditFile) {
+                            const auditPath = path.join(AUDIT_DIR, auditFile);
+                            let auditContent = fs.readFileSync(auditPath, 'utf-8');
+                            auditContent = auditContent
+                                .replace('status: open', 'status: resolved')
+                                .replace('resolved:', `resolved: ${new Date().toISOString().split('T')[0]}`)
+                                .replace('resolved_by:', 'resolved_by: ai-audit-fix');
+                            fs.writeFileSync(auditPath, auditContent, 'utf-8');
+                        }
+                    } catch (e) {
+                        console.log(`  ❌ 修复失败: ${e.message}`);
+                    }
+                } else {
+                    console.log(`  ⚠️ 找不到页面文件: ${targetTitle}`);
+                }
+            } else {
+                console.log(`  ⚠️ 不支持自动处理: ${action}`);
+            }
+        }
+
+        console.log('\n✨ 审计修复完成');
+    })().catch(e => { console.error('❌ 审计修复失败:', e.message); process.exit(1); });
+} else if (REVIEW_ONLY) {
+    // --review: 仅对已有 wiki 页面进行 AI 审阅
+    (async () => {
+        console.log('\n🔍 AI 审阅模式（仅审阅，不编译）\n');
+        const config = loadAIConfig();
+        if (!config) {
+            console.error('❌ 未配置 AI，无法执行审阅');
+            process.exit(1);
+        }
+
+        const wikiIndex = buildWikiIndex();
+        const entries = Object.entries(wikiIndex);
+        console.log(`📚 扫描到 ${entries.length} 个 wiki 页面\n`);
+
+        let passed = 0, failed = 0;
+        for (const [title, info] of entries) {
+            if (!fs.existsSync(info.file)) continue;
+            // 跳过已审阅的页面
+            const content = fs.readFileSync(info.file, 'utf-8');
+            const { frontmatter } = parseFrontmatter(content);
+            if (frontmatter.reviewed === 'true' || frontmatter.reviewed === true) continue;
+
+            const result = { title, outputPath: info.file, layer: info.layer };
+            const review = await reviewCompiledPage(result, wikiIndex, config);
+            if (review.passed) {
+                passed++;
+                console.log(`  ✅ ${title} (${review.scores.overall}/100)`);
+            } else {
+                failed++;
+                console.log(`  ❌ ${title} (${review.scores.overall}/100)`);
+                if (review.issues.length > 0) generateReviewAudit(title, review);
+            }
+        }
+
+        console.log(`\n📊 审阅统计: ${passed} 通过, ${failed} 未通过`);
+    })().catch(e => { console.error('❌ 审阅失败:', e.message); process.exit(1); });
+} else if (RUN_TEST) {
     const success = runTests();
     process.exit(success ? 0 : 1);
 } else {

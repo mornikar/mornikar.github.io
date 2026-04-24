@@ -1258,6 +1258,14 @@
               <line x1="7.5" y1="7.5" x2="10.5" y2="16.5"/><line x1="16.5" y1="7.5" x2="13.5" y2="16.5"/><line x1="8" y1="6" x2="16" y2="6"/>
             </svg>
           </button>
+          <button id="wiki-chat-feedback-btn" title="提交反馈">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              <line x1="9" y1="10" x2="15" y2="10"/>
+              <line x1="12" y1="7" x2="12" y2="13"/>
+            </svg>
+          </button>
+          </button>
           <button id="wiki-chat-settings-btn" title="设置">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
               <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -1724,6 +1732,18 @@
       const searchContainer = document.getElementById('wiki-chat-search-results')
       if (searchContainer) searchContainer.style.display = 'none'
     })
+
+    // Phase 5.B: 反馈提交按钮 → GitHub Issue（审计反馈通道）
+    const feedbackBtn = document.getElementById('wiki-chat-feedback-btn')
+    if (feedbackBtn) {
+      feedbackBtn.addEventListener('click', () => {
+        const pagePath = window.location.pathname
+        const pageTitle = document.title || ''
+        const issueTitle = encodeURIComponent(`[Wiki反馈] ${pageTitle}`)
+        const issueBody = encodeURIComponent(`## 反馈页面\n\n- 页面: ${pagePath}\n- 标题: ${pageTitle}\n\n## 问题描述\n\n（请描述问题或改进建议）\n\n## 建议操作\n\n- [ ] add_content (补充内容)\n- [ ] update (更新过时内容)\n- [ ] fix_link (修复链接)\n- [ ] merge (合并重复)\n- [ ] split (拆分过长)\n- [ ] recompile (重新编译)`)
+        window.open(`https://github.com/mornikar/mornikar.github.io/issues/new?title=${issueTitle}&body=${issueBody}`, '_blank')
+      })
+    }
 
     document.getElementById('wiki-chat-send').addEventListener('click', handleSend)
     document.getElementById('wiki-chat-input').addEventListener('keydown', e => {
