@@ -563,6 +563,8 @@ function main() {
         }
         // Phase 2: 生成 wiki-index.json 到 source/ 供前端检索
         generateWikiSearchIndexForFrontend();
+        // Phase 2.B: 生成更新日志数据
+        generateChangelogData();
     }
 }
 
@@ -765,6 +767,48 @@ function generateWikiSearchIndexForFrontend() {
     const outputPath = path.join(sourceDir, 'wiki-index.json');
     fs.writeFileSync(outputPath, JSON.stringify(index, null, 2), 'utf-8');
     console.log(`📑 生成前端索引: source/wiki-index.json (${index.length} 个页面)`);
+}
+
+/**
+ * Phase 2.B: 生成更新日志数据 (wiki-changelog-data.json)
+ * 读取 .wiki/log.md，解析为结构化 JSON，供 wiki-changelog 页面使用
+ */
+function generateChangelogData() {
+    const logContent = fs.existsSync(LOG_FILE) ? fs.readFileSync(LOG_FILE, 'utf-8') : '';
+    if (!logContent.trim()) {
+        console.log('📄 更新日志数据为空，跳过生成');
+        return;
+    }
+
+    const entries = [];
+    const lines = logContent.split('\n');
+    const logRegex = /^-\s+(\d{4}-\d{2}-\d{2})\s+[\d:]+\s*\|\s*(\w+)\s*\|\s*\[\[([^\]]+)\]\]\(([^)]+)\)\s*→\s*(\w+)/;
+
+    for (const line of lines) {
+        const match = line.match(logRegex);
+        if (match) {
+            const [, date, layer, title, , category] = match;
+            // 尝试在 wikiMeta 中找到 URL
+            const wikiMeta = loadWikiMeta();
+            const meta = wikiMeta[title];
+            const url = meta ? `/${meta.hexoDate}/${meta.title}/` : '';
+
+            entries.push({
+                date,
+                type: layer,
+                title,
+                action: '→ ' + category,
+                url,
+            });
+        }
+    }
+
+    // 按日期倒序
+    entries.sort((a, b) => b.date.localeCompare(a.date));
+
+    const outputPath = path.join(__dirname, '..', 'source', 'wiki-changelog-data.json');
+    fs.writeFileSync(outputPath, JSON.stringify({ entries }, null, 2), 'utf-8');
+    console.log(`📄 生成更新日志数据: ${entries.length} 条记录`);
 }
 
 function updateIndex() {
