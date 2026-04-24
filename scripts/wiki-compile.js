@@ -495,16 +495,9 @@ async function main() {
 
     const config = loadAIConfig();
     if (!config && !DRY_RUN) {
-        console.error('❌ 未找到 AI 配置。请设置以下方式之一：');
-        console.error('   1. 创建 .wiki/compile-config.json（推荐）');
-        console.error('   2. 设置环境变量 WIKI_COMPILE_API_KEY / WIKI_COMPILE_ENDPOINT / WIKI_COMPILE_MODEL');
-        console.error('\ncompile-config.json 示例：');
-        console.error(JSON.stringify({
-            apiKey: 'your-api-key',
-            endpoint: 'https://open.bigmodel.cn/api/paas/v4',
-            model: 'glm-4-flash'
-        }, null, 2));
-        process.exit(1);
+        console.log('ℹ️ AI 编译跳过（未配置 API Key）');
+        console.log('   如需启用，请创建 .wiki/compile-config.json 或设置环境变量');
+        return;  // 优雅退出，不报错
     }
 
     if (config) {
@@ -732,7 +725,6 @@ function appendCompileLog(compiled) {
 
     if (fs.existsSync(LOG_FILE)) {
         let logContent = fs.readFileSync(LOG_FILE, 'utf-8');
-        // 在文件开头插入（log 是 append-only，最新在前）
         const insertAfter = logContent.indexOf('\n', logContent.indexOf('\n') + 1);
         if (insertAfter !== -1) {
             logContent = logContent.slice(0, insertAfter + 1) + entries + '\n' + logContent.slice(insertAfter + 1);
@@ -741,6 +733,110 @@ function appendCompileLog(compiled) {
         }
         fs.writeFileSync(LOG_FILE, logContent, 'utf-8');
     }
+}
+
+// ============ Phase 2: Wiki 搜索索引 ============
+
+/**
+ * 生成 wiki-index.json（供 wiki-chat 前端检索使用）
+ * 包含所有 wiki 页面的标题、标签、摘要、层级、路径信息
+ */
+function generateWikiSearchIndex() {
+    const index = [];
+    const targetDirs = [
+        { dir: CONCEPTS_DIR, layer: 'concepts' },
+        { dir: ENTITIES_DIR, layer: 'entities' },
+    ];
+
+    for (const { dir, layer } of targetDirs) {
+        if (!fs.existsSync(dir)) continue;
+        const files = fs.readdirSync(dir).filter(f => f.endsWith('.md'));
+
+        for (const file of files) {
+            const fullPath = path.join(dir, file);
+            try {
+                const content = fs.readFileSync(fullPath, 'utf-8');
+                const { frontmatter, body } = parseFrontmatter(content);
+                const title = frontmatter.title || path.basename(file, '.md');
+
+                // 提取前 200 字纯文本作为搜索片段
+                const plainText = body
+                    .replace(/^#.+$/gm, '')
+                    .replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, '$1')  // WikiLink 提取文字
+                    .replace(/[*_~`#>|[\]()]/g, '')
+                    .replace(/\n+/g, ' ')
+                    .trim()
+                    .substring(0, 300);
+
+                index.push({
+                    title,
+                    layer,
+                    tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
+                    summary: frontmatter.summary || '',
+                    created: frontmatter.created || '',
+                    updated: frontmatter.updated || '',
+                    source: frontmatter.source || '',
+                    snippet: plainText,
+                    // 前端会用 wiki-to-hexo 生成的 URL 来构建链接
+                });
+            } catch (e) {
+                console.warn(`⚠️ 索引生成失败: ${file} - ${e.message}`);
+            }
+        }
+    }
+
+    // 也扫描 raw/ 目录中的已有页面（wiki-to-hexo 会将它们转为 Hexo 文章）
+    if (fs.existsSync(RAW_DIR)) {
+        function scanRaw(dir) {
+            const items = fs.readdirSync(dir, { withFileTypes: true });
+            for (const item of items) {
+                const fullPath = path.join(dir, item.name);
+                if (item.isDirectory()) {
+                    scanRaw(fullPath);
+                } else if (item.name.endsWith('.md')) {
+                    try {
+                        const content = fs.readFileSync(fullPath, 'utf-8');
+                        const { frontmatter, body } = parseFrontmatter(content);
+                        const relPath = path.relative(WIKI_DIR, fullPath);
+                        const title = frontmatter.title || path.basename(item.name, '.md');
+                        const targetLayer = determineTargetLayer(relPath, frontmatter);
+
+                        // 检查是否已在 wiki 层有编译页面
+                        const alreadyCompiled = index.some(i => i.title === title);
+                        if (alreadyCompiled) continue;
+
+                        const plainText = body
+                            .replace(/^#.+$/gm, '')
+                            .replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, '$1')
+                            .replace(/[*_~`#>|[\]()]/g, '')
+                            .replace(/\n+/g, ' ')
+                            .trim()
+                            .substring(0, 300);
+
+                        index.push({
+                            title,
+                            layer: targetLayer,
+                            tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
+                            summary: frontmatter.summary || '',
+                            created: frontmatter.created || '',
+                            updated: frontmatter.updated || '',
+                            source: relPath.replace(/\\/g, '/'),
+                            snippet: plainText,
+                            isRaw: true,
+                        });
+                    } catch (e) {
+                        // 跳过解析失败的文件
+                    }
+                }
+            }
+        }
+        scanRaw(RAW_DIR);
+    }
+
+    // 写入索引文件到 .wiki/ 目录
+    const indexPath = path.join(WIKI_DIR, 'wiki-index.json');
+    fs.writeFileSync(indexPath, JSON.stringify(index, null, 2), 'utf-8');
+    console.log(`📑 生成 wiki-index.json: ${index.length} 个页面`);
 }
 
 // ============ 单元测试 ============
