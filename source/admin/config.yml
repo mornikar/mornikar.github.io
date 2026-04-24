@@ -17,72 +17,77 @@ site_url: https://mornikar.github.io
 # local_backend: true
 
 collections:
-  # ====== Wiki 技术概念 (concepts/) ======
-  - name: concepts
-    label: "📖 技术概念"
-    folder: ".wiki/concepts"
+  # ====== AIGC 笔记随笔 ======
+  - name: aigc
+    label: "🤖 AIGC 笔记随笔"
+    folder: "source/_posts/AIGC笔记随笔"
     create: true
-    slug: "{{title}}"
+    slug: "{{date}}--{{title}}-"
     extension: md
     format: yaml-frontmatter
     fields:
       - { label: "标题", name: title, widget: string }
-      - { label: "类型", name: type, widget: hidden, default: "concepts" }
-      - { label: "标签", name: tags, widget: list, allow_add: true,
-          hint: "从 AI, LLM, RAG, Prompt, Agent, 机器学习, 产品, 开发, 学习 中选择" }
-      - { label: "创建日期", name: created, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
-      - { label: "更新日期", name: updated, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
-      - { label: "别名", name: aliases, widget: list, allow_add: true, required: false, hint: "可选" }
-      - { label: "相关页面", name: related, widget: list, allow_add: true, required: false, hint: "可选" }
-      - { label: "摘要", name: summary, widget: text, required: false, hint: "一句话描述" }
-      - { label: "正文", name: body, widget: markdown }
-
-  # ====== Wiki 实体随笔 (entities/) ======
-  - name: entities
-    label: "✏️ 实体随笔"
-    folder: ".wiki/entities"
-    create: true
-    slug: "{{title}}"
-    extension: md
-    format: yaml-frontmatter
-    fields:
-      - { label: "标题", name: title, widget: string }
-      - { label: "类型", name: type, widget: hidden, default: "entities" }
+      - { label: "日期", name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "分类", name: categories, widget: hidden, default: ["AIGC笔记随笔"] }
       - { label: "标签", name: tags, widget: list, allow_add: true }
-      - { label: "创建日期", name: created, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
-      - { label: "更新日期", name: updated, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
-      - { label: "别名", name: aliases, widget: list, allow_add: true, required: false }
-      - { label: "相关页面", name: related, widget: list, allow_add: true, required: false }
-      - { label: "摘要", name: summary, widget: text, required: false }
       - { label: "正文", name: body, widget: markdown }
 
-  # ====== Wiki 原始资料 (raw/) ======
-  - name: raw
-    label: "📁 原始资料"
-    folder: ".wiki/raw"
+  # ====== 学习随笔 ======
+  - name: essay
+    label: "✍️ 学习随笔"
+    folder: "source/_posts/LearningEssays"
     create: true
-    slug: "{{title}}"
+    slug: "{{date}}--{{title}}-"
     extension: md
     format: yaml-frontmatter
     fields:
       - { label: "标题", name: title, widget: string }
-      - { label: "类型", name: type, widget: hidden, default: "raw" }
+      - { label: "日期", name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "分类", name: categories, widget: hidden, default: ["LearningEssays"] }
       - { label: "标签", name: tags, widget: list, allow_add: true }
-      - { label: "创建日期", name: created, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
-      - { label: "更新日期", name: updated, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
       - { label: "正文", name: body, widget: markdown }
 
-  # ====== Wiki 页面（根目录） ======
-  - name: wiki_pages
-    label: "📋 Wiki 页面"
-    files:
-      - label: "索引页"
-        name: index
-        file: ".wiki/index.md"
-        fields:
-          - { label: "正文", name: body, widget: markdown }
-      - label: "操作日志"
-        name: log
-        file: ".wiki/log.md"
-        fields:
-          - { label: "正文", name: body, widget: markdown }
+  # ====== 学习笔记 ======
+  - name: learn
+    label: "📚 学习笔记"
+    folder: "source/_posts/LearningNote"
+    create: true
+    slug: "{{date}}-{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "标题", name: title, widget: string }
+      - { label: "日期", name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "分类", name: categories, widget: hidden, default: ["LearningNote"] }
+      - { label: "标签", name: tags, widget: list, allow_add: true }
+      - { label: "正文", name: body, widget: markdown }
+
+  # ====== 机器学习 ======
+  - name: ml
+    label: "🧠 机器学习"
+    folder: "source/_posts/机器学习"
+    create: true
+    slug: "{{date}}--{{title}}-"
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "标题", name: title, widget: string }
+      - { label: "日期", name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "分类", name: categories, widget: hidden, default: ["机器学习"] }
+      - { label: "标签", name: tags, widget: list, allow_add: true }
+      - { label: "正文", name: body, widget: markdown }
+
+  # ====== 云环境 ======
+  - name: cloud
+    label: "☁️ 云环境"
+    folder: "source/_posts/云环境"
+    create: true
+    slug: "{{date}}--{{title}}-"
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "标题", name: title, widget: string }
+      - { label: "日期", name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "分类", name: categories, widget: hidden, default: ["云环境"] }
+      - { label: "标签", name: tags, widget: list, allow_add: true }
+      - { label: "正文", name: body, widget: markdown }

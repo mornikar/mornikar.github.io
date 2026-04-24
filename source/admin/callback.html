@@ -1,25 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
-  <title>授权回调</title>
+  <title>授权回调 - Wiki CMS</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0e1a; color: #e2e8f0; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+    .callback-card { text-align: center; padding: 40px; background: #111827; border-radius: 12px; border: 1px solid #1e293b; max-width: 400px; }
+    .callback-card h2 { margin: 0 0 12px; }
+    .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid #1e293b; border-top-color: #6366f1; border-radius: 50%; animation: spin .6s linear infinite; margin-bottom: 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error { color: #ef4444; }
+    .success { color: #22c55e; }
+  </style>
 </head>
 <body>
-<p style="font-family:sans-serif;text-align:center;margin-top:40px">授权成功，正在返回管理界面...</p>
+<div class="callback-card">
+  <div class="spinner" id="spinner"></div>
+  <h2 id="status-text">正在处理授权...</h2>
+  <p id="status-detail" style="color:#94a3b8;font-size:13px"></p>
+</div>
+
 <script>
 (function() {
   var params = new URLSearchParams(window.location.search);
   var token = params.get('token');
   var scope = params.get('scope') || 'repo';
   var tokenType = params.get('token_type') || 'bearer';
+  var oauthError = params.get('oauth_error');
 
-  if (!token) {
-    document.body.innerHTML = '<p style="color:red;text-align:center;margin-top:40px">授权失败：未收到 token</p>';
+  var statusText = document.getElementById('status-text');
+  var statusDetail = document.getElementById('status-detail');
+  var spinner = document.getElementById('spinner');
+
+  // 如果有错误
+  if (oauthError) {
+    statusText.textContent = '授权失败';
+    statusText.className = 'error';
+    statusDetail.textContent = decodeURIComponent(oauthError);
+    spinner.style.display = 'none';
+    setTimeout(function() { window.location.href = '/admin/'; }, 3000);
     return;
   }
 
-  // 同时存储到 localStorage 作为备份
+  if (!token) {
+    statusText.textContent = '授权失败';
+    statusText.className = 'error';
+    statusDetail.textContent = '未收到有效的授权 Token';
+    spinner.style.display = 'none';
+    setTimeout(function() { window.location.href = '/admin/'; }, 3000);
+    return;
+  }
+
+  // Token 有效 — 保存到 localStorage
   try {
+    localStorage.setItem('wiki-cms-token', token);
+    localStorage.setItem('wiki-cms-login-method', 'oauth');
     localStorage.setItem('sveltia_cms_oauth', JSON.stringify({
       token: token,
       scope: scope,
@@ -28,9 +63,10 @@
     }));
   } catch(e) {}
 
+  // 方案1：如果有 opener（popup 模式），用 postMessage 通知
   if (window.opener) {
-    // Decap CMS v3 / Sveltia CMS 标准格式
     try {
+      // Decap CMS v3 / Sveltia CMS 标准格式
       window.opener.postMessage({
         type: 'oauth',
         provider: 'github',
@@ -40,8 +76,8 @@
       }, 'https://mornikar.github.io');
     } catch(e) {}
 
-    // 兼容旧版格式
     try {
+      // 兼容旧版 Decap CMS 格式
       window.opener.postMessage(
         'authorization:github:success:' + JSON.stringify({
           token: token,
@@ -52,10 +88,25 @@
       );
     } catch(e) {}
 
+    statusText.textContent = '授权成功！';
+    statusText.className = 'success';
+    statusDetail.textContent = '正在关闭窗口...';
+    spinner.style.display = 'none';
     setTimeout(function() { window.close(); }, 1000);
   } else {
-    // 没有 opener，重定向回 CMS 主页
-    window.location.href = '/admin/';
+    // 方案2：没有 opener（整页跳转模式），直接重定向到 CMS 主页
+    // 自建 CMS v4 会在 URL 参数中读取 token
+    statusText.textContent = '授权成功！';
+    statusText.className = 'success';
+    statusDetail.textContent = '正在跳转到管理界面...';
+    spinner.style.display = 'none';
+    
+    // 将 token 通过 URL 参数传递给 CMS 主页
+    setTimeout(function() {
+      window.location.href = '/admin/?token=' + encodeURIComponent(token) +
+        '&scope=' + encodeURIComponent(scope) +
+        '&token_type=' + encodeURIComponent(tokenType);
+    }, 500);
   }
 })();
 </script>

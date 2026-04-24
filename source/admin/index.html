@@ -7,7 +7,7 @@
 <style>
 /* ====== Reset & Base ====== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
+::root {
   --bg-primary: #0a0e1a; --bg-secondary: #111827; --bg-tertiary: #1e293b;
   --bg-card: #161d2f; --bg-hover: #1e3a5f; --bg-input: #0d1321;
   --text-primary: #e2e8f0; --text-secondary: #94a3b8; --text-muted: #64748b;
@@ -130,6 +130,8 @@ html, body { height: 100%; background: var(--bg-primary); color: var(--text-prim
 .btn-sm { padding: 5px 10px; font-size: 12px; }
 .btn-lg { padding: 12px 28px; font-size: 15px; }
 .btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-github { background: #24292e; border-color: #24292e; color: #fff; }
+.btn-github:hover { background: #2f363d; border-color: #2f363d; }
 
 /* ====== Login View ====== */
 .login-view { display: flex; align-items: center; justify-content: center; height: 100vh; padding: 20px; }
@@ -149,6 +151,9 @@ html, body { height: 100%; background: var(--bg-primary); color: var(--text-prim
 .error-msg { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.25); color: var(--danger); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; display: none; }
 .error-msg.show { display: block; }
 .status-msg { color: var(--text-muted); font-size: 12px; text-align: center; min-height: 18px; }
+.login-divider { display: flex; align-items: center; gap: 12px; color: var(--text-muted); font-size: 12px; margin: 4px 0; }
+.login-divider::before, .login-divider::after { content: ''; flex: 1; border-top: 1px solid var(--border); }
+.oauth-hint { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: -8px; }
 
 /* ====== Modal ====== */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 300; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .2s; }
@@ -212,6 +217,15 @@ html, body { height: 100%; background: var(--bg-primary); color: var(--text-prim
   <div class="error-msg" id="error-msg"></div>
   
   <div class="login-form">
+    <!-- OAuth 一键登录 -->
+    <button class="btn btn-github btn-lg" style="width:100%;justify-content:center" onclick="oauthLogin()">
+      <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor" style="flex-shrink:0"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+      GitHub 一键登录
+    </button>
+    <div class="oauth-hint">使用 GitHub 账号授权，自动获取访问权限</div>
+    
+    <div class="login-divider">或手动输入 Token</div>
+    
     <div class="login-token-area">
       <textarea id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" spellcheck="false"></textarea>
     </div>
@@ -241,12 +255,13 @@ html, body { height: 100%; background: var(--bg-primary); color: var(--text-prim
 
 <div class="topbar">
   <div class="topbar-left">
-    <span class="topbar-logo">Wiki CMS <small>v3</small></span>
+    <span class="topbar-logo">Wiki CMS <small>v4</small></span>
     <span id="conn-status" class="ok" title="连接状态">● 就绪</span>
   </div>
   <div class="topbar-right">
     <div class="user-avatar" id="user-avatar">?</div>
     <span id="user-display">--</span>
+    <span id="login-method" style="font-size:10px;color:var(--text-muted)"></span>
     <button class="btn btn-outline btn-sm" onclick="logout()">退出</button>
   </div>
 </div>
@@ -386,21 +401,25 @@ html, body { height: 100%; background: var(--bg-primary); color: var(--text-prim
 // ============================================================
 var PROXY_URL = 'https://shy-wood-2431decap-oauth.1548324254.workers.dev';
 var API_BASE = PROXY_URL + '/api/gh';
+var OAUTH_URL = PROXY_URL + '/auth';
 var OWNER = 'mornikar';
 var REPO = 'mornikar.github.io';
 var BRANCH = 'source';
 
 var TOKEN = localStorage.getItem('wiki-cms-token') || '';
 var USER = null;
+var LOGIN_METHOD = ''; // 'oauth' or 'token'
 
 // ============================================================
-// COLLECTIONS
+// COLLECTIONS — 对齐到实际存在的 _posts 子目录
 // ============================================================
 var COLLECTIONS = [
-  { key: 'tech',   name: '技术概念', icon: '⚡', folder: 'source/wiki/技术概念/', label: 'tech-concept' },
-  { key: 'essay',  name: '实体随笔', icon: '✍️', folder: 'source/wiki/实体随笔/', label: 'entity-essay' },
-  { key: 'raw',    name: '原始资料', icon: '📚', folder: 'source/wiki/原始资料/', label: 'raw-material' },
-  { key: 'page',   name: 'Wiki 页面', icon: '📄', folder: 'source/wiki/',       label: 'wiki-page' },
+  { key: 'aigc',  name: 'AIGC 笔记随笔', icon: '🤖', folder: 'source/_posts/AIGC笔记随笔/', label: 'AIGC', category: 'AIGC笔记随笔' },
+  { key: 'essay', name: '学习随笔',       icon: '✍️', folder: 'source/_posts/LearningEssays/', label: 'LearningEssays', category: 'LearningEssays' },
+  { key: 'learn', name: '学习笔记',       icon: '📚', folder: 'source/_posts/LearningNote/',  label: 'LearningNote', category: 'LearningNote' },
+  { key: 'ml',    name: '机器学习',       icon: '🧠', folder: 'source/_posts/机器学习/',       label: 'ML', category: '机器学习' },
+  { key: 'cloud', name: '云环境',         icon: '☁️', folder: 'source/_posts/云环境/',         label: 'Cloud', category: '云环境' },
+  { key: 'posts', name: '所有文章',       icon: '📄', folder: 'source/_posts/',               label: '', category: '' },
 ];
 
 var currentCollection = null;
@@ -464,7 +483,6 @@ function formatDate(dstr) {
 
 function parseFrontMatter(content) {
   var fm = {};
-  // Simple front matter parser
   if (content.indexOf('---') === 0) {
     var end = content.indexOf('---', 3);
     if (end > 0) {
@@ -495,7 +513,7 @@ function buildFrontMatter(meta, body) {
   var lines = ['---'];
   if (meta.title) lines.push('title: "' + meta.title.replace(/"/g, '\\"') + '"');
   if (meta.date) lines.push('date: ' + meta.date);
-  if (meta.category) lines.push('category: "' + meta.category.replace(/"/g, '\\"') + '"');
+  if (meta.category) lines.push('categories:\n  - "' + meta.category.replace(/"/g, '\\"') + '"');
   if (meta.tags && meta.tags.length > 0) lines.push('tags: [' + meta.tags.map(function(t){ return '"' + t.replace(/"/g, '\\"') + '"'; }).join(', ') + ']');
   lines.push('---');
   lines.push('');
@@ -582,8 +600,46 @@ function testConnection(tokenToTest) {
 }
 
 // ============================================================
-// AUTH
+// AUTH — OAuth + Token 双模式
 // ============================================================
+
+// OAuth 一键登录 — 跳转到 Worker 的 /auth 端点
+function oauthLogin() {
+  showStatus('正在跳转到 GitHub 授权...', true);
+  window.location.href = OAUTH_URL;
+}
+
+// 处理 OAuth 回调（从 URL 参数读取 token）
+function handleOAuthCallback() {
+  var params = new URLSearchParams(window.location.search);
+  var token = params.get('token');
+  var oauthError = params.get('oauth_error');
+  
+  if (oauthError) {
+    showError('OAuth 授权失败: ' + decodeURIComponent(oauthError));
+    // 清除 URL 参数
+    window.history.replaceState({}, document.title, window.location.pathname);
+    return false;
+  }
+  
+  if (token) {
+    TOKEN = token;
+    LOGIN_METHOD = 'oauth';
+    localStorage.setItem('wiki-cms-token', TOKEN);
+    localStorage.setItem('wiki-cms-login-method', 'oauth');
+    
+    // 清除 URL 中的 token 参数（安全考虑，不暴露在地址栏）
+    var cleanUrl = window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+    
+    showStatus('OAuth 登录成功，正在验证...', true);
+    return true;
+  }
+  
+  return false;
+}
+
+// Token 手动登录
 function doLogin() {
   var t = $('token-input').value.trim();
   if (!t) { showError('请输入 Token'); return; }
@@ -594,6 +650,8 @@ function doLogin() {
 
   testConnection(t).then(function(u) {
     localStorage.setItem('wiki-cms-token', TOKEN);
+    localStorage.setItem('wiki-cms-login-method', 'token');
+    LOGIN_METHOD = 'token';
     USER = u;
     setConnStatus('● 已连接', 'ok');
     console.log('[CMS] 登录成功: @' + u.login);
@@ -608,7 +666,9 @@ function doLogin() {
 function logout() {
   TOKEN = '';
   USER = null;
+  LOGIN_METHOD = '';
   localStorage.removeItem('wiki-cms-token');
+  localStorage.removeItem('wiki-cms-login-method');
   $('app-container').style.display = 'none';
   $('login-view').style.display = 'flex';
   $('token-input').value = '';
@@ -618,6 +678,7 @@ function logout() {
 
 function checkSavedToken() {
   if (TOKEN && TOKEN.length > 10) {
+    LOGIN_METHOD = localStorage.getItem('wiki-cms-login-method') || 'token';
     showStatus('验证已保存的 Token...', true);
     testConnection(TOKEN).then(function(u) {
       USER = u;
@@ -636,6 +697,7 @@ function showMainView() {
   $('user-display').textContent = '@' + USER.login;
   var avatarLetter = (USER.name || USER.login || '?')[0].toUpperCase();
   $('user-avatar').textContent = avatarLetter;
+  $('login-method').textContent = LOGIN_METHOD === 'oauth' ? '(OAuth)' : '(Token)';
   renderSidebar();
   selectCollection(COLLECTIONS[0].key);
 }
@@ -682,17 +744,53 @@ function refreshList() {
   
   api('GET', '/repos/' + OWNER + '/' + REPO + '/contents/' + col.folder + '?ref=' + BRANCH)
     .then(function(files) {
-      currentFiles = Array.isArray(files) ? files : [];
+      // 如果是 "所有文章" 集合，需要递归获取子目录
+      if (col.key === 'posts') {
+        return loadAllPosts(files);
+      }
+      return Array.isArray(files) ? files : [];
+    })
+    .then(function(files) {
+      currentFiles = files;
       renderFileList();
       
       // Update count
       var cntEl = $('count-' + currentCollection);
-      if (cntEl) cntEl.textContent = String(currentFiles.length);
+      if (cntEl) cntEl.textContent = String(currentFiles.filter(function(f){ return f.name.endsWith('.md'); }).length);
     })
     .catch(function(err) {
       listEl.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">加载失败</div><div class="empty-state-hint">' + escapeHtml(err.message) + '</div></div>';
       toast('加载失败: ' + err.message, 'error');
     });
+}
+
+// 递归加载所有子目录的 md 文件（用于 "所有文章" 视图）
+function loadAllPosts(entries) {
+  var mdFiles = [];
+  var dirPromises = [];
+  
+  (entries || []).forEach(function(entry) {
+    if (entry.name.endsWith('.md')) {
+      mdFiles.push(entry);
+    } else if (entry.type === 'dir') {
+      dirPromises.push(
+        api('GET', '/repos/' + OWNER + '/' + REPO + '/contents/' + entry.path + '?ref=' + BRANCH)
+          .then(function(subFiles) { return Array.isArray(subFiles) ? subFiles : []; })
+          .catch(function() { return []; })
+      );
+    }
+  });
+  
+  if (dirPromises.length === 0) return Promise.resolve(mdFiles);
+  
+  return Promise.all(dirPromises).then(function(results) {
+    results.forEach(function(subFiles) {
+      subFiles.forEach(function(f) {
+        if (f.name.endsWith('.md')) mdFiles.push(f);
+      });
+    });
+    return mdFiles;
+  });
 }
 
 function renderFileList() {
@@ -715,14 +813,16 @@ function renderFileList() {
     if (!f.name.endsWith('.md')) return;
     
     var tags = [];
-    // Try to extract tags from name or cache
     var dateStr = f.name.slice(0,10);
+    // 从路径提取子目录名
+    var pathParts = f.path.split('/');
+    var subDir = pathParts.length > 3 ? pathParts[2] : '';
     
     html += '<div class="file-item' + (currentFile && currentFile.path===f.path ? ' selected' : '') + '" onclick="openFile(\'' + f.path + '\', \'' + f.sha + '\')">' +
       '<span class="file-icon">📄</span>' +
       '<div class="file-info">' +
         '<div class="file-name">' + escapeHtml(f.name.replace('.md','')) + '</div>' +
-        '<div class="file-meta">' + formatDate(dateStr) + ' · ' + formatSize(f.size || 0) + '</div>' +
+        '<div class="file-meta">' + (subDir ? escapeHtml(subDir) + ' · ' : '') + formatDate(dateStr) + ' · ' + formatSize(f.size || 0) + '</div>' +
       '</div>' +
       '</div>';
   });
@@ -758,11 +858,12 @@ function createNew() {
   editTags = [];
   
   // Set default values
-  $('edit-filename').value = '';
+  var today = new Date().toISOString().slice(0, 10);
+  $('edit-filename').value = today + '--新文章-';
   $('edit-content').value = '# 在这里写标题\n\n';
   $('meta-title').value = '';
-  $('meta-date').value = new Date().toISOString().slice(0, 10);
-  $('meta-category').value = col.label || '';
+  $('meta-date').value = today;
+  $('meta-category').value = col.category || '';
   
   renderTagsInput();
   $('uploaded-images').innerHTML = '';
@@ -794,7 +895,12 @@ function openFile(path, sha) {
       $('edit-content').value = fm._body || content;
       $('meta-title').value = fm.title || '';
       $('meta-date').value = fm.date || formatDate(data.name.slice(0,10)) || '';
-      $('meta-category').value = fm.category || '';
+      
+      // 处理 categories — 可能是字符串或数组
+      var cat = fm.categories || fm.category || '';
+      if (Array.isArray(cat)) cat = cat[0] || '';
+      $('meta-category').value = cat;
+      
       editTags = Array.isArray(fm.tags) ? fm.tags : [];
       renderTagsInput();
       $('uploaded-images').innerHTML = '';
@@ -1130,9 +1236,28 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ============================================================
-// INIT
+// INIT — 优先处理 OAuth 回调，其次检查已保存 Token
 // ============================================================
-checkSavedToken();
+(function init() {
+  // 1. 检查 URL 中是否有 OAuth 回调的 token
+  var oauthResult = handleOAuthCallback();
+  
+  if (oauthResult) {
+    // OAuth 回调已接收 token，验证并登录
+    testConnection(TOKEN).then(function(u) {
+      USER = u;
+      setConnStatus('● 已连接 (OAuth)', 'ok');
+      showMainView();
+      toast('✅ GitHub OAuth 登录成功！', 'success');
+    }).catch(function(err) {
+      showError('OAuth Token 验证失败: ' + err.message);
+      logout();
+    });
+  } else {
+    // 2. 检查已保存的 Token
+    checkSavedToken();
+  }
+})();
 
 </script>
 </body>
