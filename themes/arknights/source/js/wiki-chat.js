@@ -856,30 +856,22 @@
         const lowerSlug = slug.toLowerCase()
         // 精确匹配
         const exact = wikiIndex.find(p => p.title.toLowerCase() === lowerSlug)
-        if (exact) {
-          // 尝试构建 Hexo 文章 URL（基于 created 日期和标题）
-          const dateStr = (exact.created || '').replace(/-/g, '/')
-          const safeTitle = slug.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, '-')
-          if (dateStr && exact.created) {
-            href = `/${dateStr}/${safeTitle}/`
-          }
+        if (exact && exact.url) {
+          // 直接使用 wiki-index.json 中已生成的正确 URL
+          href = exact.url
         }
         // 模糊匹配
         if (!href) {
           const fuzzy = wikiIndex.find(p => p.title.toLowerCase().includes(lowerSlug) || lowerSlug.includes(p.title.toLowerCase()))
-          if (fuzzy) {
-            const dateStr = (fuzzy.created || '').replace(/-/g, '/')
-            const safeTitle = slug.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, '-')
-            if (dateStr && fuzzy.created) {
-              href = `/${dateStr}/${safeTitle}/`
-            }
+          if (fuzzy && fuzzy.url) {
+            href = fuzzy.url
           }
         }
       }
 
       // 没找到精确URL时，用标题 slug 降级
       if (!href) {
-        const safeSlug = slug.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, '-')
+        const safeSlug = slug.replace(/[\\/:*?"<>|_]/g, '-').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '')
         href = `/${safeSlug}/`
       }
 

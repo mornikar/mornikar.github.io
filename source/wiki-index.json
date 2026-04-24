@@ -68,7 +68,7 @@
     ]
   },
   {
-    "title": "\"AI工作流\"",
+    "title": "AI工作流",
     "layer": "entities",
     "tags": [
       "AI产品",
@@ -78,7 +78,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--AI工作流-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-AI工作流/",
     "snippet": "第一步：写PRD（你自己写或让AI帮你写） \r \r ↓\r \r 第二步：让AI评审PRD，提出问题 \r \r ↓\r \r 第三步：确认PRD后，让AI出技术方案\r \r  ↓\r \r 第四步：按模块开发（MVP先上） \r \r ↓\r \r 第五步：迭代优化",
     "backlinks": [
       "log"
@@ -86,7 +86,7 @@
     "outlinks": []
   },
   {
-    "title": "\"AI工作流 工作流\"",
+    "title": "AI工作流 工作流",
     "layer": "entities",
     "tags": [
       "AI产品",
@@ -96,7 +96,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--AI工作流-工作流-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-AI工作流-工作流/",
     "snippet": "第一步：写PRD（你自己写或让AI帮你写） \r \r ↓\r \r 第二步：让AI评审PRD，提出问题 \r \r ↓\r \r 第三步：确认PRD后，让AI出技术方案\r \r  ↓\r \r 第四步：按模块开发（MVP先上） \r \r ↓\r \r 第五步：迭代优化",
     "backlinks": [
       "log"
@@ -104,7 +104,7 @@
     "outlinks": []
   },
   {
-    "title": "\"AI本地部署想法\"",
+    "title": "AI本地部署想法",
     "layer": "entities",
     "tags": [
       "AI产品",
@@ -114,7 +114,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--AI本地部署想法-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-AI本地部署想法/",
     "snippet": "1.在主机上因为会尝试多种AI工具，所以会产生每个AI工具都要重新下载Skill，这样会产生很多冗余的，重复性的Skill，那么如何解决这个办法呢？\r \r \r \r 解决办法：在D盘里创建一个ALLKill的文件夹作为所以Kill的统一管理。\r \r 实施办法：\r \r 推荐方案：符号链接（推荐）\r -------------\r \r 最安全、最简单的方案是创建符号链接，而不是真的移动目录：\r     D:\\AISkills\\                    ← 集中存储\r     ├── find-skills/\r     ├── skill-creator/\r     ├── tapd/\r ",
     "backlinks": [
       "log"
@@ -122,7 +122,7 @@
     "outlinks": []
   },
   {
-    "title": "\"AI稳定上线工程化\"",
+    "title": "AI稳定上线工程化",
     "layer": "entities",
     "tags": [
       "AI产品",
@@ -132,7 +132,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--AI稳定上线工程化-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-AI稳定上线工程化/",
     "snippet": "AI稳定上线工程化注意点：\r \r 为了避免AI上线后崩溃的问题。\r \r 为什么上线就崩？问题在四个失控。\r \r 1.搜索空间爆炸\r \r 如Agent挂5个工具还能应付。当挂了20个工具，那时候模型面对的不是简单的决策，而是一个无限分叉的决策树，模型在Token空间里，做概率游走，模型选错的一次工具调用，以着昂贵的PRC调用失败，引发连锁崩溃，导致准确率暴跌等结果。GPU成本，API模型调用Token消费起飞\r \r 2.成本建模缺失\r 模型思考是无成本无后果，如Agent看日志思考反思五六轮。Agent的思考过程会消耗GPU总成本70%以上。所以需要约束来控制成本与后果\r 3.文本计划接口契约鸿",
     "backlinks": [
       "log"
@@ -140,7 +140,7 @@
     "outlinks": []
   },
   {
-    "title": "\"PRD模板-小说国际化\"",
+    "title": "PRD模板-小说国际化",
     "layer": "entities",
     "tags": [
       "AI产品",
@@ -150,7 +150,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--PRD模板-小说国际化-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-PRD模板-小说国际化/",
     "snippet": "- 解决中国小说国际化\r - 目标用户是国外小说用户\r \r \r \r  功能          优先级  描述                             \r  ----------  ---  ------------------------------ \r  小说板块        P0                                  \r  推送书架        p0                                  \r  书籍详情页                                           \r  收藏书架      ",
     "backlinks": [
       "log"
@@ -158,7 +158,7 @@
     "outlinks": []
   },
   {
-    "title": "\"PRD模板通用版\"",
+    "title": "PRD模板通用版",
     "layer": "entities",
     "tags": [
       "AI产品",
@@ -168,7 +168,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--PRD模板通用版-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-PRD模板通用版/",
     "snippet": "- 解决什么问题？\r - 目标用户是谁？\r \r \r \r  功能   优先级  描述   \r  ---  ---  ---- \r  功能A  P0   必须有  \r  功能B  P1   重要   \r  功能C  P2   锦上添花 \r \r \r \r \r \r - 用户故事：作为XX用户，我想XX，以便XX\r - 输入：用户上传图片\r - 处理：AI识别内容\r - 输出：返回分析结果\r - 边界情况：文件过大怎么办？\r \r \r \r - ...\r \r \r \r - 性能要求（响应时间<2秒）\r - 兼容性（浏览器/设备）\r - 数据安全要求\r \r \r \r - 技术栈偏好（React/Vue/Python",
     "backlinks": [
       "log"
@@ -176,7 +176,7 @@
     "outlinks": []
   },
   {
-    "title": "\"企业适用大模型全场景参考（复习版）\"",
+    "title": "企业适用大模型全场景参考（复习版）",
     "layer": "entities",
     "tags": [
       "AI产品",
@@ -186,7 +186,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--企业适用大模型全场景参考（复习版）-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-企业适用大模型全场景参考（复习版）/",
     "snippet": "企业内部应用场景：\r \r - 数据处理：大型语言模型可以用于数据清洗和预处理。\r - 自然语言查询：可以通过自然语言来查询复杂的数据集。\r - 文本分析：进行情感分析、主题建模等。\r - 生成报告：自动生成数据分析报告。\r - 信息检索：更高效地从大量数据中检索有价值的信息。\r - 预测分析：基于历史数据进行预测。\r - 数据可视化：辅助在报告中生成文本解释。\r - 自动编程：生成数据查询或数据转换的代码。\r - 聊天机器人：提供数据分析的实时客户支持。\r - 智能排序：按重要性或其他标准自动排序数据。\r \r \r \r 企业内部应用场景：\r \r - 文本生成：自动生成文章或博客。\r - 文本编辑",
     "backlinks": [
       "log"
@@ -194,7 +194,7 @@
     "outlinks": []
   },
   {
-    "title": "\"内容推荐与增长业务（复习版）\"",
+    "title": "内容推荐与增长业务（复习版）",
     "layer": "entities",
     "tags": [
       "AI产品",
@@ -204,7 +204,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--内容推荐与增长业务（复习版）-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-内容推荐与增长业务（复习版）/",
     "snippet": "增长sense指在数据驱动下，通过系统性思维识别业务增长机会、分析问题根源并制定有效策略的能力。其本质是将供需理论与用户生命周期结合，从全链路视角挖掘增长点。例如，当用户活跃度下降时，需通过AARRR模型（获取-激活-留存-变现-推荐）定位问题环节，而非仅停留在数据表象。\r \r \r \r 1. 从数据统计到因果推理  \r    初级分析师常陷入“描述现象”的陷阱（如仅报告DAU下降20%），而成熟分析师会构建用户生命周期框架，结合广告算法调整、竞品分流等外部因素，量化各因素对结果的贡献度（如获客质量下降导致40%的DAU降幅）。这种分析需掌握归因分析和因素关联分析技术。\r \r 2. 系统化思维构",
     "backlinks": [
       "log"
@@ -212,7 +212,7 @@
     "outlinks": []
   },
   {
-    "title": "\"广告复盘\"",
+    "title": "广告复盘",
     "layer": "entities",
     "tags": [
       "AI产品",
@@ -222,7 +222,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--广告复盘-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-广告复盘/",
     "snippet": "在引入期和成长期，产品的核心目标是打磨用户体验，快速的拉新增长，这时不宜做过度的商业化（成熟稳定期可以逐渐扩大商业化）\r \r \r \r \r \r \r \r 品牌广告\r \r 品牌广告的目的是通过大量的曝光增强品牌心智，基本的承载形式是开屏广告和头图；\r \r 效果广告\r \r 效果广告的目的是吸引点击，产生消费或转化，基本的承载形式是信息流广告。\r \r !imghttps://image.woshipm.com/wp-files/2021/09/3mOYpUSO0JAlmY1SRqux.png\r \r \r \r 需求方平台：广告主的策略计划都在DSP上\r \r 当一个流量过来的时候，需要在 100ms 以内，完",
     "backlinks": [
       "log"
@@ -230,7 +230,7 @@
     "outlinks": []
   },
   {
-    "title": "\"数据分析与产品经理\"",
+    "title": "数据分析与产品经理",
     "layer": "entities",
     "tags": [
       "AI产品",
@@ -240,7 +240,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--数据分析与产品经理-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-数据分析与产品经理/",
     "snippet": "数据分析：数据分析师理当是业务的裁判员，同时具备运动员视角。数分的工作都是客观评价业务的健康情况，同时帮助业务寻找机会点。\r \r 是满足重点数据结果价值排序：数据决策数据分析数据采集数据规划\r \r 数据产品经理：数据产品经理是为帮助企业更好的沉淀数据资产以及数据口径的收口人角色，主要负责数据产品模块\r \r 是满足持久性数据需求\r \r 工作流程：\r \r 需求受理定义问题业务域明确分析目标数据源定义数据分析建模数据结果可视化\r \r 业务理解数据理解数据准备建立模型评估模型模型部署\r \r 行动框架：\r \r 业务现状调研需求梳理迭代定义\r \r 业务现状：当前商业模式，产品所处于的阶段（核心），市场对本",
     "backlinks": [
       "log"
@@ -248,7 +248,7 @@
     "outlinks": []
   },
   {
-    "title": "\"简历业务盘点\"",
+    "title": "简历业务盘点",
     "layer": "entities",
     "tags": [
       "AI产品",
@@ -258,7 +258,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--简历业务盘点-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-简历业务盘点/",
     "snippet": "活动几乎围绕的AARRR模型-升级是3A4R多了一个认可认知以及一个召回\r \r 分析活动时必须要搞清楚活动类型，目的，评估标准\r \r 分析活动好坏时候需要把历史的活动串联起来找规律，验证研究规律结论\r \r 活动前对比，历史活动对比，也可ABtest\r \r 评估标准：实际vs目标、有活动vs自然增长、参加用户vs未参加用户、活动前用户vs活动后用户\r \r 参与对象，参与行为，参与奖励\r \r 策略层：转化如何优惠，优惠力度以及体现，表因是通过执行层的监控去定位出现问题的环节，根本原因是通过历史同类活动去做数据对比（例如渠道差异，文案图片差异，人群差异）\r \r \r \r A方案打折促销（面对价值评估的",
     "backlinks": [
       "log"
@@ -266,7 +266,7 @@
     "outlinks": []
   },
   {
-    "title": "\"修改意见\"",
+    "title": "修改意见",
     "layer": "entities",
     "tags": [
       "AI产品",
@@ -276,7 +276,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--修改意见-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-修改意见/",
     "snippet": "梳理一下自己目前缺失的准备安排逐个去针对性复习（最好看到对应薪资的负责职能以及要求）\r \r 你自己写的：建议复习好了之后面几家试手熟悉后先把G端面完再B端，再C端以此类推。会影响以后再找工作的方向与职业规划方向。\r \r 顺序错了，没有可能复习好再去面试，第二个先面C再B再G，可以想一下为什么我会这样建议\r \r \r \r 因为G端岗位都比较少所以需要。B端岗位比G端多一点所以放在C端后面。C端现在市场岗位是比较多，所以先接C端的面试，把面试的熟练度提上来。把状态提高后再去面B端与C端这样机会就更大。\r \r \r \r \r \r 项目造价网址：《文汇报》：香港康文署申9亿开发智慧图书馆系统 - 业界动态 ",
     "backlinks": [
       "log"
@@ -284,7 +284,7 @@
     "outlinks": []
   },
   {
-    "title": "\"AIGC指标梳理\"",
+    "title": "AIGC指标梳理",
     "layer": "entities",
     "tags": [
       "AI行业",
@@ -295,7 +295,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--AIGC指标梳理-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-AIGC指标梳理/",
     "snippet": "AI模型优化训练方向指标：\r \r \r \r 1.提高模型规模：\r \r \r \r 模型规模通常直接影响模型的理解和生成能力，规模越大，处理复杂任务的能力通常越强。\r \r \r \r \r \r 2.训练数据\r \r \r \r AI可以通过训练数据提高以下能力指标：\r \r     1.特定领域性能评估：这指的是模型在其训练数据所针对的特定任务或领域中的表现。通过评估指标衡量，如准确率、召回率、F1分数等\r \r \r \r     2.泛化能力：这是衡量模型能否将所学知识推广到新的、未见过的任务或领域的能力。\r \r \r \r \r \r 如何提高模型的特定领域性能和泛化能力：\r \r     数据多样性：在训练模型时，使用来自",
     "backlinks": [
       "log"
@@ -303,7 +303,7 @@
     "outlinks": []
   },
   {
-    "title": "\"AIGC架构面试八股文\"",
+    "title": "AIGC架构面试八股文",
     "layer": "entities",
     "tags": [
       "AI行业",
@@ -314,7 +314,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--AIGC架构面试八股文-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-AIGC架构面试八股文/",
     "snippet": "AIGC环境生态：\r \r  应用    APPLICATIONS    AI    \r  ----  --------------  ----- \r  模型    MODELS          IS A  \r  基础设施  INFRASTRUCTURE  FIVE  \r  芯片    CHIPS           LAYER \r  能源    ENERGY          CAKE  \r \r \r \r 从0到1设计一个Agent智能体：\r \r 明确核心问题→拆解核心能力→做分层架构→打磨设计细节→快速MVP验证效果→根据数据持续迭代优化\r \r \r \r 1.熟悉具体公司业务流程，根据业务确定",
     "backlinks": [
       "log"
@@ -322,7 +322,7 @@
     "outlinks": []
   },
   {
-    "title": "\"AI产品经理学习路线\"",
+    "title": "AI产品经理学习路线",
     "layer": "entities",
     "tags": [
       "AI行业",
@@ -333,7 +333,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--AI产品经理学习路线-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-AI产品经理学习路线/",
     "snippet": "结合当前就业市场趋势和空窗期特点，以下是针对您转向AI产品经理岗位的分析及建议：\r \r   \r \r \r \r 1. ​​市场需求旺盛​​\r    \r     AI技术加速渗透金融、医疗、教育、制造等行业，企业对AI产品经理的需求持续增长，尤其是具备​​跨领域知识​​（技术+业务）的复合型人才。\r     岗位薪资水平显著高于传统产品经理，一线城市资深岗位年薪可达60K-16薪，部分岗位甚至更高。\r \r 2. ​​竞争激烈但机会明确​​\r    \r     虽然求职者增多，但​​技术门槛​​（如AI基础知识、数据分析能力）和​​行业经验​​（如医疗、金融等垂直领域）筛选严格，供给仍小于需求。\r  ",
     "backlinks": [
       "log"
@@ -341,7 +341,7 @@
     "outlinks": []
   },
   {
-    "title": "\"AI模型优化训练指标\"",
+    "title": "AI模型优化训练指标",
     "layer": "entities",
     "tags": [
       "AI行业",
@@ -352,7 +352,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--AI模型优化训练指标-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-AI模型优化训练指标/",
     "snippet": "AI模型优化训练方向指标：\r \r \r \r 1.提高模型规模：\r \r \r \r 模型规模通常直接影响模型的理解和生成能力，规模越大，处理复杂任务的能力通常越强。\r \r \r \r \r \r 2.训练数据\r \r \r \r AI可以通过训练数据提高以下能力指标：\r \r     1.特定领域性能评估：这指的是模型在其训练数据所针对的特定任务或领域中的表现。通过评估指标衡量，如准确率、召回率、F1分数等\r \r \r \r     2.泛化能力：这是衡量模型能否将所学知识推广到新的、未见过的任务或领域的能力。\r \r \r \r \r \r 如何提高模型的特定领域性能和泛化能力：\r \r     数据多样性：在训练模型时，使用来自",
     "backlinks": [
       "log"
@@ -360,7 +360,7 @@
     "outlinks": []
   },
   {
-    "title": "\"ChatGPT各版本差异调研\"",
+    "title": "ChatGPT各版本差异调研",
     "layer": "entities",
     "tags": [
       "AI行业",
@@ -371,7 +371,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--ChatGPT各版本差异调研-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-ChatGPT各版本差异调研/",
     "snippet": "ChatGPT 的各个版本主要是指不同时间点发布的模型，其性能差异通常体现在模型的规模、训练数据、优化算法和特定任务的适应性等方面。以下是一些可能的具体差异：\r \r 1. 模型规模：ChatGPT 最初的版本是基于 GPT-3.5 模型，随后可能会有更大规模或更小规模的版本发布，如 GPT-3.5 XL 或 GPT-3.5 XXL。模型规模通常直接影响模型的理解和生成能力，规模越大，处理复杂任务的能力通常越强。\r    \r    \r 2. 训练数据：随着时间的推移，模型可能会使用更多或更高质量的训练数据进行训练，这有助于提高模型在特定领域的性能和泛化能力。\r    \r    \r 3. 优化算法",
     "backlinks": [
       "log"
@@ -379,7 +379,7 @@
     "outlinks": []
   },
   {
-    "title": "\"LLMWiki_VS_RAG调研\"",
+    "title": "LLMWiki_VS_RAG调研",
     "layer": "entities",
     "tags": [
       "AI行业",
@@ -390,7 +390,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--LLMWiki_VS_RAG调研-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-LLMWiki-VS-RAG调研/",
     "snippet": "技术维度                               核心考量点                 传统 RAG 动态运行时架构                                                                               LLM Wiki 静态编译期架构                                                                               \r  ---------------------------------  -----------------",
     "backlinks": [
       "log"
@@ -398,7 +398,7 @@
     "outlinks": []
   },
   {
-    "title": "\"大模型解构\"",
+    "title": "大模型解构",
     "layer": "entities",
     "tags": [
       "AI行业",
@@ -409,7 +409,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--大模型解构-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-大模型解构/",
     "snippet": "AI工作流：\r \r AIGC赋能电商公司：\r \r 极睿科技：极睿科技https://www.infimind.com/\r \r \r \r AIGC赋能教育：\r \r AIGC赋能广告：HeyGen\r \r 30人3个亿\r \r \r \r AIGC赋能办公场景：AIPPT\r \r AiPPT - 全智能 AI 一键生成 PPThttps://www.aippt.cn/?utmtype=SEM&utmsource=biyingsem&utmpage=aidlz&utmplan=ppt-02&utmunit=aic&utmkeyword=40338&msclkid=8f2e8de0ed5010640028eafa",
     "backlinks": [
       "log"
@@ -417,7 +417,7 @@
     "outlinks": []
   },
   {
-    "title": "\"CharGLM3部署\"",
+    "title": "CharGLM3部署",
     "layer": "entities",
     "tags": [
       "AI部署",
@@ -428,7 +428,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--CharGLM3部署-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-CharGLM3部署/",
     "snippet": "建议：60G存储的服务器\r \r 1.提前更新准备：\r \r \r \r 1.更新软件包\r \r \r sudo apt update\r \r 2.sudo apt upgrade\r \r \r \r \r \r 3.安装git\r \r \r sudo apt install git\r \r \r \r \r \r 4.安装项目\r     git clone https://github.com/THUDM/ChatGLM3.git\r 如果克隆失败可以加学术加速 \r source /etc/networkturbo\r \r \r \r \r 5.创建虚拟环境\r \r \r conda create --name myenv python\r 或",
     "backlinks": [
       "log"
@@ -436,7 +436,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Dialoqbase部署\"",
+    "title": "Dialoqbase部署",
     "layer": "entities",
     "tags": [
       "AI部署",
@@ -447,7 +447,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--Dialoqbase部署-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-Dialoqbase部署/",
     "snippet": "servicerole：\r \r https://supabase.com/dashboard/project/tnyeqmwisirlksjqasvt/settings/api-keys/legacy\r \r 我的servicerole：\r \r YOURSUPABASESERVICEROLEKEY\r \r \r \r 云服务器实例化创建好后：\r \r 1.更新软件包\r \r sudo apt update\r \r 2.sudo apt upgrade\r \r 3.安装git\r \r sudo apt install git\r \r \r \r 4.安装项目\r \r git clone https://github.co",
     "backlinks": [
       "log"
@@ -455,7 +455,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Dify工作流搭建\"",
+    "title": "Dify工作流搭建",
     "layer": "entities",
     "tags": [
       "AI部署",
@@ -466,7 +466,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--Dify工作流搭建-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-Dify工作流搭建/",
     "snippet": "解决Dify与本地模型兼容性问题的最优解之一，彻底绕过原生节点的model.mode校验限制，同时规避你之前遇到的ASCII编码错误。以下是具体操作细节和注意事项：\r \r   \r \r \r \r 原生问题分类器节点强制要求model.mode字段，而本地模型（如通过stvlynn/lms接入的）可能未被Dify正确识别为chat模式。用HTTP请求节点直接调用本地模型API，完全脱离Dify的原生模型封装层，从根源解决问题。\r \r   \r \r \r \r 1. 删除原问题分类器节点：避免原生节点的校验逻辑干扰。\r \r 2. 配置HTTP请求节点：\r    \r     URL：填写本地模型API地址（如",
     "backlinks": [
       "log"
@@ -474,7 +474,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Dify私有化部署\"",
+    "title": "Dify私有化部署",
     "layer": "entities",
     "tags": [
       "AI部署",
@@ -485,7 +485,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--Dify私有化部署-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-Dify私有化部署/",
     "snippet": "Dify作为开源LLM应用开发平台，其低代码/可视化编排、多模型支持、RAG引擎、企业级LLMOps等特性，使其适用于从初创企业到大型集团的各类公司，覆盖电商、金融、教育、制造、医疗、法律等多个垂直行业。\r \r 快速验证AI场景，降低开发成本，\r \r \r \r  需求痛点：需整合多系统（如ERP、CRM）、多模型（如GPT-4、Claude 3），实现AI能力的集中管理、合规监管；需支持高并发、高可用的生产环境。\r \r \r \r  需求痛点：数据涉及敏感信息（如金融交易、医疗病历、政府机密），需严格保障数据不出本地；需符合行业合规标准（如GDPR、等保三级）。\r \r \r \r  需求痛点：需快速集成",
     "backlinks": [
       "log"
@@ -493,7 +493,7 @@
     "outlinks": []
   },
   {
-    "title": "\"OpenClaw Skills市场\"",
+    "title": "OpenClaw Skills市场",
     "layer": "entities",
     "tags": [
       "AI部署",
@@ -504,7 +504,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--OpenClaw-Skills市场-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-OpenClaw-Skills市场/",
     "snippet": "OpenClaw Skills 市场：\r ------------------\r \r  市场              网址                                                                                                             \r :--------------: --------------------------------------------------------------------------------------------------------------",
     "backlinks": [
       "log"
@@ -512,7 +512,7 @@
     "outlinks": []
   },
   {
-    "title": "\"OpenClaw + LLM 电商平台集成指南\"",
+    "title": "OpenClaw + LLM 电商平台集成指南",
     "layer": "entities",
     "tags": [
       "AI部署",
@@ -523,7 +523,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--OpenClaw-+-LLM-电商平台集成指南-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-OpenClaw-+-LLM-电商平台集成指南/",
     "snippet": "bash\r \r pip install openclaw-python-sdk\r pip install langchain\r pip install openai   或 anthropic, cohere\r \r \r pip install pinecone-client\r \r pip install qdrant-client\r \r pip install chromadb\r \r \r pip install pandas numpy\r pip install faiss-cpu   或 faiss-gpu\r \r \r \r \r \r python\r from langchain.embeddin",
     "backlinks": [
       "log"
@@ -531,7 +531,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Skill封装与优化\"",
+    "title": "Skill封装与优化",
     "layer": "entities",
     "tags": [
       "AI部署",
@@ -542,7 +542,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--Skill封装与优化-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-Skill封装与优化/",
     "snippet": "我叫什么：skill的名称和定位\r     我负责什么：触发场景和职责范围\r \r \r     收到指令→分析→执行→输出\r \r \r     做事标准：格式、质量、输出规范\r \r \r \r     每次工作确立职责，不需要重头教\r \r \r \r \r \r \r     格式标准：表格列宽、字段顺序\r \r \r     内容规范：必填项、禁用词\r \r \r \r     行业规范：报销凭证要求\r \r \r \r     视觉规范：字体、颜色、间距\r \r \r \r     文件命名：日期公司金额\r \r \r \r \r \r \r \r     自动读取发票并且识别文字\r \r \r     自动格式化输出表格结果\r \r \r \r   ",
     "backlinks": [
       "log"
@@ -550,7 +550,7 @@
     "outlinks": []
   },
   {
-    "title": "\"电商AI_Claw方案\"",
+    "title": "电商AI_Claw方案",
     "layer": "entities",
     "tags": [
       "AI部署",
@@ -561,7 +561,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--电商AI_Claw方案-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-电商AI-Claw方案/",
     "snippet": "OpenClaw + LLM 在电商平台的典型应用场景：\r \r 1. 智能客服系统 - 自动应答、订单查询、售后处理\r 2. 商品推荐引擎 - 基于用户行为和对话意图的个性化推荐\r 3. 智能搜索 - 自然语言搜索、语义匹配、模糊查询\r 4. 内容生成 - 商品描述生成、营销文案、A/B测试文案\r 5. 用户画像分析 - 从对话中提取用户偏好、购买意图\r 6. 智能助手 - 购物顾问、比价助手、库存预警\r    \r    \r    \r    \r \r 技术架构方案\r ------\r \r \r \r python\r \r 复制\r      核心架构\r     电商平台前端 → OpenClaw Agen",
     "backlinks": [
       "log"
@@ -569,7 +569,7 @@
     "outlinks": []
   },
   {
-    "title": "\"电商自动化Skills\"",
+    "title": "电商自动化Skills",
     "layer": "entities",
     "tags": [
       "AI部署",
@@ -580,7 +580,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--电商自动化Skills-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-电商自动化Skills/",
     "snippet": "通过 OpenClaw Skills 实现电商平台后台的自动化操作，包括：\r \r - ✅ 自动登录电商平台后台\r - ✅ 自动处理订单、发货\r - ✅ 批量上传商品\r - ✅ 自动回复客服消息\r - ✅ 数据报表导出\r - ✅ 库存预警和自动补货\r \r ---\r \r \r \r \r \r  方案                             优点            缺点            适用场景                   \r  -----------------------------  ------------  ------------  -------------",
     "backlinks": [
       "log"
@@ -588,7 +588,7 @@
     "outlinks": []
   },
   {
-    "title": "\"多模态AI笔记\"",
+    "title": "多模态AI笔记",
     "layer": "entities",
     "tags": [
       "多模态",
@@ -597,7 +597,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--多模态AI笔记-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-多模态AI笔记/",
     "snippet": "LLM领域的AI应用\r \r \r \r 1、基座模型与上层应用，分层清晰、各有空间\r \r 2、应用层几乎不涉及模型和算法\r \r 3、逻辑性抢、更容易量化\r \r \r \r \r \r 多模态领域的AI应用\r \r 1、模型即是应用\r \r 2、多模型模块的组合\r \r 3、多模块底层逻辑的理解\r \r \r \r !ea5705823bbc7b820471ffb5ea7aa77C:\\Users\\Q\\Documents\\工作资料\\简历\\AIGC笔记随笔\\多模态Image\\ea5705823bbc7b820471ffb5ea7aa77.jpg\r \r \r \r \r \r \r \r \r \r \r \r 多模态领域的重要技术突破：\r \r",
     "backlinks": [
       "log"
@@ -605,7 +605,7 @@
     "outlinks": []
   },
   {
-    "title": "\"AIGC随笔\"",
+    "title": "AIGC随笔",
     "layer": "entities",
     "tags": [
       "随笔"
@@ -613,7 +613,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--AIGC随笔-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-AIGC随笔/",
     "snippet": "复习内容：生成对抗网络（GAN）、基于变换器（Transformer）架构、搭建GPT、BERT、变分自编码器（Variational Autoencoder, VAE）、\r \r \r \r 成为AIGC（人工智能生成内容）产品经理的学习路径通常包括以下几个方面：\r \r 1. 基础知识：\r    \r    - 产品管理基础：学习产品生命周期、市场调研、用户需求分析、MVP（最小可行产品）开发等。\r    - AI与机器学习基础：了解机器学习、深度学习、自然语言处理（NLP）等基础概念，可以通过在线课程或书籍学习。\r \r 2. 行业知识：\r    \r    - AIGC的应用领域：研究AIGC在内容",
     "backlinks": [
       "log"
@@ -621,7 +621,7 @@
     "outlinks": []
   },
   {
-    "title": "\"随笔\"",
+    "title": "随笔",
     "layer": "entities",
     "tags": [
       "随笔"
@@ -629,7 +629,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/LearningEssays/2026-04-18--随笔-/",
+    "url": "/2026/04/18/LearningEssays/2026-04-18-随笔/",
     "snippet": "函数是封装了一些独立的功能，可以直接调用，能将一些数据（参数）传递进去进行处理，然后返回一些数据（返回值），也可以没有返回值。可以直接在模块中进行定义使用。所有传递给函数的数据都是显式传递的。\r \r \r \r \r \r 方法和函数类似，同样封装了独立的功能，但是方法是只能依靠类或者对象来调用的，表示针对性的操作。\r \r 方法可以操作类内部的数据\r \r \r \r 当类实例化对象后，如apple对象，再调用function时，\r 普通func，如fun1，就被称为是实例化方法，\r 定义在@staticmethod下的func，与class和实例化对象无关，所以依然属于函数,\r 定义在@classmeth",
     "backlinks": [
       "log"
@@ -637,7 +637,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Matplotlib基础\"",
+    "title": "Matplotlib基础",
     "layer": "ML",
     "tags": [
       "机器学习",
@@ -647,7 +647,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/机器学习/2026-04-18--Matplotlib基础-/",
+    "url": "/2026/04/18/机器学习/2026-04-18-Matplotlib基础/",
     "snippet": "from pylab import mpl\r mpl.rcParams\"font.sans-serif\"=\"SimHei\"\r mpl.rcParams\"axes.unicodeminu\"= False\r \r \r \r \r plt.gridTrue, linestyle=\"--\",alpha=0.5\r \r \r \r \r plt.xlable\"时间\"\r plt.ylable\"温度\"\r plt.title\"中午的温度变化图\"，fontsize=20\r \r \r \r plt.savefig\"test.png\"\r \r 画图流程\r \r import matplotlib.pyplot as plt\r impor",
     "backlinks": [
       "log"
@@ -655,7 +655,7 @@
     "outlinks": []
   },
   {
-    "title": "\"ndarray运算\"",
+    "title": "ndarray运算",
     "layer": "ML",
     "tags": [
       "机器学习",
@@ -665,7 +665,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/机器学习/2026-04-18--ndarray运算-/",
+    "url": "/2026/04/18/机器学习/2026-04-18-ndarray运算/",
     "snippet": "score = np.random.randint40, 100,10,5\r \r printscore\r \r \r testscore = score6:, 0:5\r \r \r printtestscore  60\r \r \r printtestscoretestscore  60 =1\r \r 判断or&and\r \r \r  np.allscore0:2, :  60\r False\r np.any\r \r  np.anyscore0:2, :  80\r True\r \r \r \r \r \r \r \r temp = score:4, :4\r np.wheretemp  60, 1, 0\r \r \r np.where",
     "backlinks": [
       "log"
@@ -673,7 +673,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Numpy基础\"",
+    "title": "Numpy基础",
     "layer": "ML",
     "tags": [
       "机器学习",
@@ -683,7 +683,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/机器学习/2026-04-18--Numpy基础-/",
+    "url": "/2026/04/18/机器学习/2026-04-18-Numpy基础/",
     "snippet": "a = np.array1,2,3,4,5,6\r \r a1 = np.arraya\r \r a2 = np.asarraya\r \r  关于array和asarray的不同\r \r 等于创建一个软链接\r 当数组赋值给另外一个变量后，\r array：修改变量不会改变\r asarray： 会跟着改变\r \r \r \r 生成各种不同的数组\r \r 生成固定范围的数组\r \r np.linspace start, stop, num, endpoint\r 参数:\r start:序列的起始值\r stop:序列的终止值\r num:要生成的等间隔样例数量，默认为50\r endpoint:序列中是否包含stop值，默认为t",
     "backlinks": [
       "log"
@@ -691,7 +691,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Pandas基础\"",
+    "title": "Pandas基础",
     "layer": "ML",
     "tags": [
       "机器学习",
@@ -701,7 +701,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/机器学习/2026-04-18--Pandas基础-/",
+    "url": "/2026/04/18/机器学习/2026-04-18-Pandas基础/",
     "snippet": "创建Series\r \r import pandas as pd \r s = pd.Series'banana',42\r \r 创建DataFrame\r \r namelist = pd.DataFrame\r \t{\r \t\t'Name':'Tome','Bob', \r \t\t'Occupation':'Teacher','IT Engineer', \r \t\t'age':28,36\r \t}\r \r \r \r \r loc\t使用索引值取子集\r iloc \t使用索引位置取子集\r dtype或dtypes Series\t内容的类型\r T \tSeries的转置矩阵\r shape \t数据的维数\r size \tSeries",
     "backlinks": [
       "log"
@@ -709,7 +709,7 @@
     "outlinks": []
   },
   {
-    "title": "\"深度学习与机器学习笔记\"",
+    "title": "深度学习与机器学习笔记",
     "layer": "ML",
     "tags": [
       "机器学习",
@@ -719,7 +719,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/机器学习/2026-04-18--深度学习与机器学习笔记-/",
+    "url": "/2026/04/18/机器学习/2026-04-18-深度学习与机器学习笔记/",
     "snippet": "mean平均值\r 热数据\r \r sns.heatmapdataframe.corr, annot=True, fmt='.1f'\r \r 例子用于理解\r 对比两个最小值的均值\r （第一个age 提取出年龄）（:2（把排好序的的两个拿出））\r \r np.meanage for name ,age in sortedpersonandage.items, key = lambda e: e1:2\r \r 对比两个最小值的均值\r 【:topn】最前的两个数值\r historyprice数据\r e0取 面积：价格 的面积\r \r def findpricebysimilarhistoryprice,quer",
     "backlinks": [
       "log"
@@ -727,7 +727,7 @@
     "outlinks": []
   },
   {
-    "title": "\"机器学习算法分类\"",
+    "title": "机器学习算法分类",
     "layer": "ML",
     "tags": [
       "机器学习",
@@ -737,7 +737,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/机器学习/2026-04-18--机器学习算法分类-/",
+    "url": "/2026/04/18/机器学习/2026-04-18-机器学习算法分类/",
     "snippet": "1. 监督学习\r - 定义：输入数据是由输入特征值和目标值所组成\r \t-  函数的输出可以是连续的值（回归）\r \t-  或是输出有限个离散值（分类）\r 2. 无监督学习\r - 定义：输入数据是由输入特征值组成，没有目标值\r \t- 输入数据没有被标记，也没有确定的结果。样本数据类别未知\r \t- 需要根据样本间的相似性对样本集进行类别划分\r 3. 半监督学习\r - 定义训练集同时包含有标记样本数据和未标记样本数据\r 4. 强化学习\r \r \tIn\tOut\t目的\t案例\r 监督学习\r supervised learning\t有标签\t有反馈\t 预测结果\t猫狗分类 房价预测\r 无监督学习\r unsuperv",
     "backlinks": [
       "log"
@@ -745,7 +745,7 @@
     "outlinks": []
   },
   {
-    "title": "\"矩阵运算\"",
+    "title": "矩阵运算",
     "layer": "ML",
     "tags": [
       "机器学习",
@@ -755,7 +755,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/机器学习/2026-04-18--矩阵运算-/",
+    "url": "/2026/04/18/机器学习/2026-04-18-矩阵运算/",
     "snippet": "C = A x B\r \r \r \r   矩阵乘法的性质\r 矩阵的乘法不满足交换律：A×B≠B×A\r \r 矩阵的乘法满足结合律。即：A×（B×C）=（A×B）×C\r \r 单位矩阵：在矩阵的乘法中，有一种矩阵起着特殊的作用，如同数的乘法中的 1,我们称 这种矩阵为单位矩阵．它是个方阵，一般用 I 或者 E 表示，从 左上角到右下角的对角线（称为主对角线）上的元素均为 1 以外全都为 0\r \r \r np.matmul\r np.dot\r \r \r \r 二者都是矩阵乘法。 np.matmul中禁止矩阵与标量的乘法。 在矢量乘矢量的內积运算中，np.matmul与np.dot没有区别。",
     "backlinks": [
       "log"
@@ -763,7 +763,7 @@
     "outlinks": []
   },
   {
-    "title": "\"云环境笔记\"",
+    "title": "云环境笔记",
     "layer": "OS",
     "tags": [
       "云环境",
@@ -772,7 +772,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/云环境/2026-04-18--云环境笔记-/",
+    "url": "/2026/04/18/云环境/2026-04-18-云环境笔记/",
     "snippet": "https://www.bistudio.com.cn/cloudDetail?cloudid=1",
     "backlinks": [
       "log"
@@ -780,7 +780,7 @@
     "outlinks": []
   },
   {
-    "title": "\"企业适用大模型场景参考\"",
+    "title": "企业适用大模型场景参考",
     "layer": "PM",
     "tags": [
       "产品经理",
@@ -789,7 +789,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--企业适用大模型场景参考-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-企业适用大模型场景参考/",
     "snippet": "企业内部应用场景：\r \r - 数据处理：大型语言模型可以用于数据清洗和预处理。\r - 自然语言查询：可以通过自然语言来查询复杂的数据集。\r - 文本分析：进行情感分析、主题建模等。\r - 生成报告：自动生成数据分析报告。\r - 信息检索：更高效地从大量数据中检索有价值的信息。\r - 预测分析：基于历史数据进行预测。\r - 数据可视化：辅助在报告中生成文本解释。\r - 自动编程：生成数据查询或数据转换的代码。\r - 聊天机器人：提供数据分析的实时客户支持。\r - 智能排序：按重要性或其他标准自动排序数据。\r \r \r \r 企业内部应用场景：\r \r - 文本生成：自动生成文章或博客。\r - 文本编辑",
     "backlinks": [
       "log"
@@ -797,7 +797,7 @@
     "outlinks": []
   },
   {
-    "title": "\"内容推荐与增长业务\"",
+    "title": "内容推荐与增长业务",
     "layer": "PM",
     "tags": [
       "产品经理",
@@ -806,7 +806,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--内容推荐与增长业务-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-内容推荐与增长业务/",
     "snippet": "增长sense指在数据驱动下，通过系统性思维识别业务增长机会、分析问题根源并制定有效策略的能力。其本质是将供需理论与用户生命周期结合，从全链路视角挖掘增长点。例如，当用户活跃度下降时，需通过AARRR模型（获取-激活-留存-变现-推荐）定位问题环节，而非仅停留在数据表象。\r \r \r \r 1. 从数据统计到因果推理  \r    初级分析师常陷入“描述现象”的陷阱（如仅报告DAU下降20%），而成熟分析师会构建用户生命周期框架，结合广告算法调整、竞品分流等外部因素，量化各因素对结果的贡献度（如获客质量下降导致40%的DAU降幅）。这种分析需掌握归因分析和因素关联分析技术。\r \r 2. 系统化思维构",
     "backlinks": [
       "log"
@@ -828,7 +828,7 @@
     "outlinks": []
   },
   {
-    "title": "\"复盘临时文档\"",
+    "title": "复盘临时文档",
     "layer": "PM",
     "tags": [
       "产品经理",
@@ -837,7 +837,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--复盘临时文档-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-复盘临时文档/",
     "snippet": "1.调研：\r 1.1 可行性：根据调研得出，目前香港项目是已现有旧系统，大致部分香港的系统与内地Interlib系统大致流程相同。大致上可行\r 1.2 技术可行性：除去几个有技术难度的新系统。可以调配招人进行技术攻破克服。\r 1.3 资源可行性：目前人手资源不足，可以招人解决人手资源问题，或者等其他项目收尾，释放资源投入到香港项目\r 风险：\r 技术风险：目前有技术难题或者难以攻破，需要对仅有几个技术难题的系统对外外包。\r 例如：DRM、IVR、BIT等\r 投资预算在可接受范围之内\r \r \r 2. 立项\r 2.1 目标：香港项目，作用于香港政府职员用于图书馆与康文署的系统管理\r 2.2 产品价值",
     "backlinks": [
       "log"
@@ -845,7 +845,7 @@
     "outlinks": []
   },
   {
-    "title": "\"广告复盘\"",
+    "title": "广告复盘",
     "layer": "PM",
     "tags": [
       "产品经理",
@@ -854,7 +854,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--广告复盘-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-广告复盘/",
     "snippet": "在引入期和成长期，产品的核心目标是打磨用户体验，快速的拉新增长，这时不宜做过度的商业化（成熟稳定期可以逐渐扩大商业化）\r \r \r \r \r \r \r \r 品牌广告\r \r 品牌广告的目的是通过大量的曝光增强品牌心智，基本的承载形式是开屏广告和头图；\r \r 效果广告\r \r 效果广告的目的是吸引点击，产生消费或转化，基本的承载形式是信息流广告。\r \r !imghttps://image.woshipm.com/wp-files/2021/09/3mOYpUSO0JAlmY1SRqux.png\r \r \r \r 需求方平台：广告主的策略计划都在DSP上\r \r 当一个流量过来的时候，需要在 100ms 以内，完",
     "backlinks": [
       "log"
@@ -862,7 +862,7 @@
     "outlinks": []
   },
   {
-    "title": "\"数据分析与数据产品经理\"",
+    "title": "数据分析与数据产品经理",
     "layer": "PM",
     "tags": [
       "产品经理",
@@ -871,7 +871,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--数据分析与数据产品经理-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-数据分析与数据产品经理/",
     "snippet": "数据分析：数据分析师理当是业务的裁判员，同时具备运动员视角。数分的工作都是客观评价业务的健康情况，同时帮助业务寻找机会点。\r \r 是满足重点数据结果价值排序：数据决策数据分析数据采集数据规划\r \r 数据产品经理：数据产品经理是为帮助企业更好的沉淀数据资产以及数据口径的收口人角色，主要负责数据产品模块\r \r 是满足持久性数据需求\r \r 工作流程：\r \r 需求受理定义问题业务域明确分析目标数据源定义数据分析建模数据结果可视化\r \r 业务理解数据理解数据准备建立模型评估模型模型部署\r \r 行动框架：\r \r 业务现状调研需求梳理迭代定义\r \r 业务现状：当前商业模式，产品所处于的阶段（核心），市场对本",
     "backlinks": [
       "log"
@@ -879,7 +879,7 @@
     "outlinks": []
   },
   {
-    "title": "\"简历业务盘点\"",
+    "title": "简历业务盘点",
     "layer": "PM",
     "tags": [
       "产品经理",
@@ -888,7 +888,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--简历业务盘点-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-简历业务盘点/",
     "snippet": "活动几乎围绕的AARRR模型-升级是3A4R多了一个认可认知以及一个召回\r \r 分析活动时必须要搞清楚活动类型，目的，评估标准\r \r 分析活动好坏时候需要把历史的活动串联起来找规律，验证研究规律结论\r \r 活动前对比，历史活动对比，也可ABtest\r \r 评估标准：实际vs目标、有活动vs自然增长、参加用户vs未参加用户、活动前用户vs活动后用户\r \r 参与对象，参与行为，参与奖励\r \r 策略层：转化如何优惠，优惠力度以及体现，表因是通过执行层的监控去定位出现问题的环节，根本原因是通过历史同类活动去做数据对比（例如渠道差异，文案图片差异，人群差异）\r \r \r \r A方案打折促销（面对价值评估的",
     "backlinks": [
       "log"
@@ -896,7 +896,7 @@
     "outlinks": []
   },
   {
-    "title": "\"面试修改意见参考\"",
+    "title": "面试修改意见参考",
     "layer": "PM",
     "tags": [
       "产品经理",
@@ -905,7 +905,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--面试修改意见参考-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-面试修改意见参考/",
     "snippet": "梳理一下自己目前缺失的准备安排逐个去针对性复习（最好看到对应薪资的负责职能以及要求）\r \r 你自己写的：建议复习好了之后面几家试手熟悉后先把G端面完再B端，再C端以此类推。会影响以后再找工作的方向与职业规划方向。\r \r 顺序错了，没有可能复习好再去面试，第二个先面C再B再G，可以想一下为什么我会这样建议\r \r \r \r 因为G端岗位都比较少所以需要。B端岗位比G端多一点所以放在C端后面。C端现在市场岗位是比较多，所以先接C端的面试，把面试的熟练度提上来。把状态提高后再去面B端与C端这样机会就更大。\r \r \r \r \r \r 项目造价网址：《文汇报》：香港康文署申9亿开发智慧图书馆系统 - 业界动态 ",
     "backlinks": [
       "log"
@@ -913,7 +913,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Flask基础\"",
+    "title": "Flask基础",
     "layer": "skills",
     "tags": [
       "Flask",
@@ -923,7 +923,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Flask基础-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Flask基础/",
     "snippet": "App 等于整个项目\r \r 原理：线程控制，通过线程id来区分\r \r request.remoteuser\r request.remoteaddr\r \r \r \r \r mydict = None   type:dict\r \r \r \r \r \r \r @app.route'/user', methods=\"get\", \"post\"\r def helloworld:\r      ==========request基础属性=============\r      请求url地址\r      printrequest.url\r      发送请求的用户和ip\r      printrequest.remote",
     "backlinks": [
       "log"
@@ -931,7 +931,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Flask基础（二）\"",
+    "title": "Flask基础（二）",
     "layer": "skills",
     "tags": [
       "Flask",
@@ -941,7 +941,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Flask基础（二）-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Flask基础（二）/",
     "snippet": "如果是底层配置需求（有错需要警告的话）就用方法''提取，空就会报错\r 如果是无关大雅的外层需求，可以用get.''来提取，空也不会报错\r \r \r \r \r \r \r from flask import Blueprint, urlfor\r \r homebp = Blueprint\"hone\", name, urlprefix = '/home'\r \r \r \r @homebp.beforerequest\r def processrequest:\r \tprint \"beforerequest调用了\"\r \r from .views import \r \r \r \r \r \r \r 1.请求上下文:request",
     "backlinks": [
       "log"
@@ -949,7 +949,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Flask数据操作\"",
+    "title": "Flask数据操作",
     "layer": "skills",
     "tags": [
       "Flask",
@@ -959,7 +959,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Flask数据操作-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Flask数据操作/",
     "snippet": "user.query.optionsloadonlyuser.id\r \r \r \r （增加数据主要需要三步操作）\r \r \r \r \r \r \r \r \r     user1 = Username='zs', age=20\r      user1.name = 'zs'\r      user1.age = 20\r \r      2.将模型对象添加到会话中 \r     db.session.adduser1\r      添加多条记录\r      db.session.addalluser1, user2, user3\r \r      3.提交会话 会提交事务\r      sqlalchemy会自动创建隐式",
     "backlinks": [
       "log"
@@ -967,7 +967,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Flask数据迁移\"",
+    "title": "Flask数据迁移",
     "layer": "skills",
     "tags": [
       "Flask",
@@ -977,7 +977,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Flask数据迁移-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Flask数据迁移/",
     "snippet": "...\r \r from flaskmigrate import Migrate\r \r ...\r \r \r def registerextensionsapp:\r     \"\"\"组件初始化\"\"\"\r \r     ...\r \r      数据迁移组件初始化\r     Migrateapp, db\r \r      导入模型类\r     from models import user\r \r \r \r SET命令",
     "backlinks": [
       "log"
@@ -985,7 +985,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Flask注意点\"",
+    "title": "Flask注意点",
     "layer": "skills",
     "tags": [
       "Flask",
@@ -995,7 +995,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Flask注意点-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Flask注意点/",
     "snippet": "app.config\"RESTFULJSON\" = {\"ensureascii\": False}\r \r \r app.config\"JSONASASCII\" = Flask\r \r \r 内容执行顺序从上到下\r \r \r \r from flask import Flask\r from settings import configdict\r from flasksqlalchemy import SQLAlchemy\r \r \r \r \r db = SQLAlchemy\r \r \r \r \r \r \r def createappconfigname:\r      1.创建app\r     app = Flaskn",
     "backlinks": [
       "log"
@@ -1003,7 +1003,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Flask虚拟环境\"",
+    "title": "Flask虚拟环境",
     "layer": "skills",
     "tags": [
       "Flask",
@@ -1013,7 +1013,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Flask虚拟环境-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Flask虚拟环境/",
     "snippet": "pip freeze  requirements.txt\r \r \r pip install -r requirements.txt  -i 源",
     "backlinks": [
       "log"
@@ -1021,7 +1021,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Flask链接MySQL\"",
+    "title": "Flask链接MySQL",
     "layer": "skills",
     "tags": [
       "Flask",
@@ -1031,7 +1031,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Flask链接MySQL-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Flask链接MySQL/",
     "snippet": "在Mysql命令行中更改时区\r \r \r Copy\r mysql  SET timezone = '+8:00';  此为北京时，我们所在东8区\r Copy\r mysql flush privileges;  立即生效",
     "backlinks": [
       "log"
@@ -1039,7 +1039,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Git基础命令\"",
+    "title": "Git基础命令",
     "layer": "skills",
     "tags": [
       "Git",
@@ -1048,7 +1048,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Git基础命令-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Git基础命令/",
     "snippet": "版本查询:sit --version\r 查看当前仓库的状态信息：git status\r 将单个文件加入缓存区：git add绿了\r 将所有文件加入缓存区：git add.\r 提交这次变更：git commit -m<messagemessage-描述\r 查看日志：git log\r 将缓存区拿出来：绿变红git reset<filename\r \r 生成密钥：ssh-keygen -t rsa\r 查看公钥：cat /.ssh/idrsa.pub\r 主题部署上线：hexo deploy",
     "backlinks": [
       "log"
@@ -1056,7 +1056,7 @@
     "outlinks": []
   },
   {
-    "title": "\"MySQL操作分类\"",
+    "title": "MySQL操作分类",
     "layer": "skills",
     "tags": [
       "MySQL",
@@ -1065,7 +1065,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--MySQL操作分类-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-MySQL操作分类/",
     "snippet": "select....\r \r \r \r \r insert delete update\r insert 增\r delete 删\r update 改\r \r \r \r create ： 新建，等同增\r drop：删除\r alter：修改\r \r \r \r \r \r 事务提交：commit；\r 事务回滚：rollback；\r \r \r \r （）\r \r 授权：grant\r 撤销授权revoke",
     "backlinks": [
       "log"
@@ -1073,7 +1073,7 @@
     "outlinks": []
   },
   {
-    "title": "\"MySQL笔记\"",
+    "title": "MySQL笔记",
     "layer": "skills",
     "tags": [
       "MySQL",
@@ -1082,7 +1082,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--MySQL笔记-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-MySQL笔记/",
     "snippet": "1.\r \r distinct可以去除重复数据行\r \r 2.\r \r like是模糊查询关键字\r %表示任意多个任意字符\r 表示一个任意字符\r \r 例1：查询姓黄的学生:\r \r select  from students where name like '黄%';\r 例2：查询姓黄并且“名”是一个字的学生:\r \r select  from students where name like '黄';\r 例3：查询姓黄或叫靖的学生:\r \r select  from students where name like '黄%' or name like '%靖';\r \r \r 3.\r \r \r between",
     "backlinks": [
       "log"
@@ -1090,7 +1090,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Conda启动命令\"",
+    "title": "Conda启动命令",
     "layer": "skills",
     "tags": [
       "Python",
@@ -1100,7 +1100,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Conda启动命令-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Conda启动命令/",
     "snippet": "redis-server.exe\r \r 绑定端口号\r redis-cli.exe -h 127.0.0.1 -p 6379",
     "backlinks": [
       "log"
@@ -1108,7 +1108,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Conda基础命令\"",
+    "title": "Conda基础命令",
     "layer": "skills",
     "tags": [
       "Python",
@@ -1118,7 +1118,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Conda基础命令-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Conda基础命令/",
     "snippet": "查看虚拟环境 conda info -e\r \r 2019-05-16 update: 这个道理跟家里的电视机是一样一样的，安装conda就相当于买了一台电视机，但是有电视了不意味着你就能看节目了，你要手动添加频道才能看你想看的电视节目。\r 官方channel: 先不要急着添加这两个哦,只要添加下面的清华的4个镜像地址就足够了的：\r \r conda config --add channels bioconda\r conda config --add channels conda-forge\r 官方的话这两个channel应该就够了的。\r \r 2020-06-14 update：但是其实现在用国内",
     "backlinks": [
       "log"
@@ -1126,7 +1126,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Conda必要操作\"",
+    "title": "Conda必要操作",
     "layer": "skills",
     "tags": [
       "Python",
@@ -1136,7 +1136,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Conda必要操作-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Conda必要操作/",
     "snippet": "进入虚拟环境\r  source activate envname \r \r 安装命令:\r  conda install pytest\r 搜索\r  conda search pytest\r 安装完成后，可以用“which 软件名”来查看该软件安装的位置：\r  which gatk\r 如需要安装特定的版本:\r conda install 软件名=版本号\r conda install gatk=3.7\r \r 查看已安装软件:\r conda list\r \r 更新指定软件:\r conda update gatk\r \r 卸载指定软件:\r conda remove gatk\r \r \r 退出conda环境\r .",
     "backlinks": [
       "log"
@@ -1144,7 +1144,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Conda环境导入\"",
+    "title": "Conda环境导入",
     "layer": "skills",
     "tags": [
       "Python",
@@ -1154,7 +1154,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Conda环境导入-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Conda环境导入/",
     "snippet": "联网复制\r 1.导出已有环境\r 激活环境envname环境名称\r \r conda activate envname\r 导出环境\r \r conda env export --file envname.yml\r 将envname.yml复制到另一台机器上，导入\r \r conda env create -f envname.yml\r 复制到环境仅包含原来环境中使用conda install 安装的包。\r 2. 导入pip安装的包需进入虚拟机环境\r 导出安装库源机器\r \r pip freeze  requirements.txt\r 导入安装库目标机器\r \r pip install -r require",
     "backlinks": [
       "log"
@@ -1162,7 +1162,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Conda环境导入2\"",
+    "title": "Conda环境导入2",
     "layer": "skills",
     "tags": [
       "Python",
@@ -1172,7 +1172,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Conda环境导入2-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Conda环境导入2/",
     "snippet": "conda本身的命令里是有移植这个选项的。\r 假如前提是，在本地的conda里已经有一个AAA的环境，我想创建一个新环境跟它一模一样的叫BBB，那么这样一句就搞定了：\r \r conda create -n BBB --clone AAA\r 1\r 但是如果是跨计算机呢。\r \r 其实是一样的。\r \r 查询conda create命令的原来说明，是这样的：\r \r –clone ENV \r Path to or name of existing local environment.\r 1\r 2\r –clone这个参数后面的不仅可以是环境的名字，也可以是环境的路径。\r \r 所以，很自然地，我们可以把原来",
     "backlinks": [
       "log"
@@ -1180,7 +1180,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Conda环境导入3\"",
+    "title": "Conda环境导入3",
     "layer": "skills",
     "tags": [
       "Python",
@@ -1190,7 +1190,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Conda环境导入3-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Conda环境导入3/",
     "snippet": "虚拟环境配置\r 统一虚拟环境，适用于python等高级语言\r 环境隔离\r 做人工智能，深度挖掘时会用到dokcer 里嵌套安装conda\r 2、更新包管理镜像源：\r \r conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/\r \r conda config --set showchannelurls yes\r \r 3、更新所有包：conda update --all\r \r 4、安装包：conda install xxx，\r 更新包：conda update xxx，\r 删除包：co",
     "backlinks": [
       "log"
@@ -1198,7 +1198,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Pip环境导出导入\"",
+    "title": "Pip环境导出导入",
     "layer": "skills",
     "tags": [
       "Python",
@@ -1208,7 +1208,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Pip环境导出导入-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Pip环境导出导入/",
     "snippet": "导出 \r \r pip freeze  requirements.txt\r \r 导入 \r \r pip install -r requirements.txt",
     "backlinks": [
       "log"
@@ -1216,7 +1216,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Vim常用命令\"",
+    "title": "Vim常用命令",
     "layer": "skills",
     "tags": [
       "Ubuntu",
@@ -1225,7 +1225,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Vim常用命令-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Vim常用命令/",
     "snippet": "取消vim末行模式下的数字\r \r \r 全选（高亮显示）：按esc后，然后ggvG或者ggVG\r \r 全部复制：按esc后，然后ggyG\r \r 全部删除：按esc后，然后dG\r \r \r \r \r vim命令行模式下输入  ：set nu　　取消显示：在vim命令行模式下输入：  set nonu\r 插入内容：\r \r 　　　　i: 插入光标前一个字符\r \r 　　　　I: 插入行首\r \r 　　　　a: 插入光标后一个字符\r \r 　　　　A: 插入行未\r \r 　　　　o: 向下新开一行,插入行首\r \r 　　　　O: 向上新开一行,插入行首\r \r 　　移动光标:\r \r 　　　　 h: 左移\r \r 　　　　",
     "backlinks": [
       "log"
@@ -1233,7 +1233,7 @@
     "outlinks": []
   },
   {
-    "title": "\"DRF框架\"",
+    "title": "DRF框架",
     "layer": "skills",
     "tags": [
       "Web",
@@ -1243,7 +1243,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--DRF框架-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-DRF框架/",
     "snippet": "- REF开发模式：\t前后端分离模式开发的\r  - - RESTful\r  - 域名\r   接口设计方法：【大型服务部署放在专有域名下（整个服务器提供此类服务）】\r  \r \thttps://api.example.com\r \r 小型 子应用：\r \r https://example.org/api/\r \r \r \r - 版本（在app后面放版本号）\r \r https://www.example.com/api/1.0/foo\r \r - 路径名词，复数\r 遵循restful风格：/books/\r \r - 请求动作\r - 没pk（id）：\r get + /books/ == 获取全部对象\r post ",
     "backlinks": [
       "log"
@@ -1251,7 +1251,7 @@
     "outlinks": []
   },
   {
-    "title": "\"Restful风格HTTP接口\"",
+    "title": "Restful风格HTTP接口",
     "layer": "skills",
     "tags": [
       "Web",
@@ -1261,7 +1261,7 @@
     "summary": "",
     "created": "2026-04-18",
     "updated": "2026-04-18",
-    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18--Restful风格HTTP接口-/",
+    "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-Restful风格HTTP接口/",
     "snippet": "查询书本列表数据\r get + /books/\r 请求方式 GET\r 请求路径 /books/\r 请求参数 无\r 请求返回 json\r \r class Booksview:\r \tdef getself, request:\r   \t\tbooks = books.objects.all\r   \t\tbooklist = \r   \t\tfro book in books:\r     \t\t\tbooklist.addend{\r         \t\t'id': book.id,\r         \t\t'btitle' : book.btitle,\r     \t\t}\r     \t\tcontext ={\r    ",
     "backlinks": [
       "log"

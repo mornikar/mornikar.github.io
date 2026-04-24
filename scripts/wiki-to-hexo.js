@@ -123,8 +123,19 @@ function parseFrontmatter(content) {
         if (colonIndex > 0) {
             const key = line.slice(0, colonIndex).trim();
             let value = line.slice(colonIndex + 1).trim();
+            // 去掉 YAML 值的外层引号（单引号或双引号包裹）
+            if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+                value = value.slice(1, -1).trim();
+            }
             if (value.startsWith('[') && value.endsWith(']')) {
-                value = value.slice(1, -1).split(',').map(v => v.trim()).filter(v => v);
+                value = value.slice(1, -1).split(',').map(v => {
+                    v = v.trim();
+                    // 数组元素也去引号
+                    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+                        v = v.slice(1, -1);
+                    }
+                    return v;
+                }).filter(v => v);
             }
             frontmatter[key] = value;
         }
@@ -170,8 +181,11 @@ function convertWikiLinks(body, wikiMeta) {
 
 function slugify(title) {
     return title
-        .replace(/[\\/:*?"<>|]/g, '-')
-        .replace(/\s+/g, '-')
+        .replace(/[\\/:*?"<>|]/g, '-')   // 非法字符替换为横线
+        .replace(/\s+/g, '-')             // 空格替换为横线
+        .replace(/_+/g, '-')              // 下划线替换为横线（避免URL中\_转义问题）
+        .replace(/-+/g, '-')              // 连续横线合并为一条
+        .replace(/^-+|-+$/g, '')          // 去掉首尾横线
         .trim();
 }
 
