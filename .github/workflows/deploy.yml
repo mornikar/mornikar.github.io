@@ -195,7 +195,9 @@ jobs:
         run: npm ci
 
       - name: 配置 AI（如可用）
-        if: ${{ secrets.WIKI_COMPILE_API_KEY != '' }}
+        env:
+          WIKI_COMPILE_API_KEY: ${{ secrets.WIKI_COMPILE_API_KEY }}
+        if: ${{ env.WIKI_COMPILE_API_KEY != '' }}
         run: |
           cat > .wiki/compile-config.json << EOF
           {
