@@ -579,6 +579,13 @@ var COLLECTIONS = [
   { key: 'ml',    name: '机器学习',       icon: 'brain', folder: 'source/_posts/机器学习/',       label: 'ML', category: '机器学习' },
   { key: 'cloud', name: '云环境',         icon: 'cloud', folder: 'source/_posts/云环境/',         label: 'Cloud', category: '云环境' },
   { key: 'posts', name: '所有文章',       icon: 'fileText', folder: 'source/_posts/',               label: '', category: '' },
+  // Wiki 源文件管理
+  { key: 'wiki-concepts', name: '📚 Wiki 概念', icon: 'sparkles', folder: '.wiki/concepts/', label: '', category: '' },
+  { key: 'wiki-entities', name: '✍️ Wiki 随笔', icon: 'penLine', folder: '.wiki/entities/', label: '', category: '' },
+  { key: 'wiki-raw-articles', name: '📥 素材·文章', icon: 'fileText', folder: '.wiki/raw/articles/', label: '', category: '' },
+  { key: 'wiki-raw-ml', name: '📥 素材·ML', icon: 'brain', folder: '.wiki/raw/ML/', label: '', category: '' },
+  { key: 'wiki-raw-pm', name: '📥 素材·PM', icon: 'settings', folder: '.wiki/raw/PM/', label: '', category: '' },
+  { key: 'wiki-audit', name: '🔍 审计反馈', icon: 'alertTriangle', folder: '.wiki/audit/', label: '', category: '' },
 ];
 
 var currentCollection = null;
@@ -914,8 +921,8 @@ function refreshList() {
   
   api('GET', '/repos/' + OWNER + '/' + REPO + '/contents/' + col.folder + '?ref=' + BRANCH)
     .then(function(files) {
-      // 如果是 "所有文章" 集合，需要递归获取子目录
-      if (col.key === 'posts') {
+      // 如果是 "所有文章" 集合或含子目录的 wiki 集合，需要递归获取
+      if (col.key === 'posts' || col.key.indexOf('wiki-raw-') === 0) {
         return loadAllPosts(files);
       }
       return Array.isArray(files) ? files : [];
@@ -1030,8 +1037,9 @@ function createNew() {
   
   // Set default values
   var today = new Date().toISOString().slice(0, 10);
-  $('edit-filename').value = today + '--新文章-';
-  $('edit-content').value = '# 在这里写标题\n\n';
+  var isWiki = col.key.indexOf('wiki-') === 0;
+  $('edit-filename').value = isWiki ? '新页面' : (today + '-新文章');
+  $('edit-content').value = isWiki ? '---\ntitle: 新页面\ntags: []\ncreated: ' + today + '\nupdated: ' + today + '\n---\n\n' : '# 在这里写标题\n\n';
   $('meta-title').value = '';
   $('meta-date').value = today;
   $('meta-category').value = col.category || '';
@@ -1147,14 +1155,15 @@ function saveFile() {
   var category = $('meta-category').value;
   
   // Build content with front matter
-  var meta = { title: title, date: date, category: category, tags: editTags };
-  var finalContent = buildFrontMatter(meta, content);
+  var col = COLLECTIONS.find(function(c){ return c.key === currentCollection; });
+  var isWiki = col && col.key.indexOf('wiki-') === 0;
+  // Wiki 文件自带 frontmatter，不需要再包装 Hexo 格式
+  var finalContent = isWiki ? content : buildFrontMatter({ title: title, date: date, category: category, tags: editTags }, content);
   
   // Encode to base64
   var encoded = btoa(unescape(encodeURIComponent(finalContent)));
   
   // Determine path
-  var col = COLLECTIONS.find(function(c){ return c.key === currentCollection; });
   var filePath;
   
   if (isNewFile || !currentFile) {
