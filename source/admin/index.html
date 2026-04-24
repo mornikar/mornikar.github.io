@@ -7,7 +7,7 @@
 <style>
 /* ====== Reset & Base ====== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-::root {
+:root {
   --bg-primary: #000000;
   --bg-secondary: rgba(10, 10, 10, 0.6);
   --bg-tertiary: rgba(20, 20, 20, 0.7);
@@ -15,9 +15,10 @@
   --bg-hover: rgba(255, 255, 255, 0.04);
   --bg-input: rgba(0, 0, 0, 0.3);
   --bg-editor: rgba(8, 8, 8, 0.7);
-  --text-primary: #FAFAFA;
-  --text-secondary: rgba(250, 250, 250, 0.65);
-  --text-muted: rgba(250, 250, 250, 0.35);
+  --editor-min-height: 500px;
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.75);
+  --text-muted: rgba(255, 255, 255, 0.45);
   --accent: #3B82F6;
   --accent-hover: #2563EB;
   --accent-dim: rgba(59, 130, 246, 0.12);
@@ -32,7 +33,7 @@
 }
 html, body { min-height: 100%; background: var(--bg-primary); color: var(--text-primary); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; font-size: 14px; line-height: 1.6; letter-spacing: -0.01em; }
 
-/* ====== Background Light Effects ====== */
+/* ====== Background Video ====== */
 .app-wrapper {
   min-height: 100vh;
   padding: 16px;
@@ -41,42 +42,21 @@ html, body { min-height: 100%; background: var(--bg-primary); color: var(--text-
   justify-content: center;
   position: relative;
   overflow: hidden;
-  background: radial-gradient(ellipse at 50% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-              radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 40%),
-              #000000;
+  background: #000000;
+}
+.bg-video {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
 }
 .light-beam-container {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 0;
-}
-.light-beam {
-  position: absolute;
-  width: 200%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.3) 20%, rgba(59, 130, 246, 0.5) 50%, rgba(59, 130, 246, 0.3) 80%, transparent 100%);
-  filter: blur(2px);
-  animation: beam-drift 12s ease-in-out infinite;
-}
-.light-beam:nth-child(1) { top: 25%; animation-delay: 0s; }
-.light-beam:nth-child(2) { top: 40%; animation-delay: -3s; opacity: .4; }
-.light-beam:nth-child(3) { top: 55%; animation-delay: -6s; opacity: .25; }
-.light-beam:nth-child(4) { top: 70%; animation-delay: -1.5s; opacity: .35; }
-@keyframes beam-drift {
-  0%, 100% { transform: translateX(-35%) rotate(-0.5deg); opacity: .2; }
-  50% { transform: translateX(-5%) rotate(0.5deg); opacity: .5; }
+  display: none;
 }
 .light-glow {
-  position: fixed;
-  width: 1000px; height: 500px;
-  background: radial-gradient(ellipse, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
-  top: 5%; left: 50%;
-  transform: translateX(-50%);
-  pointer-events: none;
-  z-index: 0;
-  filter: blur(60px);
+  display: none;
 }
 
 /* ====== Glass App Container (Subline Style) ====== */
@@ -84,9 +64,9 @@ html, body { min-height: 100%; background: var(--bg-primary); color: var(--text-
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 1400px;
+  max-width: 1600px;
   height: calc(100vh - 32px);
-  max-height: 900px;
+  max-height: 1000px;
   background: rgba(17, 17, 17, 0.55);
   backdrop-filter: blur(24px) saturate(1.2);
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
@@ -162,7 +142,7 @@ html, body { min-height: 100%; background: var(--bg-primary); color: var(--text-
 .tag-mini { font-size: 10px; padding: 1px 6px; border-radius: 8px; background: rgba(255,255,255,.06); color: var(--text-muted); }
 
 /* ====== Editor Panel ====== */
-.editor-panel { position: absolute; top: 0; right: -720px; width: 700px; max-width: 100%; height: 100%; background: rgba(12, 12, 12, 0.75); backdrop-filter: blur(20px) saturate(1.1); border-left: 1px solid rgba(255, 255, 255, 0.06); z-index: 200; display: flex; flex-direction: column; transition: right .3s cubic-bezier(0.16,1,0.3,1); box-shadow: -8px 0 40px rgba(0, 0, 0, 0.5); }
+.editor-panel { position: absolute; top: 0; right: -900px; width: 880px; max-width: 100%; height: 100%; background: rgba(12, 12, 12, 0.75); backdrop-filter: blur(20px) saturate(1.1); border-left: 1px solid rgba(255, 255, 255, 0.06); z-index: 200; display: flex; flex-direction: column; transition: right .3s cubic-bezier(0.16,1,0.3,1); box-shadow: -8px 0 40px rgba(0, 0, 0, 0.5); }
 .editor-panel.open { right: 0; }
 .editor-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); z-index: 199; opacity: 0; pointer-events: none; transition: opacity .3s; }
 .editor-overlay.show { opacity: 1; pointer-events: auto; }
@@ -185,7 +165,7 @@ html, body { min-height: 100%; background: var(--bg-primary); color: var(--text-
 .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .5px; }
 .form-input, .form-textarea, .form-select { width: 100%; padding: 9px 12px; background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 13px; font-family: inherit; outline: none; transition: all .2s; resize: vertical; }
 .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: rgba(59,130,246,.5); box-shadow: 0 0 0 2px rgba(59,130,246,.1); }
-.form-textarea { min-height: 300px; line-height: 1.7; font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace; font-size: 13px; tab-size: 2; }
+.form-textarea { min-height: var(--editor-min-height); line-height: 1.7; font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace; font-size: 13px; tab-size: 2; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .form-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
 
@@ -328,13 +308,9 @@ html, body { min-height: 100%; background: var(--bg-primary); color: var(--text-
 <body>
 
 <div class="app-wrapper">
-  <div class="light-beam-container">
-    <div class="light-beam"></div>
-    <div class="light-beam"></div>
-    <div class="light-beam"></div>
-    <div class="light-beam"></div>
-    <div class="light-glow"></div>
-  </div>
+  <video class="bg-video" id="bg-video" autoplay loop playsinline>
+    <source src="/videos/arknights-bg.mp4" type="video/mp4">
+  </video>
   <div class="app-glass">
 
 <!-- ============================================================ -->
@@ -600,6 +576,15 @@ var isNewFile = false;
 // UTILS
 // ============================================================
 function $(id) { return document.getElementById(id); }
+
+// Background video volume control (50%)
+document.addEventListener('DOMContentLoaded', function() {
+  var video = $('bg-video');
+  if (video) {
+    video.volume = 0.5;
+    video.play().catch(function() {});
+  }
+});
 
 function showStatus(msg, loading) {
   var el = $('status-msg');
