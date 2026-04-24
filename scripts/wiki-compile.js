@@ -655,6 +655,146 @@ async function main() {
         appendCompileLog(compiled);
     }
 
+    // Phase 6.A: 编译质量提升
+    if (!DRY_RUN && compiled.length > 0 && config) {
+        console.log('\n🔧 Phase 6.A: 编译质量提升\n');
+        const freshIndex6 = buildWikiIndex();
+
+        // 1. 页面长度检测 + 标记需拆分
+        for (const result of compiled) {
+            if (!fs.existsSync(result.outputPath)) continue;
+            const content = fs.readFileSync(result.outputPath, 'utf-8');
+            const { body } = parseFrontmatter(content);
+            const charCount = body.replace(/\s/g, '').length;
+
+            if (charCount > 2000) {
+                console.log(`  ⚠️ ${result.title} 过长 (${charCount}字)，标记为需拆分`);
+                // 在 frontmatter 中添加 needs_split 标记
+                const updated = content.replace(
+                    /^(---\n)/,
+                    `$1needs_split: true\nsplit_reason: "超过2000字(${charCount}字)"\n`
+                );
+                fs.writeFileSync(result.outputPath, updated, 'utf-8');
+            }
+        }
+
+        // 2. 交叉引用增强：编译新页面后，检查已有页面中是否应添加 [[新页面]] 链接
+        const newTitles = compiled.map(r => r.title);
+        for (const [title, info] of Object.entries(freshIndex6)) {
+            if (newTitles.includes(title)) continue; // 跳过新编译的页面
+            if (!fs.existsSync(info.file)) continue;
+
+            const content = fs.readFileSync(info.file, 'utf-8');
+            const { frontmatter, body } = parseFrontmatter(content);
+
+            // 检查 body 中是否提到了新页面的关键词但未链接
+            let modified = false;
+            let newBody = body;
+            for (const newTitle of newTitles) {
+                if (body.includes(`[[${newTitle}]]`)) continue; // 已有链接
+                if (body.includes(newTitle)) {
+                    // 在文本中提到了新标题但未链接，自动添加 WikiLink
+                    newBody = newBody.replace(
+                        new RegExp(`(?<!\\[\\[)${newTitle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?!\\]\\])`, 'g'),
+                        `[[${newTitle}]]`
+                    );
+                    modified = true;
+                }
+            }
+
+            if (modified) {
+                // 更新 frontmatter 的 updated 日期
+                const today = new Date().toISOString().split('T')[0];
+                const newContent = content.replace(
+                    body,
+                    newBody
+                ).replace(
+                    /updated: .*/,
+                    `updated: ${today}`
+                );
+                fs.writeFileSync(info.file, newContent, 'utf-8');
+                console.log(`  🔗 ${title}: 自动添加交叉引用`);
+            }
+        }
+
+        // 3. 近重复页检测：检查标题/内容相似度
+        const allPages = Object.entries(freshIndex6);
+        for (let i = 0; i < allPages.length; i++) {
+            for (let j = i + 1; j < allPages.length; j++) {
+                const [titleA, infoA] = allPages[i];
+                const [titleB, infoB] = allPages[j];
+                // 简单的标题相似度检查
+                const titleSimilarity = computeTitleSimilarity(titleA, titleB);
+                if (titleSimilarity > 0.8) {
+                    console.log(`  ⚠️ 可能重复: [[${titleA}]] ↔ [[${titleB}]] (相似度: ${(titleSimilarity * 100).toFixed(0)}%)`);
+                }
+            }
+        }
+
+        // 4. index.md 完全重建
+        rebuildWikiIndex(freshIndex6, compiled);
+    }
+
+    // Phase 6.B: 摄入增强（1→N 影响分析）
+    if (!DRY_RUN && compiled.length > 0 && config) {
+        console.log('\n📊 Phase 6.B: 摄入影响分析\n');
+        const freshIndex6b = buildWikiIndex();
+        const impactReport = [];
+
+        for (const result of compiled) {
+            const affectedPages = [];
+            const newTitle = result.title;
+
+            // 检查哪些已有页面与新编译页面相关
+            for (const [title, info] of Object.entries(freshIndex6b)) {
+                if (title === newTitle) continue;
+                if (!fs.existsSync(info.file)) continue;
+
+                const content = fs.readFileSync(info.file, 'utf-8');
+                const { frontmatter, body } = parseFrontmatter(content);
+
+                // 关联判定：标签交集 ≥2 或 body 中提到新标题
+                const newTags = result.tags || [];
+                const existingTags = Array.isArray(frontmatter.tags) ? frontmatter.tags : [];
+                const commonTags = newTags.filter(t => existingTags.includes(t));
+                const mentions = body.includes(newTitle);
+
+                if (commonTags.length >= 2 || mentions) {
+                    affectedPages.push({
+                        title,
+                        reason: commonTags.length >= 2
+                            ? `标签交集: ${commonTags.join(', ')}`
+                            : `文中提及: ${newTitle}`,
+                        action: 'add_cross_reference',
+                    });
+                }
+            }
+
+            if (affectedPages.length > 0) {
+                impactReport.push({
+                    source: newTitle,
+                    affected: affectedPages,
+                });
+                console.log(`  📈 ${newTitle} 影响了 ${affectedPages.length} 个已有页面:`);
+                affectedPages.forEach(p => console.log(`     - [[${p.title}]] (${p.reason})`));
+            }
+        }
+
+        // 保存影响报告
+        if (impactReport.length > 0) {
+            const reportPath = path.join(WIKI_DIR, 'compile-impact-report.json');
+            const existingReport = fs.existsSync(reportPath)
+                ? JSON.parse(fs.readFileSync(reportPath, 'utf-8'))
+                : [];
+            existingReport.push({
+                date: new Date().toISOString(),
+                impacts: impactReport,
+            });
+            fs.writeFileSync(reportPath, JSON.stringify(existingReport, null, 2), 'utf-8');
+            console.log(`  📄 影响报告已保存: compile-impact-report.json`);
+        }
+    }
+
     // Phase 5.B: AI 自动审阅
     if (!DRY_RUN && compiled.length > 0 && config) {
         console.log('\n🔍 Phase 5.B: AI 自动审阅\n');
@@ -953,6 +1093,99 @@ function markReviewStatus(outputPath, passed) {
         lines.splice(secondDash, 0, `reviewed: ${passed}`, `review_date: ${new Date().toISOString().split('T')[0]}`);
     }
     fs.writeFileSync(outputPath, lines.join('\n'), 'utf-8');
+}
+
+/**
+ * Phase 6.A: 计算两个标题的相似度（简单 Jaccard）
+ */
+function computeTitleSimilarity(a, b) {
+    const setA = new Set(a.toLowerCase().split(''));
+    const setB = new Set(b.toLowerCase().split(''));
+    const intersection = new Set([...setA].filter(x => setB.has(x)));
+    const union = new Set([...setA, ...setB]);
+    return union.size === 0 ? 0 : intersection.size / union.size;
+}
+
+/**
+ * Phase 6.A: 完全重建 index.md
+ * 编译后统计所有层级页面数，重建 index.md 的统计区块
+ */
+function rebuildWikiIndex(wikiIndex, compiled) {
+    const INDEX_FILE = path.join(WIKI_DIR, 'index.md');
+    if (!fs.existsSync(INDEX_FILE)) return;
+
+    // 统计每个层级的页面数
+    const counts = {};
+    LAYER_DIRS.forEach(dir => {
+        const dirPath = path.join(WIKI_DIR, dir);
+        if (fs.existsSync(dirPath)) {
+            const files = fs.readdirSync(dirPath).filter(f => f.endsWith('.md'));
+            counts[dir] = files.length;
+        } else {
+            counts[dir] = 0;
+        }
+    });
+    const total = Object.values(counts).reduce((a, b) => a + b, 0);
+
+    // 也统计 raw/
+    if (fs.existsSync(RAW_DIR)) {
+        let rawCount = 0;
+        function countRaw(dir) {
+            const items = fs.readdirSync(dir, { withFileTypes: true });
+            for (const item of items) {
+                const full = path.join(dir, item.name);
+                if (item.isDirectory()) countRaw(full);
+                else if (item.name.endsWith('.md')) rawCount++;
+            }
+        }
+        countRaw(RAW_DIR);
+        counts['raw (未编译)'] = rawCount;
+    }
+
+    // 读取 index.md
+    let content = fs.readFileSync(INDEX_FILE, 'utf-8');
+
+    // 替换统计区块
+    const statsBlock = [
+        '',
+        '## 统计',
+        '',
+        ...Object.entries(counts).map(([k, v]) => `- ${k}: ${v}`),
+        `- 总计: ${total}`,
+        '',
+    ].join('\n');
+
+    // 移除旧统计块
+    const statsRegex = /## 统计\n\n(- .+\n)*- 总计: \d+\n*/g;
+    content = content.replace(statsRegex, '');
+
+    // 插入新统计块（在"最近更新"前）
+    if (content.includes('## 最近更新')) {
+        content = content.replace('## 最近更新', statsBlock + '## 最近更新');
+    } else {
+        content = content.trimEnd() + '\n' + statsBlock;
+    }
+
+    // 添加本次编译记录
+    if (compiled.length > 0) {
+        const compileRecord = [
+            '',
+            `### 最近编译 (${new Date().toISOString().split('T')[0]})`,
+            '',
+            ...compiled.map(r => `- [[${r.title}]] → ${r.layer}/ (${r.tags.join(', ')})`),
+            '',
+        ].join('\n');
+
+        // 在"最近更新"前插入编译记录
+        if (content.includes('## 最近更新')) {
+            content = content.replace('## 最近更新', compileRecord + '## 最近更新');
+        } else {
+            content = content.trimEnd() + '\n' + compileRecord;
+        }
+    }
+
+    fs.writeFileSync(INDEX_FILE, content, 'utf-8');
+    console.log(`  📑 重建 index.md (总计: ${total} 页)`);
 }
 
 // ============ Phase 2: Wiki 搜索索引 ============

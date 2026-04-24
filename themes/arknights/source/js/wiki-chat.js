@@ -780,10 +780,62 @@
     bubble.className = 'wiki-chat-bubble'
     bubble.innerHTML = renderMarkdown(content)
     div.appendChild(bubble)
+
+    // Phase 6.C: 给 bot 消息添加"保存为知识"按钮
+    if (role === 'bot' && !isStreaming && content.length > 100) {
+      const saveBtn = document.createElement('button')
+      saveBtn.className = 'wiki-chat-save-knowledge'
+      saveBtn.title = '保存到知识库'
+      saveBtn.innerHTML = '📌'
+      saveBtn.addEventListener('click', () => {
+        saveConversationAsQuery(content)
+        saveBtn.innerHTML = '✅'
+        saveBtn.disabled = true
+        saveBtn.title = '已保存'
+      })
+      div.appendChild(saveBtn)
+    }
+
     if (isStreaming) div.dataset.streaming = 'true'
     messages.appendChild(div)
     messages.scrollTop = messages.scrollHeight
     return bubble
+  }
+
+  /**
+   * Phase 6.C: 保存对话到 .wiki/queries/（供 wiki-query-promote.js 提升）
+   * 前端只保存到 localStorage，提示用户后续可提升
+   */
+  function saveConversationAsQuery(botResponse) {
+    const input = document.getElementById('wiki-chat-input')
+    const userQuery = input ? input.value : ''
+    const pageTitle = document.title || '未知页面'
+    const pagePath = window.location.pathname
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+
+    // 保存到 localStorage 的待提升队列
+    const STORAGE_KEY_QUERIES = 'wiki-chat-pending-queries'
+    let pendingQueries = []
+    try {
+      pendingQueries = JSON.parse(localStorage.getItem(STORAGE_KEY_QUERIES) || '[]')
+    } catch (e) { pendingQueries = [] }
+
+    pendingQueries.push({
+      id: `query-${timestamp}`,
+      title: `查询: ${userQuery.substring(0, 50)}`,
+      page: pageTitle,
+      path: pagePath,
+      query: userQuery,
+      response: botResponse,
+      date: new Date().toISOString(),
+    })
+
+    // 最多保留 50 条
+    if (pendingQueries.length > 50) {
+      pendingQueries = pendingQueries.slice(-50)
+    }
+
+    localStorage.setItem(STORAGE_KEY_QUERIES, JSON.stringify(pendingQueries))
   }
 
   function renderMarkdown(text) {

@@ -825,3 +825,36 @@
     text-decoration none
     &:hover
       text-decoration underline
+
+// ─── Phase 6.C: 保存为知识按钮 ──────────────────────────────
+.wiki-chat-save-knowledge
+  position absolute
+  top 4px
+  right 4px
+  border none
+  background none
+  cursor pointer
+  font-size 14px
+  opacity 0
+  transition opacity .2s, transform .2s
+  padding 2px
+  border-radius 4px
+
+.wiki-chat-msg--bot
+  position relative
+  &:hover .wiki-chat-save-knowledge
+    opacity 0.6
+  .wiki-chat-save-knowledge:hover
+    opacity 1
+    transform scale(1.2)
+  .wiki-chat-save-knowledge:disabled
+    opacity 0.4
+    cursor default
+    transform none
+
+// ─── Phase 5.C: 反馈按钮 ──────────────────────────────────
+#wiki-chat-feedback-btn
+  opacity 0.7
+  transition opacity .2s
+  &:hover
+    opacity 1

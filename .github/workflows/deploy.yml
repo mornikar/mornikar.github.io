@@ -19,6 +19,8 @@ on:
       - '.docs-src/**'     # 项目文档源文件
       - 'source/admin/**'  # Decap CMS 管理界面
       - 'tools/**'         # 工具脚本（OAuth Worker 等）
+  schedule:
+    - cron: '0 3 * * *'    # 每天 UTC 3:00（北京时间 11:00）自动维护
   workflow_dispatch:
     inputs:
       mode:
@@ -164,6 +166,64 @@ jobs:
         run: node scripts/copy-assets.js
 
       - name: 部署到 GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
+          force_orphan: true
+
+  # Phase 6.D: 定时自维护任务
+  auto-maintain:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 配置 AI（如可用）
+        if: ${{ secrets.WIKI_COMPILE_API_KEY != '' }}
+        run: |
+          cat > .wiki/compile-config.json << EOF
+          {
+            "apiKey": "${{ secrets.WIKI_COMPILE_API_KEY }}",
+            "endpoint": "${{ secrets.WIKI_COMPILE_ENDPOINT }}",
+            "model": "${{ secrets.WIKI_COMPILE_MODEL }}"
+          }
+          EOF
+
+      - name: 运行自维护
+        run: node scripts/auto-maintain.js --audit-fix
+
+      - name: 部署（如有变更）
+        if: success()
+        run: |
+          npx hexo generate
+          node scripts/compile_css.js
+          npm install --save-dev pagefind
+          npx pagefind --site public --output-path public/pagefind
+          mkdir -p public/admin
+          cp source/admin/index.html public/admin/
+          cp source/admin/config.yml public/admin/
+          cp source/admin/callback.html public/admin/ 2>/dev/null || true
+          node scripts/build_docs_html.js
+          cp README.md public/
+          node scripts/copy-assets.js
+      - name: 部署到 GitHub Pages
+        if: success()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
