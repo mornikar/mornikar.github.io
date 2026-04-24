@@ -142,8 +142,4 @@ scripts/                   ← 自动化脚本
 | CI 构建历史 | https://github.com/mornikar/mornikar.github.io/actions |
 | GitHub 仓库 | https://github.com/mornikar/mornikar.github.io |
 
----
 
-## 📜 License
-
-MIT — 欢迎 Fork、借鉴、魔改。
