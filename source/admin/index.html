@@ -561,7 +561,8 @@ function toast(msg, type) {
   var c = $('toast-container');
   var t = document.createElement('div');
   t.className = 'toast ' + type;
-  t.innerHTML = (type==='success'?'✅':type==='error'?'❌':'ℹ️')+' '+escapeHtml(msg);
+  var icon = type==='success' ? ICONS.check : type==='error' ? ICONS.alertTriangle : '';
+  t.innerHTML = (icon ? '<span style="flex-shrink:0">' + icon + '</span>' : '') + escapeHtml(msg);
   c.appendChild(t);
   setTimeout(function(){ t.style.opacity='0'; setTimeout(function(){t.remove()},250) }, 3500);
 }
@@ -793,6 +794,16 @@ function showMainView() {
   $('user-avatar').textContent = avatarLetter;
   $('login-method').textContent = LOGIN_METHOD === 'oauth' ? '(OAuth)' : '(Token)';
   renderSidebar();
+  // Populate category dropdown from collections
+  var catSelect = $('meta-category');
+  if (catSelect) {
+    catSelect.innerHTML = '<option value="">未分类</option>';
+    COLLECTIONS.forEach(function(col) {
+      if (col.category) {
+        catSelect.innerHTML += '<option value="' + escapeHtml(col.category) + '">' + escapeHtml(col.name) + '</option>';
+      }
+    });
+  }
   selectCollection(COLLECTIONS[0].key);
 }
 
@@ -800,10 +811,10 @@ function showMainView() {
 // SIDEBAR
 // ============================================================
 function renderSidebar() {
-  var html = '<div style="padding:14px 16px 10px;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;font-weight:600">文章集合</div>';
+  var html = '<div class="sidebar-section-title">文章集合</div>';
   COLLECTIONS.forEach(function(col) {
     html += '<div class="sidebar-item' + (currentCollection===col.key ? ' active' : '') + '" onclick="selectCollection(\'' + col.key + '\')" data-col="' + col.key + '">' +
-      '<span class="sidebar-item-icon">' + col.icon + '</span>' +
+      '<span class="sidebar-item-icon">' + ICONS[col.icon] + '</span>' +
       '<span class="sidebar-item-name">' + col.name + '</span>' +
       '<span class="sidebar-count" id="count-' + col.key + '">-</span>' +
       '</div>';
@@ -895,7 +906,8 @@ function renderFileList() {
   
   if (filtered.length === 0) {
     var hint = q ? '没有匹配「' + escapeHtml(q) + '」的文件' : '此集合暂无文件';
-    $('file-list').innerHTML = '<div class="empty-state"><div class="empty-state-icon">' + (q ? '🔍' : '📂') + '</div><div class="empty-state-text">' + hint + '</div><div class="empty-state-hint">点击「新建」创建文章</div></div>';
+    var emptyIcon = q ? ICONS.search : ICONS.folderOpen;
+    $('file-list').innerHTML = '<div class="empty-state"><div class="empty-state-icon">' + emptyIcon + '</div><div class="empty-state-text">' + hint + '</div><div class="empty-state-hint">点击「新建」创建文章</div></div>';
     return;
   }
   
@@ -913,7 +925,7 @@ function renderFileList() {
     var subDir = pathParts.length > 3 ? pathParts[2] : '';
     
     html += '<div class="file-item' + (currentFile && currentFile.path===f.path ? ' selected' : '') + '" onclick="openFile(\'' + f.path + '\', \'' + f.sha + '\')">' +
-      '<span class="file-icon">📄</span>' +
+      '<span class="file-icon">' + ICONS.fileText + '</span>' +
       '<div class="file-info">' +
         '<div class="file-name">' + escapeHtml(f.name.replace('.md','')) + '</div>' +
         '<div class="file-meta">' + (subDir ? escapeHtml(subDir) + ' · ' : '') + formatDate(dateStr) + ' · ' + formatSize(f.size || 0) + '</div>' +
@@ -922,7 +934,7 @@ function renderFileList() {
   });
   
   if (!html) {
-    $('file-list').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📂</div><div class="empty-state-text">暂无 Markdown 文件</div></div>';
+    $('file-list').innerHTML = '<div class="empty-state"><div class="empty-state-icon">' + ICONS.folderOpen + '</div><div class="empty-state-text">暂无 Markdown 文件</div></div>';
     return;
   }
   
@@ -961,7 +973,7 @@ function createNew() {
   
   renderTagsInput();
   $('uploaded-images').innerHTML = '';
-  $('editor-title').textContent = '➕ 新建文章 · ' + col.name;
+  $('editor-title').textContent = '新建文章 · ' + col.name;
   $('btn-delete').style.display = 'none';
   
   openEditorPanel();
@@ -1002,7 +1014,7 @@ function openFile(path, sha) {
       renderTagsInput();
       $('uploaded-images').innerHTML = '';
       
-      $('editor-title').textContent = '✏️ 编辑 · ' + data.name;
+      $('editor-title').textContent = '编辑 · ' + data.name;
       $('btn-delete').style.display = '';
       
       openEditorPanel();
@@ -1101,7 +1113,7 @@ function saveFile() {
   
   api('PUT', '/repos/' + OWNER + '/' + REPO + '/contents/' + filePath, body)
     .then(function(result) {
-      toast('✅ 保存成功！', 'success');
+      toast('保存成功', 'success');
       showStatus('');
       $('btn-save').disabled = false;
       
@@ -1113,7 +1125,7 @@ function saveFile() {
       refreshList();
     })
     .catch(function(err) {
-      toast('❌ 保存失败: ' + err.message, 'error');
+      toast('保存失败: ' + err.message, 'error');
       showStatus('');
       $('btn-save').disabled = false;
     });
@@ -1140,7 +1152,7 @@ function doDelete() {
     sha: currentFile.sha,
     branch: BRANCH,
   }).then(function() {
-    toast('✅ 已删除 ' + currentFile.name, 'success');
+    toast('已删除 ' + currentFile.name, 'success');
     closeModal();
     closeEditor();
     refreshList();
@@ -1265,11 +1277,11 @@ function uploadImage(file) {
       
       // Insert markdown reference at cursor
       insertAtCursor('![' + data.filename + '](' + data.url + ')');
-      toast('✅ 上传成功: ' + data.filename, 'success');
+      toast('上传成功: ' + data.filename, 'success');
     }).catch(function(err) {
       var imgDiv = document.getElementById(div.id);
       if (imgDiv) imgDiv.querySelector('.loading-spinner').outerHTML = '<span style="color:var(--danger);font-size:11px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">✗</span>';
-      toast('❌ 上传失败: ' + err.message, 'error');
+      toast('上传失败: ' + err.message, 'error');
     });
   };
   reader.readAsDataURL(file);
@@ -1345,7 +1357,7 @@ document.addEventListener('keydown', function(e) {
       USER = u;
       setConnStatus('● 已连接 (OAuth)', 'ok');
       showMainView();
-      toast('✅ GitHub OAuth 登录成功！', 'success');
+      toast('GitHub OAuth 登录成功', 'success');
     }).catch(function(err) {
       showError('OAuth Token 验证失败: ' + err.message);
       logout();
