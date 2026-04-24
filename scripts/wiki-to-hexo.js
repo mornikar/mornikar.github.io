@@ -158,7 +158,7 @@ function convertWikiLinks(body, wikiMeta) {
         }
 
         if (meta) {
-            const hexoPath = `${meta.hexoDate}/${meta.title}`;
+            const hexoPath = `${meta.hexoDate}/${meta.hexoTitle}`;
             return `[${display}](/${hexoPath}/)`;
         }
 
@@ -192,12 +192,17 @@ function loadWikiMeta() {
                 const created = frontmatter.created || new Date().toISOString().split('T')[0];
                 const dateStr = created.replace(/-/g, '/');
 
+                const hexoDateDash = created; // e.g. 2025-09-12
+                const safeName = slugify(title);
+                const hexoTitle = `${hexoDateDash}-${safeName}`; // e.g. 2025-09-12-AI模型优化训练方向
+
                 meta[title] = {
                     title,
                     titleLower: title.toLowerCase(),
                     layer,
                     category: CATEGORY_MAP[layer] || 'LearningNote',
-                    hexoDate: dateStr,
+                    hexoDate: dateStr,      // 2025/09/12 (用于 URL 的日期部分)
+                    hexoTitle,              // 2025-09-12-AI模型优化训练方向 (用于 URL 的 :title 部分)
                     file: full,
                 };
             }
@@ -302,7 +307,7 @@ function generateBacklinksHtml(title, backlinkIndex, wikiMeta) {
     for (const bl of entry.backlinks) {
         const blMeta = wikiMeta[bl];
         if (blMeta) {
-            const url = `/${blMeta.hexoDate}/${slugify(bl)}/`;
+            const url = `/${blMeta.hexoDate}/${blMeta.hexoTitle}/`;
             lines.push(`  <li><a href="${url}">${bl}</a></li>`);
         } else {
             lines.push(`  <li>${bl}</li>`);
@@ -330,7 +335,7 @@ function generateRelatedPostsHtml(title, frontmatter, wikiMeta, backlinkIndex) {
             if (related.length >= MAX_RELATED) break;
             const rMeta = wikiMeta[r];
             if (rMeta) {
-                const url = `/${rMeta.hexoDate}/${slugify(r)}/`;
+                const url = `/${rMeta.hexoDate}/${rMeta.hexoTitle}/`;
                 related.push({ title: r, url, source: 'related' });
             }
         }
@@ -347,7 +352,7 @@ function generateRelatedPostsHtml(title, frontmatter, wikiMeta, backlinkIndex) {
             const metaTags = Array.isArray(meta.tags) ? meta.tags : [];
             const hasCommonTag = tags.some(tag => metaTags.includes(tag));
             if (hasCommonTag) {
-                const url = `/${meta.hexoDate}/${slugify(t)}/`;
+                const url = `/${meta.hexoDate}/${meta.hexoTitle}/`;
                 related.push({ title: t, url, source: 'tags' });
             }
         }
@@ -787,9 +792,10 @@ function generateWikiSearchIndexForFrontend() {
                     const created = frontmatter.created || '';
 
                     // 构建该页面的 Hexo URL
+                    // Hexo :title = 文件名(含日期前缀), 如 2025-09-12-AI模型优化训练方向
                     const dateStr = created.replace(/-/g, '/');
                     const safeTitle = slugify(title);
-                    const hexoUrl = created ? `/${dateStr}/${safeTitle}/` : '';
+                    const hexoUrl = created ? `/${dateStr}/${created}-${safeTitle}/` : '';
 
                     // 提取纯文本片段
                     const plainText = body
@@ -852,7 +858,7 @@ function generateChangelogData() {
             // 尝试在 wikiMeta 中找到 URL
             const wikiMeta = loadWikiMeta();
             const meta = wikiMeta[title];
-            const url = meta ? `/${meta.hexoDate}/${meta.title}/` : '';
+            const url = meta ? `/${meta.hexoDate}/${meta.hexoTitle}/` : '';
 
             entries.push({
                 date,
@@ -1005,18 +1011,18 @@ tags: [ai, ml]
     // 测试 4: WikiLink 转换
     test('WikiLink: 精确匹配', () => {
         const wikiMeta = {
-            'Test': { hexoDate: '2025/01/01', title: 'Test' }
+            'Test': { hexoDate: '2025/01/01', title: 'Test', hexoTitle: '2025-01-01-Test' }
         };
         const result = convertWikiLinks('[[Test]]', wikiMeta);
-        assertEqual(result, '[Test](/2025/01/01/Test/)');
+        assertEqual(result, '[Test](/2025/01/01/2025-01-01-Test/)');
     });
 
     test('WikiLink: 别名显示文字', () => {
         const wikiMeta = {
-            'Target': { hexoDate: '2025/01/01', title: 'Target' }
+            'Target': { hexoDate: '2025/01/01', title: 'Target', hexoTitle: '2025-01-01-Target' }
         };
         const result = convertWikiLinks('[[Target|显示文字]]', wikiMeta);
-        assertEqual(result, '[显示文字](/2025/01/01/Target/)');
+        assertEqual(result, '[显示文字](/2025/01/01/2025-01-01-Target/)');
     });
 
     test('WikiLink: 大小写不敏感', () => {

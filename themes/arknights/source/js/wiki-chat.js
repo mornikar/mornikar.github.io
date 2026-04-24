@@ -549,10 +549,10 @@
     canvas.addEventListener('mouseup', () => { dragNode = null })
     canvas.addEventListener('mouseleave', () => { dragNode = null; hoverNode = null; if (tooltip) tooltip.style.display = 'none' })
 
-    // 点击跳转
+    // 点击跳转（站内链接，当前窗口跳转）
     canvas.addEventListener('click', e => {
       if (hoverNode && hoverNode.url) {
-        window.open(hoverNode.url, '_blank')
+        window.location.href = hoverNode.url
       }
     })
 

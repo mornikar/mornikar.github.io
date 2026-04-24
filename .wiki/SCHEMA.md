@@ -245,10 +245,25 @@ wiki-to-hexo.js 扫描 [[WikiLink]] → buildBacklinks() → 反向链接索引
   <h4 class="wiki-backlinks-title">🔗 反向链接</h4>
   <p class="wiki-backlinks-desc">以下页面引用了本文：</p>
   <ul class="wiki-backlinks-list">
-    <li><a href="/2025/09/12/RAG检索增强生成/">RAG检索增强生成</a></li>
+    <li><a href="/2025/09/12/2025-09-12-RAG检索增强生成/">RAG检索增强生成</a></li>
   </ul>
 </div>
 ```
+
+### URL 格式说明
+
+Hexo permalink 配置为 `:year/:month/:day/:title/`，其中 `:title` 来自**文件名**（含日期前缀），
+而非 frontmatter 中的 title 字段。因此 Wiki 页面的 Hexo URL 格式为：
+
+```
+/:year/:month/:day/:hexoDate-:safeTitle/
+```
+
+示例：
+- Wiki 文件：`.wiki/concepts/RAG检索增强生成.md`（frontmatter `created: 2025-09-12`）
+- Hexo 文件：`source/_posts/LearningNote/2025-09-12-RAG检索增强生成.md`
+- **正确 URL**：`/2025/09/12/2025-09-12-RAG检索增强生成/`
+- ~~错误 URL~~：~~`/2025/09/12/RAG检索增强生成/`~~（会 404！）
 
 ### 知识图谱
 

@@ -1,0 +1,105 @@
+﻿
+🚀 Wiki → Hexo 转换脚本 v4.0 (Phase 2)
+
+🔗 反向链接索引: 69 个页面被引用
+🔗 出链索引: 5 个页面有出链
+  ⚠️  WikiLink 未匹配: [[Prompt工程]]
+  ✅ AI模型优化训练方向
+  ✅ RAG检索增强生成
+  ✅ Hexo博客升级记录
+  ✅ "AI工作流"
+  ✅ "AI工作流 工作流"
+  ✅ "AI本地部署想法"
+  ✅ "AI稳定上线工程化"
+  ✅ "PRD模板-小说国际化"
+  ✅ "PRD模板通用版"
+  ✅ "企业适用大模型全场景参考（复习版）"
+  ✅ "内容推荐与增长业务（复习版）"
+  ⚠️  WikiLink 未匹配: [[2\]]
+  ✅ "广告复盘"
+  ✅ "数据分析与产品经理"
+  ✅ "简历业务盘点"
+  ✅ "修改意见"
+  ✅ "AIGC指标梳理"
+  ✅ "AIGC架构面试八股文"
+  ✅ "AI产品经理学习路线"
+  ✅ "AI模型优化训练指标"
+  ✅ "ChatGPT各版本差异调研"
+  ✅ "LLMWiki_VS_RAG调研"
+  ✅ "大模型解构"
+  ✅ "CharGLM3部署"
+  ✅ "Dialoqbase部署"
+  ✅ "Dify工作流搭建"
+  ✅ "Dify私有化部署"
+  ✅ "OpenClaw Skills市场"
+  ✅ "OpenClaw + LLM 电商平台集成指南"
+  ✅ "Skill封装与优化"
+  ✅ "电商AI_Claw方案"
+  ✅ "电商自动化Skills"
+  ✅ "多模态AI笔记"
+  ✅ "AIGC随笔"
+  ✅ "随笔"
+  ✅ "Matplotlib基础"
+  ✅ "ndarray运算"
+  ✅ "Numpy基础"
+  ⚠️  WikiLink 未匹配: [['year','artist','track','time','date.entered']]
+  ⚠️  WikiLink 未匹配: [['id','week','rating']]
+  ✅ "Pandas基础"
+  ✅ "深度学习与机器学习笔记"
+  ✅ "机器学习算法分类"
+  ✅ "矩阵运算"
+  ✅ "云环境笔记"
+  ✅ "企业适用大模型场景参考"
+  ✅ "内容推荐与增长业务"
+  ✅ 图库资源
+  ✅ "复盘临时文档"
+  ⚠️  WikiLink 未匹配: [[2\]]
+  ✅ "广告复盘"
+  ✅ "数据分析与数据产品经理"
+  ✅ "简历业务盘点"
+  ✅ "面试修改意见参考"
+  ✅ "Flask基础"
+  ✅ "Flask基础（二）"
+  ✅ "Flask数据操作"
+  ✅ "Flask数据迁移"
+  ✅ "Flask注意点"
+  ✅ "Flask虚拟环境"
+  ✅ "Flask链接MySQL"
+  ✅ "Git基础命令"
+  ✅ "MySQL操作分类"
+  ✅ "MySQL笔记"
+  ✅ "Conda启动命令"
+  ✅ "Conda基础命令"
+  ✅ "Conda必要操作"
+  ✅ "Conda环境导入"
+  ✅ "Conda环境导入2"
+  ✅ "Conda环境导入3"
+  ✅ "Pip环境导出导入"
+  ✅ "Vim常用命令"
+  ✅ "DRF框架"
+  ✅ "Restful风格HTTP接口"
+  ✅ PDF嵌入Snippet
+  ⚠️  WikiLink 未匹配: [[Prompt工程]]
+  ⚠️  WikiLink 未匹配: [[2\]]
+  ⚠️  WikiLink 未匹配: [['year','artist','track','time','date.entered']]
+  ⚠️  WikiLink 未匹配: [['id','week','rating']]
+  ⚠️  WikiLink 未匹配: [[2\]]
+
+========================================
+📊 转换统计
+========================================
+  concepts: 2
+  entities: 32
+  ML: 7
+  OS: 1
+  PM: 8
+  skills: 20
+  snippets: 1
+  总计新增/更新: 71
+  跳过(未变): 0
+  警告: 10
+
+✨ 转换完成！
+   运行 hexo generate 构建博客
+📑 生成前端索引: source/wiki-index.json (71 个页面)
+📄 生成更新日志数据: 266 条记录
