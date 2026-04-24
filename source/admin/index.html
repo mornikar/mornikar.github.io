@@ -308,9 +308,12 @@ html, body { min-height: 100%; background: var(--bg-primary); color: var(--text-
 <body>
 
 <div class="app-wrapper">
-  <video class="bg-video" id="bg-video" autoplay playsinline>
-    <source src="/videos/arknights-bg.mp4" type="video/mp4">
+  <video class="bg-video" id="bg-video" autoplay loop muted playsinline>
+    <source src="/videos/bg-video.mp4" type="video/mp4">
   </video>
+  <audio id="bgm-audio" loop>
+    <source src="/videos/bgm.mp3" type="audio/mpeg">
+  </audio>
   <div class="app-glass">
 
 <!-- ============================================================ -->
@@ -371,6 +374,10 @@ html, body { min-height: 100%; background: var(--bg-primary); color: var(--text-
     <span id="conn-status" class="ok" title="连接状态">● 就绪</span>
   </div>
   <div class="topbar-right">
+    <button class="btn btn-outline btn-sm" id="music-toggle" onclick="toggleMusic()" title="背景音乐">
+      <svg id="music-icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+      <svg id="music-icon-off" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+    </button>
     <div class="user-avatar" id="user-avatar">?</div>
     <span id="user-display">--</span>
     <span id="login-method" style="font-size:10px;color:var(--text-muted)"></span>
@@ -577,18 +584,38 @@ var isNewFile = false;
 // ============================================================
 function $(id) { return document.getElementById(id); }
 
-// Background video: play once at 50% volume, stop when ended
+// Background video & music control
+var musicEnabled = true;
+
 document.addEventListener('DOMContentLoaded', function() {
   var video = $('bg-video');
+  var audio = $('bgm-audio');
   if (video) {
-    video.volume = 0.5;
     video.play().catch(function() {});
-    video.onended = function() {
-      video.pause();
-      video.currentTime = 0;
-    };
+  }
+  if (audio) {
+    audio.volume = 0.5;
+    audio.play().catch(function() {});
   }
 });
+
+function toggleMusic() {
+  var audio = $('bgm-audio');
+  var iconOn = $('music-icon-on');
+  var iconOff = $('music-icon-off');
+  if (!audio) return;
+  if (musicEnabled) {
+    audio.pause();
+    musicEnabled = false;
+    if (iconOn) iconOn.style.display = 'none';
+    if (iconOff) iconOff.style.display = 'inline';
+  } else {
+    audio.play().catch(function() {});
+    musicEnabled = true;
+    if (iconOn) iconOn.style.display = 'inline';
+    if (iconOff) iconOff.style.display = 'none';
+  }
+}
 
 function showStatus(msg, loading) {
   var el = $('status-msg');
