@@ -169,7 +169,8 @@ function convertWikiLinks(body, wikiMeta) {
         }
 
         if (meta) {
-            const hexoPath = `${meta.hexoDate}/${meta.hexoTitle}`;
+            // Hexo 实际 permalink 含 category 段: /:year/:month/:day/:category/:title/
+            const hexoPath = `${meta.hexoDate}/${meta.category}/${meta.hexoTitle}`;
             return `[${display}](/${hexoPath}/)`;
         }
 
@@ -321,7 +322,7 @@ function generateBacklinksHtml(title, backlinkIndex, wikiMeta) {
     for (const bl of entry.backlinks) {
         const blMeta = wikiMeta[bl];
         if (blMeta) {
-            const url = `/${blMeta.hexoDate}/${blMeta.hexoTitle}/`;
+            const url = `/${blMeta.hexoDate}/${blMeta.category}/${blMeta.hexoTitle}/`;
             lines.push(`  <li><a href="${url}">${bl}</a></li>`);
         } else {
             lines.push(`  <li>${bl}</li>`);
@@ -349,7 +350,7 @@ function generateRelatedPostsHtml(title, frontmatter, wikiMeta, backlinkIndex) {
             if (related.length >= MAX_RELATED) break;
             const rMeta = wikiMeta[r];
             if (rMeta) {
-                const url = `/${rMeta.hexoDate}/${rMeta.hexoTitle}/`;
+                const url = `/${rMeta.hexoDate}/${rMeta.category}/${rMeta.hexoTitle}/`;
                 related.push({ title: r, url, source: 'related' });
             }
         }
@@ -366,7 +367,7 @@ function generateRelatedPostsHtml(title, frontmatter, wikiMeta, backlinkIndex) {
             const metaTags = Array.isArray(meta.tags) ? meta.tags : [];
             const hasCommonTag = tags.some(tag => metaTags.includes(tag));
             if (hasCommonTag) {
-                const url = `/${meta.hexoDate}/${meta.hexoTitle}/`;
+                const url = `/${meta.hexoDate}/${meta.category}/${meta.hexoTitle}/`;
                 related.push({ title: t, url, source: 'tags' });
             }
         }
@@ -827,11 +828,12 @@ function generateWikiSearchIndexForFrontend() {
                     const created = frontmatter.created || '';
 
                     // 构建该页面的 Hexo URL
-                    // Hexo permalink = :year/:month/:day/:title/（不含 category）
-                    // 例: /2025/09/12/2025-09-12-AI模型优化训练方向/
+                    // Hexo 实际 permalink 含 category: /:year/:month/:day/:category/:title/
+                    // 例: /2025/09/12/LearningNote/2025-09-12-AI模型优化训练方向/
                     const dateStr = created.replace(/-/g, '/');
                     const safeTitle = slugify(title);
-                    const hexoUrl = created ? `/${dateStr}/${created}-${safeTitle}/` : '';
+                    const hexoCategory = CATEGORY_MAP[layer] || 'LearningNote';
+                    const hexoUrl = created ? `/${dateStr}/${hexoCategory}/${created}-${safeTitle}/` : '';
 
                     // 提取纯文本片段
                     const plainText = body
@@ -894,7 +896,8 @@ function generateChangelogData() {
             // 尝试在 wikiMeta 中找到 URL
             const wikiMeta = loadWikiMeta();
             const meta = wikiMeta[title];
-            const url = meta ? `/${meta.hexoDate}/${meta.hexoTitle}/` : '';
+            // Hexo 实际 permalink 含 category 段
+            const url = meta ? `/${meta.hexoDate}/${meta.category}/${meta.hexoTitle}/` : '';
 
             entries.push({
                 date,
