@@ -1,0 +1,239 @@
+<!DOCTYPE html><html lang="zh-CN" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Wiki AI 助手 | Mornikar's Blog</title><meta name="keywords" content="AI产品经理,大模型,AIGC,学习笔记"><meta name="description" content="🤖 Wiki AI 助手 基于 Wiki 知识库的 AI 对话助手   功能特性 📚 知识库问答 — 基于 Wiki 内容进行 RAG 检索增强回答 🔗 多接入方式 — 支持 Dify &#x2F; 在线 API &#x2F; 直连模型 🎨 主题风格 — 与网站一致的 Arknights 风格设计 ⚙️ 灵活配置 — 支持自定义 System Prompt   接入方式三种模式   模式">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wiki AI 助手">
+<meta property="og:url" content="https://mornikar.github.io/docs/AI_CHAT.html">
+<meta property="og:site_name" content="Mornikar&#39;s Blog">
+<meta property="og:description" content="🤖 Wiki AI 助手 基于 Wiki 知识库的 AI 对话助手   功能特性 📚 知识库问答 — 基于 Wiki 内容进行 RAG 检索增强回答 🔗 多接入方式 — 支持 Dify &#x2F; 在线 API &#x2F; 直连模型 🎨 主题风格 — 与网站一致的 Arknights 风格设计 ⚙️ 灵活配置 — 支持自定义 System Prompt   接入方式三种模式   模式">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-27T07:03:31.741Z">
+<meta property="article:modified_time" content="2026-04-27T07:03:31.741Z">
+<meta property="article:author" content="Mornikar">
+<meta property="article:tag" content="AI产品经理">
+<meta property="article:tag" content="大模型">
+<meta property="article:tag" content="AIGC">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary"><link rel="canonical" href="https://mornikar.github.io/docs/AI_CHAT"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":false,"search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@11.12.2/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: 'confirm'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@11.12.2/dist/mermaid.esm.min.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {window.giscusSettings = {
+ repo: 'mornikar/mornikar.github.io',
+ repoId: 'R_kgDOPto6vw',
+ category: 'Announcements',
+ categoryId: 'DIC_kwDOPto6v84C7YeI',
+ mapping: 'pathname',
+ strict: '0',
+ reactionsEnabled: '1',
+ emitMetadata: '1',
+ inputPosition: 'top',
+ lang: 'zh-CN',
+ crossorigin: 'anonymous' , loading: 'lazy'};window.giscusThemeConfig = { theme: 'preferred_color_scheme' };document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Mornikar's Blog" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/assets-archive/"><span class="navItemTitle">资源</span></a></li><li class="navItem"><a class="navBlock" href="/wiki-changelog/"><span class="navItemTitle">更新日志</span></a></li><li class="navItem"><a class="navBlock" href="/infinite-menu/"><span class="navItemTitle">∞导航</span></a></li></ol></nav></header><article><div id="post-bg"><!-- CMS 编辑按钮（对齐标题右上角）--><a class="cms-edit-btn" href="#" title="编辑此文章" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg></a><style>.cms-edit-btn {
+  position: absolute;
+  top: 22px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border: 1px solid rgba(34, 187, 255, 0.25);
+  border-radius: 6px;
+  color: rgba(34, 187, 255, 0.5);
+  text-decoration: none;
+  transition: all 0.2s;
+  background: rgba(34, 187, 255, 0.05);
+  z-index: 10;
+}
+.cms-edit-btn:hover {
+  color: #2bf;
+  border-color: #2bf;
+  background: rgba(34, 187, 255, 0.12);
+  transform: scale(1.1);
+}
+.cms-edit-btn svg {
+  width: 16px;
+  height: 16px;
+}</style><div id="post-title"><h1>Wiki AI 助手<!-- Phase 3: Wiki 来源标记--></h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2026-04-27T07:03:31.741Z" id="date"> 2026-04-27</time></div></span><br><span>Last Update: <div class="control"><time datetime="2026-04-27T07:03:31.741Z" id="updated"> 2026-04-27</time></div></span></div><hr><!-- Phase 3: Wiki 来源信息--></div><div id="post-content"><h1 id="🤖-Wiki-AI-助手"><a href="#🤖-Wiki-AI-助手" class="headerlink" title="🤖 Wiki AI 助手"></a>🤖 Wiki AI 助手</h1><blockquote>
+<p>基于 Wiki 知识库的 AI 对话助手</p>
+</blockquote>
+<hr>
+<h2 id="功能特性"><a href="#功能特性" class="headerlink" title="功能特性"></a>功能特性</h2><ul>
+<li>📚 <strong>知识库问答</strong> — 基于 Wiki 内容进行 RAG 检索增强回答</li>
+<li>🔗 <strong>多接入方式</strong> — 支持 Dify &#x2F; 在线 API &#x2F; 直连模型</li>
+<li>🎨 <strong>主题风格</strong> — 与网站一致的 Arknights 风格设计</li>
+<li>⚙️ <strong>灵活配置</strong> — 支持自定义 System Prompt</li>
+</ul>
+<hr>
+<h2 id="接入方式"><a href="#接入方式" class="headerlink" title="接入方式"></a>接入方式</h2><h3 id="三种模式"><a href="#三种模式" class="headerlink" title="三种模式"></a>三种模式</h3><table>
+<thead>
+<tr>
+<th>模式</th>
+<th>说明</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Dify</strong></td>
+<td>连接本地 Dify RAG 应用</td>
+<td>知识库检索增强</td>
+</tr>
+<tr>
+<td><strong>在线 API</strong></td>
+<td>Cloudflare Worker 代理访问远程 API</td>
+<td>公网访问内网模型</td>
+</tr>
+<tr>
+<td><strong>直连模型</strong></td>
+<td>直接连接本地 LM Studio</td>
+<td>本地开发测试</td>
+</tr>
+</tbody></table>
+<h3 id="Dify-模式"><a href="#Dify-模式" class="headerlink" title="Dify 模式"></a>Dify 模式</h3><ul>
+<li>Dify 本地部署</li>
+<li>配置 RAG 知识库应用</li>
+<li>提供 API 地址和应用密钥</li>
+</ul>
+<h3 id="在线-API-模式"><a href="#在线-API-模式" class="headerlink" title="在线 API 模式"></a>在线 API 模式</h3><ul>
+<li>通过 Cloudflare Worker 代理</li>
+<li>解决跨域问题</li>
+<li>支持 OpenAI 兼容 API</li>
+</ul>
+<h3 id="直连模式"><a href="#直连模式" class="headerlink" title="直连模式"></a>直连模式</h3><ul>
+<li>连接本地 LM Studio</li>
+<li>需要启用 “Enable API”</li>
+<li>适合开发调试</li>
+</ul>
+<hr>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><h3 id="1-打开-AI-助手"><a href="#1-打开-AI-助手" class="headerlink" title="1. 打开 AI 助手"></a>1. 打开 AI 助手</h3><p>点击页面右下角的 🔵 蓝色按钮，或访问 <code>/login/</code> 页面。</p>
+<h3 id="2-配置接入方式"><a href="#2-配置接入方式" class="headerlink" title="2. 配置接入方式"></a>2. 配置接入方式</h3><p>在登录页面选择接入模式：</p>
+<ul>
+<li><strong>Dify</strong> — 连接本地知识库</li>
+<li><strong>在线 API</strong> — 通过代理访问远程模型</li>
+<li><strong>直连模型</strong> — 直接连接本地模型</li>
+</ul>
+<h3 id="3-自定义-Prompt"><a href="#3-自定义-Prompt" class="headerlink" title="3. 自定义 Prompt"></a>3. 自定义 Prompt</h3><p>在设置面板中修改 System Prompt，自定义 AI 的角色和行为。</p>
+<h3 id="4-开始对话"><a href="#4-开始对话" class="headerlink" title="4. 开始对话"></a>4. 开始对话</h3><p>配置完成后，在对话框中输入问题即可获得回答。</p>
+<hr>
+<h2 id="System-Prompt"><a href="#System-Prompt" class="headerlink" title="System Prompt"></a>System Prompt</h2><h3 id="默认-Prompt"><a href="#默认-Prompt" class="headerlink" title="默认 Prompt"></a>默认 Prompt</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">你是一个基于 Wiki 知识库的 AI 助手，擅长回答关于编程、AI、LLM、RAG 等技术问题。请用中文回答，保持简洁准确。</span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义配置"><a href="#自定义配置" class="headerlink" title="自定义配置"></a>自定义配置</h3><p>支持在设置面板中修改：</p>
+<ul>
+<li>自定义角色设定</li>
+<li>特定领域知识注入</li>
+<li>回复风格约束</li>
+</ul>
+<hr>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><h3 id="AI-助手没有出现？"><a href="#AI-助手没有出现？" class="headerlink" title="AI 助手没有出现？"></a>AI 助手没有出现？</h3><ol>
+<li>检查浏览器 Console 是否有报错</li>
+<li>确认 JS 文件是否正确加载</li>
+<li>检查网络连接</li>
+</ol>
+<h3 id="API-请求失败？"><a href="#API-请求失败？" class="headerlink" title="API 请求失败？"></a>API 请求失败？</h3><ol>
+<li>确认对应服务是否运行</li>
+<li>检查 API 地址和密钥配置</li>
+<li>查看浏览器 Network 面板错误信息</li>
+</ol>
+<h3 id="如何关闭？"><a href="#如何关闭？" class="headerlink" title="如何关闭？"></a>如何关闭？</h3><p>在设置面板中选择关闭，或联系网站管理员配置 <code>_config.yml</code>。</p>
+<hr>
+<h2 id="📝-在线内容管理-CMS"><a href="#📝-在线内容管理-CMS" class="headerlink" title="📝 在线内容管理 CMS"></a>📝 在线内容管理 CMS</h2><p>博客内容可通过在线 CMS 管理，访问 <code>/admin/</code> 即可打开。</p>
+<h3 id="登录方式"><a href="#登录方式" class="headerlink" title="登录方式"></a>登录方式</h3><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>GitHub OAuth 一键登录</strong></td>
+<td>点击「GitHub 一键登录」按钮，授权后自动登录</td>
+</tr>
+<tr>
+<td><strong>手动输入 Token</strong></td>
+<td>生成 GitHub Personal Access Token（需 <code>repo</code> 权限），粘贴登录</td>
+</tr>
+</tbody></table>
+<h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><ul>
+<li>📂 集合浏览 — 按分类浏览文章（AIGC &#x2F; 学习随笔 &#x2F; 学习笔记 &#x2F; 机器学习 &#x2F; 云环境）</li>
+<li>✏️ Markdown 编辑 — 在线编辑文章内容，支持实时预览</li>
+<li>🏷️ 标签管理 — 添加&#x2F;删除标签</li>
+<li>📷 图片上传 — 拖拽上传图片到 GitHub 仓库</li>
+<li>📄 新建文章 — 在指定分类下创建新文章</li>
+<li>🗑️ 删除文章 — 确认后删除（不可撤销）</li>
+</ul>
+<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">浏览器 → Cloudflare Worker（统一 Worker v4）</span><br><span class="line">           ├── /auth     → GitHub OAuth 授权</span><br><span class="line">           ├── /callback → OAuth 回调</span><br><span class="line">           ├── /api/gh/* → GitHub API 代理（解决 CORS）</span><br><span class="line">           └── /api/upload → 图片上传</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>💡 所有 API 请求通过 Cloudflare Worker 代理，Token 仅存储在浏览器本地。</p>
+</blockquote>
+<div id="paginator"></div></div><div id="post-footer"></div><div id="comments"><div id="giscus"></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" onClick="tocControl.change()" title="To Catalog"><span class="tocBtnIconBar"></span><span class="tocBtnIconBar"></span><span class="tocBtnIconBar"></span></a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="Change Theme"></a><a onclick="BgmControl()"><svg id="bgm-control" viewBox="0 0 30 34" fill="currentColor" style="width: 24px; transition: transform .3s;margin-top: 4px"><path d="M25.998 23.422V11.29h3.999v12.132h-3.999zM19.497 6.234h4.001v22.243h-4.001V6.234zM12.998.867h4v32.978h-4V.867zm-6.5 5.367h4.001v22.243H6.498V6.234zm-6.5 5.056h4v12.132h-4V11.29z"></path></svg><audio id="bgm" src="/audio/bgm.mp3" loop crossorigin="anonymous"> </audio></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Mornikar's Blog" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">Mornikar</a></h1><div id="description"><p>记录AI产品、技术学习与成长</p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%F0%9F%A4%96-Wiki-AI-%E5%8A%A9%E6%89%8B"><span class="toc-number">1.</span> <span class="toc-text">🤖 Wiki AI 助手</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E7%89%B9%E6%80%A7"><span class="toc-number">1.1.</span> <span class="toc-text">功能特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%85%A5%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">接入方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.1.</span> <span class="toc-text">三种模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dify-%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.2.</span> <span class="toc-text">Dify 模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E7%BA%BF-API-%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.3.</span> <span class="toc-text">在线 API 模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B4%E8%BF%9E%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.4.</span> <span class="toc-text">直连模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">使用方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%89%93%E5%BC%80-AI-%E5%8A%A9%E6%89%8B"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 打开 AI 助手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%85%8D%E7%BD%AE%E6%8E%A5%E5%85%A5%E6%96%B9%E5%BC%8F"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 配置接入方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%87%AA%E5%AE%9A%E4%B9%89-Prompt"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 自定义 Prompt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%BC%80%E5%A7%8B%E5%AF%B9%E8%AF%9D"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. 开始对话</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#System-Prompt"><span class="toc-number">1.4.</span> <span class="toc-text">System Prompt</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4-Prompt"><span class="toc-number">1.4.1.</span> <span class="toc-text">默认 Prompt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%85%8D%E7%BD%AE"><span class="toc-number">1.4.2.</span> <span class="toc-text">自定义配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="toc-number">1.5.</span> <span class="toc-text">常见问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AI-%E5%8A%A9%E6%89%8B%E6%B2%A1%E6%9C%89%E5%87%BA%E7%8E%B0%EF%BC%9F"><span class="toc-number">1.5.1.</span> <span class="toc-text">AI 助手没有出现？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#API-%E8%AF%B7%E6%B1%82%E5%A4%B1%E8%B4%A5%EF%BC%9F"><span class="toc-number">1.5.2.</span> <span class="toc-text">API 请求失败？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%85%B3%E9%97%AD%EF%BC%9F"><span class="toc-number">1.5.3.</span> <span class="toc-text">如何关闭？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%9D-%E5%9C%A8%E7%BA%BF%E5%86%85%E5%AE%B9%E7%AE%A1%E7%90%86-CMS"><span class="toc-number">1.6.</span> <span class="toc-text">📝 在线内容管理 CMS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%99%BB%E5%BD%95%E6%96%B9%E5%BC%8F"><span class="toc-number">1.6.1.</span> <span class="toc-text">登录方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">1.6.2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-number">1.6.3.</span> <span class="toc-text">架构</span></a></li></ol></li></ol></li></ol></div></div><footer></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script><script defer src="/js/wiki-chat.js"></script><script defer src="/js/wiki-tree.js"></script><script defer src="/live2d/live2d.js"></script></body></html>

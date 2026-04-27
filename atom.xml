@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Mornikar&#39;s Blog</title>
+  
+  <subtitle>AI的学习笔记</subtitle>
+  <link href="https://mornikar.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://mornikar.github.io/"/>
+  <updated>2026-04-27T00:00:00.000Z</updated>
+  <id>https://mornikar.github.io/</id>
+  
+  <author>
+    <name>Mornikar</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>图库资源</title>
+    <link href="https://mornikar.github.io/2026/04/27/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-27-%E5%9B%BE%E5%BA%93%E8%B5%84%E6%BA%90/"/>
+    <id>https://mornikar.github.io/2026/04/27/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-27-%E5%9B%BE%E5%BA%93%E8%B5%84%E6%BA%90/</id>
+    <published>2026-04-27T00:00:00.000Z</published>
+    <updated>2026-04-27T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/PM/图库资源.md --&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.iconfont.cn/&quot;&gt;iconfont-阿里巴巴矢量图标库&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;工具：&lt;/p&gt;
+&lt;p&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki" scheme="https://mornikar.github.io/tags/wiki/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>图库资源</title>
+    <link href="https://mornikar.github.io/2026/04/24/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-24-%E5%9B%BE%E5%BA%93%E8%B5%84%E6%BA%90/"/>
+    <id>https://mornikar.github.io/2026/04/24/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-24-%E5%9B%BE%E5%BA%93%E8%B5%84%E6%BA%90/</id>
+    <published>2026-04-24T00:00:00.000Z</published>
+    <updated>2026-04-24T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw&#92;PM&#92;图库资源.md --&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.iconfont.cn/&quot;&gt;iconfont-阿里巴巴矢量图标库&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;工具：&lt;/p&gt;
+&lt;p&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki" scheme="https://mornikar.github.io/tags/wiki/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Conda启动命令</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%90%AF%E5%8A%A8%E5%91%BD%E4%BB%A4/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%90%AF%E5%8A%A8%E5%91%BD%E4%BB%A4/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/python/Conda启动命令.md --&gt;
+
+&lt;h1 id=&quot;redis-启动&quot;&gt;&lt;a href=&quot;#redis-启动&quot; class=&quot;headerlink&quot; title=&quot;redis</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Python, Conda, 环境管理" scheme="https://mornikar.github.io/tags/wiki-Python-Conda-%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Conda基础命令</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/python/Conda基础命令.md --&gt;
+
+&lt;p&gt;查看虚拟环境 conda info -e&lt;/p&gt;
+&lt;p&gt;2019-05-16 update:</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Python, Conda, 环境管理" scheme="https://mornikar.github.io/tags/wiki-Python-Conda-%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Conda必要操作</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%BF%85%E8%A6%81%E6%93%8D%E4%BD%9C/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%BF%85%E8%A6%81%E6%93%8D%E4%BD%9C/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/python/Conda必要操作.md --&gt;
+
+&lt;p&gt;进入虚拟环境&lt;br&gt; source activate env_name &lt;/p&gt;
+&lt;p&gt;安装命令:&lt;br&gt; conda install</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Python, Conda, 环境管理" scheme="https://mornikar.github.io/tags/wiki-Python-Conda-%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Conda环境导入</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%85%A5/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%85%A5/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/python/Conda环境导入.md --&gt;
+
+&lt;p&gt;联网复制&lt;br&gt;1.导出已有环境&lt;br&gt;激活环境env_name(环境名称)&lt;/p&gt;
+&lt;p&gt;conda activate</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Python, Conda, 环境管理" scheme="https://mornikar.github.io/tags/wiki-Python-Conda-%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Conda环境导入2</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%85%A52/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%85%A52/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/python/Conda环境导入2.md</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Python, Conda, 环境管理" scheme="https://mornikar.github.io/tags/wiki-Python-Conda-%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Conda环境导入3</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%85%A53/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%85%A53/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/python/Conda环境导入3.md --&gt;
+
+&lt;p&gt;虚拟环境配置&lt;br&gt;统一虚拟环境，适用于python等高级语言&lt;br&gt;环境隔离&lt;br&gt;做人工智能，深度挖掘时会用到dokcer</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Python, Conda, 环境管理" scheme="https://mornikar.github.io/tags/wiki-Python-Conda-%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Flask基础</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E5%9F%BA%E7%A1%80/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E5%9F%BA%E7%A1%80/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/flask/Flask基础.md --&gt;
+
+&lt;p&gt;App 等于整个项目&lt;/p&gt;
+&lt;h1 id=&quot;flask-的request-的是从包导入，是全局变量。怎么区分？&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Flask, Python, Web" scheme="https://mornikar.github.io/tags/wiki-Flask-Python-Web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>DRF框架</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-DRF%E6%A1%86%E6%9E%B6/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-DRF%E6%A1%86%E6%9E%B6/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/web/DRF框架.md --&gt;
+
+&lt;h1 id=&quot;DRF框架就是RestFramework框架（rest-framework-导入的方式-）&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Web, HTTP, REST" scheme="https://mornikar.github.io/tags/wiki-Web-HTTP-REST/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Flask基础（二）</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E5%9F%BA%E7%A1%80%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E5%9F%BA%E7%A1%80%EF%BC%88%E4%BA%8C%EF%BC%89/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/flask/Flask基础2.md --&gt;
+
+&lt;h1 id=&quot;列表提取与元组提取注意点：&quot;&gt;&lt;a href=&quot;#列表提取与元组提取注意点：&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Flask, Python, Web" scheme="https://mornikar.github.io/tags/wiki-Flask-Python-Web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Flask数据操作</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/flask/Flask数据操作.md --&gt;
+
+&lt;h1 id=&quot;优化查询&quot;&gt;&lt;a href=&quot;#优化查询&quot; class=&quot;headerlink&quot; title=&quot;优化查询&quot;&gt;&lt;/a&gt;优化查询&lt;/h1&gt;&lt;figure</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Flask, Python, Web" scheme="https://mornikar.github.io/tags/wiki-Flask-Python-Web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Flask数据迁移</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/flask/Flask数据迁移.md --&gt;
+
+&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Flask, Python, Web" scheme="https://mornikar.github.io/tags/wiki-Flask-Python-Web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Flask注意点</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E6%B3%A8%E6%84%8F%E7%82%B9/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E6%B3%A8%E6%84%8F%E7%82%B9/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/flask/Flask注意点.md --&gt;
+
+&lt;h1 id=&quot;1-蓝图（注意避免循环导包）&quot;&gt;&lt;a href=&quot;#1-蓝图（注意避免循环导包）&quot; class=&quot;headerlink&quot; title=&quot;1.</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Flask, Python, Web" scheme="https://mornikar.github.io/tags/wiki-Flask-Python-Web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Flask虚拟环境</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/flask/Flask虚拟环境.md --&gt;
+
+&lt;h1 id=&quot;导出虚拟环境所有的第三方包&quot;&gt;&lt;a href=&quot;#导出虚拟环境所有的第三方包&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Flask, Python, Web" scheme="https://mornikar.github.io/tags/wiki-Flask-Python-Web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Flask链接MySQL</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E9%93%BE%E6%8E%A5MySQL/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E9%93%BE%E6%8E%A5MySQL/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/flask/Flask链接MySQL.md --&gt;
+
+&lt;p&gt;在Mysql命令行中更改时区&lt;/p&gt;
+&lt;h1</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Flask, Python, Web" scheme="https://mornikar.github.io/tags/wiki-Flask-Python-Web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Git基础命令</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Git%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Git%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/git/Git基础命令.md --&gt;
+
+&lt;p&gt;版本查询:sit –version&lt;br&gt;查看当前仓库的状态信息：git status&lt;br&gt;将单个文件加入缓存区：git</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Git, 版本控制" scheme="https://mornikar.github.io/tags/wiki-Git-%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL操作分类</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-MySQL%E6%93%8D%E4%BD%9C%E5%88%86%E7%B1%BB/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-MySQL%E6%93%8D%E4%BD%9C%E5%88%86%E7%B1%BB/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/mysql/MySQL操作分类.md --&gt;
+
+&lt;h1 id=&quot;DQL-数据查询语言（凡是带有select-关键字的都是查询语句）&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, MySQL, 数据库" scheme="https://mornikar.github.io/tags/wiki-MySQL-%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>PDF嵌入Snippet</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-PDF%E5%B5%8C%E5%85%A5Snippet/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-PDF%E5%B5%8C%E5%85%A5Snippet/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/snippets/PDF嵌入Snippet.md --&gt;
+
+&lt;h2 id=&quot;使用方法&quot;&gt;&lt;a href=&quot;#使用方法&quot; class=&quot;headerlink&quot; title=&quot;使用方法&quot;&gt;&lt;/a&gt;使用方法&lt;/h2&gt;&lt;p&gt;在 wiki</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="PDF, 嵌入, Snippet, wiki" scheme="https://mornikar.github.io/tags/PDF-%E5%B5%8C%E5%85%A5-Snippet-wiki/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Pip环境导出导入</title>
+    <link href="https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Pip%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%87%BA%E5%AF%BC%E5%85%A5/"/>
+    <id>https://mornikar.github.io/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Pip%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%87%BA%E5%AF%BC%E5%85%A5/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/python/Pip环境导出导入.md --&gt;
+
+&lt;p&gt;导出 &lt;/p&gt;
+&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Python, Conda, 环境管理" scheme="https://mornikar.github.io/tags/wiki-Python-Conda-%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+</feed>

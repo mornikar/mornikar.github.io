@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GISCUS - LLM Wiki 文档</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.7;
+    color: #e0e0e0;
+    background: #1a1a2e;
+    min-height: 100vh;
+  }
+  a { color: #4fc3f7; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .topbar {
+    background: #16213e;
+    border-bottom: 1px solid #0f3460;
+    padding: 0.8rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .topbar .brand { font-weight: 700; font-size: 1.1rem; color: #e94560; }
+  .topbar .brand:hover { text-decoration: none; }
+  .breadcrumb { color: #888; font-size: 0.9rem; }
+  .breadcrumb span { color: #ccc; }
+  .layout { display: flex; max-width: 1200px; margin: 0 auto; padding: 2rem; gap: 2rem; }
+  .sidebar { width: 200px; flex-shrink: 0; }
+  .sidebar h3 { color: #e94560; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+  .sidebar nav a {
+    display: block;
+    padding: 0.3rem 0.5rem;
+    color: #a0a0a0;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    margin-bottom: 2px;
+  }
+  .sidebar nav a:hover { color: #4fc3f7; background: rgba(79,195,247,0.1); text-decoration: none; }
+  .sidebar nav a.active { color: #e94560; background: rgba(233,69,96,0.1); }
+  .main { flex: 1; min-width: 0; }
+  .main h1 { color: #e94560; font-size: 1.8rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #333; }
+  .main h2 { color: #4fc3f7; font-size: 1.3rem; margin: 1.8rem 0 0.8rem; }
+  .main h3 { color: #80cbc4; font-size: 1.1rem; margin: 1.5rem 0 0.6rem; }
+  .main h4 { color: #fff; font-size: 1rem; margin: 1.2rem 0 0.5rem; }
+  .main p { margin: 0.8rem 0; color: #d0d0d0; }
+  .main ul, .main ol { margin: 0.8rem 0; padding-left: 1.5rem; }
+  .main li { margin: 0.3rem 0; color: #d0d0d0; }
+  .main code {
+    background: #0f3460;
+    color: #e94560;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-family: "Fira Code", "Consolas", monospace;
+    font-size: 0.88em;
+  }
+  .main pre {
+    background: #0f3460;
+    border: 1px solid #1a4a7a;
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+  }
+  .main pre code { background: none; color: #e0e0e0; padding: 0; font-size: 0.85rem; }
+  .main blockquote {
+    border-left: 3px solid #e94560;
+    padding: 0.5rem 1rem;
+    margin: 1rem 0;
+    background: rgba(233,69,96,0.05);
+    color: #a0a0a0;
+  }
+  .main table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  .main th { background: #0f3460; color: #4fc3f7; padding: 0.6rem 1rem; text-align: left; }
+  .main td { padding: 0.5rem 1rem; border-bottom: 1px solid #2a2a4a; color: #d0d0d0; }
+  .main tr:hover td { background: rgba(79,195,247,0.05); }
+  .main hr { border: none; border-top: 1px solid #333; margin: 2rem 0; }
+  .main img { max-width: 100%; border-radius: 4px; }
+  .main a { color: #4fc3f7; }
+  .main strong { color: #fff; }
+  .main em { color: #a0a0a0; }
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: #555;
+    font-size: 0.8rem;
+    border-top: 1px solid #222;
+    margin-top: 3rem;
+  }
+  @media (max-width: 768px) {
+    .layout { flex-direction: column; padding: 1rem; }
+    .sidebar { width: 100%; }
+    .topbar { padding: 0.8rem 1rem; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/">🌸 LLM Wiki</a>
+  <span class="breadcrumb">&raquo; <a href="/docs/">文档</a> &raquo; <a href="/docs/GISCUS/">GISCUS</a></span>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <h3>📄 文档导航</h3>
+    <nav>
+      <a href="/docs/">文档首页</a>
+      <a href="/docs/PROJECT/">系统架构</a>
+      <a href="/docs/MAINTENANCE/">维护指南</a>
+      <a href="/docs/TROUBLESHOOTING/">故障排查</a>
+      <a href="/docs/MIGRATION/">迁移规范</a>
+    </nav>
+  </aside>
+  <main class="main">
+    <h1 id="💬-giscus-留言系统">💬 Giscus 留言系统</h1>
+    <blockquote>
+    <p>基于 GitHub Discussions 的博客评论系统，无需数据库，简洁高效。</p>
+    </blockquote>
+    <hr>
+    <h2 id="一、功能特性">一、功能特性</h2>
+    <table>
+    <thead>
+    <tr>
+    <th>特性</th>
+    <th>说明</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>🚀 <strong>零维护</strong></td>
+    <td>使用 GitHub Discussions 存储评论，无需独立数据库</td>
+    </tr>
+    <tr>
+    <td>🔒 <strong>安全可靠</strong></td>
+    <td>评论数据存储在你自己仓库的 Discussions 中</td>
+    </tr>
+    <tr>
+    <td>🎨 <strong>主题适配</strong></td>
+    <td>自动跟随网站明暗主题切换</td>
+    </tr>
+    <tr>
+    <td>🌐 <strong>无服务器</strong></td>
+    <td>纯前端嵌入，GitHub Pages 天然支持</td>
+    </tr>
+    <tr>
+    <td>💬 <strong>GitHub 登录</strong></td>
+    <td>访客使用 GitHub 账号评论，便于社区互动</td>
+    </tr>
+    </tbody></table>
+    <hr>
+    <h2 id="二、工作原理">二、工作原理</h2>
+    <pre><code>访客评论 → Giscus 前端 → GitHub API → 创建/更新 Discussion
+                                        ↓
+    访客查看 ← Giscus 前端 ← GitHub API ← Discussion 数据
+    </code></pre>
+    <ol>
+    <li>访客在博客评论 → Giscus 调用 GitHub API</li>
+    <li>系统在仓库中创建对应的 Discussion（每个页面一个 Discussion）</li>
+    <li>评论数据存储在 GitHub Discussions 中</li>
+    <li>其他访客查看评论时，从 Discussions 读取并展示</li>
+    </ol>
+    <hr>
+    <h2 id="三、启用条件">三、启用条件</h2>
+    <h3 id="31-仓库要求">3.1 仓库要求</h3>
+    <table>
+    <thead>
+    <tr>
+    <th>要求</th>
+    <th>说明</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td><strong>公开仓库</strong></td>
+    <td>Giscus 需要访客能读取 Discussions</td>
+    </tr>
+    <tr>
+    <td><strong>安装 Giscus App</strong></td>
+    <td>将 Giscus App 安装到你的仓库</td>
+    </tr>
+    <tr>
+    <td><strong>开启 Discussions</strong></td>
+    <td>在仓库 Settings → Features 中开启</td>
+    </tr>
+    </tbody></table>
+    <h3 id="32-安装-giscus-app">3.2 安装 Giscus App</h3>
+    <ol>
+    <li>打开 <a href="https://github.com/apps/giscus">https://github.com/apps/giscus</a></li>
+    <li>点击 <strong>&quot;Install&quot;</strong></li>
+    <li>选择 <strong>&quot;Only select repositories&quot;</strong></li>
+    <li>选择你的博客仓库（如 <code>mornikar/mornikar.github.io</code>）</li>
+    <li>点击 <strong>&quot;Install&quot;</strong></li>
+    </ol>
+    <h3 id="33-开启-discussions">3.3 开启 Discussions</h3>
+    <ol>
+    <li>进入仓库 <strong>Settings</strong></li>
+    <li>找到 <strong>Features</strong> 部分</li>
+    <li>勾选 <strong>&quot;Discussions&quot;</strong></li>
+    <li>点击 <strong>&quot;Start discussions&quot;</strong> 确认</li>
+    </ol>
+    <hr>
+    <h2 id="四、获取配置参数">四、获取配置参数</h2>
+    <h3 id="41-访问-giscus-配置页">4.1 访问 Giscus 配置页</h3>
+    <p>打开 <a href="https://giscus.app/zh-CN">https://giscus.app/zh-CN</a></p>
+    <h3 id="42-配置参数">4.2 配置参数</h3>
+    <table>
+    <thead>
+    <tr>
+    <th>参数</th>
+    <th>设置值</th>
+    <th>说明</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td><strong>仓库</strong></td>
+    <td><code>mornikar/mornikar.github.io</code></td>
+    <td>你的博客仓库</td>
+    </tr>
+    <tr>
+    <td><strong>映射关系</strong></td>
+    <td><code>pathname</code></td>
+    <td>页面路径映射到 Discussion</td>
+    </tr>
+    <tr>
+    <td><strong>分类</strong></td>
+    <td><code>Announcements</code></td>
+    <td>评论所在的分类</td>
+    </tr>
+    <tr>
+    <td><strong>主题</strong></td>
+    <td><code>preferred_color_scheme</code></td>
+    <td>跟随系统明暗</td>
+    </tr>
+    </tbody></table>
+    <h3 id="43-创建-discussion-分类">4.3 创建 Discussion 分类</h3>
+    <ol>
+    <li>在 Giscus 页面的「分类」下拉框中</li>
+    <li>点击 <strong>&quot;Create a new category&quot;</strong></li>
+    <li>名称输入：<code>Announcements</code></li>
+    <li>类型选择：**&quot;Announcements&quot;**（公告类型）</li>
+    <li>点击 <strong>&quot;Create&quot;</strong></li>
+    </ol>
+    <blockquote>
+    <p>💡 <strong>推荐使用公告类型分类</strong>：这样只有仓库维护者和 Giscus 机器人能创建新 Discussion，访客只能在现有 Discussion 下评论，避免垃圾评论。</p>
+    </blockquote>
+    <h3 id="44-复制配置">4.4 复制配置</h3>
+    <p>配置完成后，页面会显示生成的代码，例如：</p>
+    <pre><code class="language-html">&lt;script src=&quot;https://giscus.app/client.js&quot;
+            data-repo=&quot;mornikar/mornikar.github.io&quot;
+            data-repo-id=&quot;R_kgDOPto6vw&quot;
+            data-category=&quot;Announcements&quot;
+            data-category-id=&quot;DIC_kwDOPto6v84C7YeI&quot;
+            data-mapping=&quot;pathname&quot;
+            data-strict=&quot;0&quot;
+            data-reactions-enabled=&quot;1&quot;
+            data-emit-metadata=&quot;1&quot;
+            data-input-position=&quot;top&quot;
+            data-theme=&quot;preferred_color_scheme&quot;
+            data-lang=&quot;zh-CN&quot;
+            data-loading=&quot;lazy&quot;
+            crossorigin=&quot;anonymous&quot;
+            async&gt;
+    &lt;/script&gt;
+    </code></pre>
+    <p>记录以下三个关键参数：</p>
+    <ul>
+    <li><code>data-repo-id</code></li>
+    <li><code>data-category-id</code></li>
+    </ul>
+    <hr>
+    <h2 id="五、配置博客">五、配置博客</h2>
+    <h3 id="51-修改主题配置">5.1 修改主题配置</h3>
+    <p>编辑 <code>themes/arknights/_config.yml</code>，找到 giscus 配置：</p>
+    <pre><code class="language-yaml"># Giscus
+    giscus:
+      enable: true
+      repo: 你的用户名/仓库名
+      repo_id: 从 giscus.app 获取的仓库 ID
+      category: Announcements
+      category_id: 从 giscus.app 获取的分类 ID
+      mapping: pathname
+      input_position: top
+      theme: preferred_color_scheme
+      lang: zh-CN
+      loading: lazy
+    </code></pre>
+    <h3 id="52-配置参数说明">5.2 配置参数说明</h3>
+    <table>
+    <thead>
+    <tr>
+    <th>参数</th>
+    <th>可选值</th>
+    <th>说明</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td><code>enable</code></td>
+    <td><code>true</code> / <code>false</code></td>
+    <td>开启/关闭评论</td>
+    </tr>
+    <tr>
+    <td><code>repo</code></td>
+    <td><code>用户名/仓库名</code></td>
+    <td>GitHub 仓库</td>
+    </tr>
+    <tr>
+    <td><code>repo_id</code></td>
+    <td><code>R_xxxxx</code></td>
+    <td>仓库唯一标识</td>
+    </tr>
+    <tr>
+    <td><code>category</code></td>
+    <td>分类名称</td>
+    <td>Discussion 分类</td>
+    </tr>
+    <tr>
+    <td><code>category_id</code></td>
+    <td><code>DIC_xxxxx</code></td>
+    <td>分类唯一标识</td>
+    </tr>
+    <tr>
+    <td><code>mapping</code></td>
+    <td><code>pathname</code> / <code>url</code> / <code>title</code></td>
+    <td>页面映射方式</td>
+    </tr>
+    <tr>
+    <td><code>input_position</code></td>
+    <td><code>top</code> / <code>bottom</code></td>
+    <td>评论框位置</td>
+    </tr>
+    <tr>
+    <td><code>theme</code></td>
+    <td><code>preferred_color_scheme</code> / <code>light</code> / <code>dark</code></td>
+    <td>主题</td>
+    </tr>
+    </tbody></table>
+    <h3 id="53-主题配置示例">5.3 主题配置示例</h3>
+    <p><strong>方案一：跟随网站明暗（推荐）</strong></p>
+    <pre><code class="language-yaml">theme: preferred_color_scheme
+    </code></pre>
+    <p><strong>方案二：固定亮色</strong></p>
+    <pre><code class="language-yaml">theme: light
+    </code></pre>
+    <p><strong>方案三：固定暗色</strong></p>
+    <pre><code class="language-yaml">theme: dark
+    </code></pre>
+    <p><strong>方案四：明暗分开配置</strong></p>
+    <pre><code class="language-yaml">theme_light: light
+    theme_dark: dark_dimmed
+    </code></pre>
+    <hr>
+    <h2 id="六、推送更新">六、推送更新</h2>
+    <pre><code class="language-powershell"># 提交更改
+    git add themes/arknights/_config.yml
+    git commit -m &quot;feat: 启用 Giscus 留言功能&quot;
+    git push origin source
+    
+    # CI 自动构建部署，2 分钟后生效
+    </code></pre>
+    <hr>
+    <h2 id="七、验证效果">七、验证效果</h2>
+    <ol>
+    <li>打开博客任意文章</li>
+    <li>滚动到文章底部</li>
+    <li>应能看到 Giscus 评论区</li>
+    <li>点击评论框，使用 GitHub 账号登录</li>
+    <li>尝试发表一条测试评论</li>
+    </ol>
+    <hr>
+    <h2 id="八、常见问题">八、常见问题</h2>
+    <h3 id="q1-评论没有出现？">Q1: 评论没有出现？</h3>
+    <ol>
+    <li>确认 <code>giscus.enable: true</code></li>
+    <li>检查浏览器 Console 是否有报错</li>
+    <li>确认 Giscus App 已安装到仓库</li>
+    <li>确认 Discussions 已开启</li>
+    </ol>
+    <h3 id="q2-如何自定义评论样式？">Q2: 如何自定义评论样式？</h3>
+    <p>Giscus 支持自定义 CSS，通过 <code>theme</code> 参数可以加载自定义样式文件：</p>
+    <pre><code class="language-yaml">theme: https://your-domain.com/custom-giscus.css
+    </code></pre>
+    <h3 id="q3-可以关闭某篇文章的评论吗？">Q3: 可以关闭某篇文章的评论吗？</h3>
+    <p>在文章 frontmatter 中添加：</p>
+    <pre><code class="language-yaml">comments: false
+    </code></pre>
+    <h3 id="q4-评论数据存在哪里？">Q4: 评论数据存在哪里？</h3>
+    <p>评论存储在 GitHub Discussions 中，可以直接访问仓库的 Discussions 页面查看和管理。</p>
+    <hr>
+    <h2 id="九、进阶配置">九、进阶配置</h2>
+    <h3 id="91-启用评论反应">9.1 启用评论反应</h3>
+    <pre><code class="language-yaml">reactions_enabled: 1
+    </code></pre>
+    <h3 id="92-输出元数据">9.2 输出元数据</h3>
+    <pre><code class="language-yaml">emit_metadata: 1
+    </code></pre>
+    <h3 id="93-严格标题匹配">9.3 严格标题匹配</h3>
+    <pre><code class="language-yaml">strict: 1
+    </code></pre>
+    <h3 id="94-限制访问域名">9.4 限制访问域名</h3>
+    <pre><code class="language-yaml">origin: https://your-domain.com
+    </code></pre>
+    <hr>
+    <h2 id="十、相关链接">十、相关链接</h2>
+    <table>
+    <thead>
+    <tr>
+    <th>资源</th>
+    <th>链接</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>Giscus 官网</td>
+    <td><a href="https://giscus.app">https://giscus.app</a></td>
+    </tr>
+    <tr>
+    <td>Giscus GitHub</td>
+    <td><a href="https://github.com/giscus/giscus">https://github.com/giscus/giscus</a></td>
+    </tr>
+    <tr>
+    <td>Discussions 管理</td>
+    <td><a href="https://github.com/%E4%BD%A0%E7%9A%84%E7%94%A8%E6%88%B7%E5%90%8D/%E4%BB%93%E5%BA%93%E5%90%8D/discussions">https://github.com/你的用户名/仓库名/discussions</a></td>
+    </tr>
+    </tbody></table>
+    
+  </main>
+</div>
+<footer class="footer">
+  由 LLM Wiki 文档系统生成 &middot; <a href="/">返回博客</a>
+</footer>
+</body>
+</html>

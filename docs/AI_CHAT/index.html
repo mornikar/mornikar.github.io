@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI_CHAT - LLM Wiki 文档</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.7;
+    color: #e0e0e0;
+    background: #1a1a2e;
+    min-height: 100vh;
+  }
+  a { color: #4fc3f7; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .topbar {
+    background: #16213e;
+    border-bottom: 1px solid #0f3460;
+    padding: 0.8rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .topbar .brand { font-weight: 700; font-size: 1.1rem; color: #e94560; }
+  .topbar .brand:hover { text-decoration: none; }
+  .breadcrumb { color: #888; font-size: 0.9rem; }
+  .breadcrumb span { color: #ccc; }
+  .layout { display: flex; max-width: 1200px; margin: 0 auto; padding: 2rem; gap: 2rem; }
+  .sidebar { width: 200px; flex-shrink: 0; }
+  .sidebar h3 { color: #e94560; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+  .sidebar nav a {
+    display: block;
+    padding: 0.3rem 0.5rem;
+    color: #a0a0a0;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    margin-bottom: 2px;
+  }
+  .sidebar nav a:hover { color: #4fc3f7; background: rgba(79,195,247,0.1); text-decoration: none; }
+  .sidebar nav a.active { color: #e94560; background: rgba(233,69,96,0.1); }
+  .main { flex: 1; min-width: 0; }
+  .main h1 { color: #e94560; font-size: 1.8rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #333; }
+  .main h2 { color: #4fc3f7; font-size: 1.3rem; margin: 1.8rem 0 0.8rem; }
+  .main h3 { color: #80cbc4; font-size: 1.1rem; margin: 1.5rem 0 0.6rem; }
+  .main h4 { color: #fff; font-size: 1rem; margin: 1.2rem 0 0.5rem; }
+  .main p { margin: 0.8rem 0; color: #d0d0d0; }
+  .main ul, .main ol { margin: 0.8rem 0; padding-left: 1.5rem; }
+  .main li { margin: 0.3rem 0; color: #d0d0d0; }
+  .main code {
+    background: #0f3460;
+    color: #e94560;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-family: "Fira Code", "Consolas", monospace;
+    font-size: 0.88em;
+  }
+  .main pre {
+    background: #0f3460;
+    border: 1px solid #1a4a7a;
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+  }
+  .main pre code { background: none; color: #e0e0e0; padding: 0; font-size: 0.85rem; }
+  .main blockquote {
+    border-left: 3px solid #e94560;
+    padding: 0.5rem 1rem;
+    margin: 1rem 0;
+    background: rgba(233,69,96,0.05);
+    color: #a0a0a0;
+  }
+  .main table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  .main th { background: #0f3460; color: #4fc3f7; padding: 0.6rem 1rem; text-align: left; }
+  .main td { padding: 0.5rem 1rem; border-bottom: 1px solid #2a2a4a; color: #d0d0d0; }
+  .main tr:hover td { background: rgba(79,195,247,0.05); }
+  .main hr { border: none; border-top: 1px solid #333; margin: 2rem 0; }
+  .main img { max-width: 100%; border-radius: 4px; }
+  .main a { color: #4fc3f7; }
+  .main strong { color: #fff; }
+  .main em { color: #a0a0a0; }
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: #555;
+    font-size: 0.8rem;
+    border-top: 1px solid #222;
+    margin-top: 3rem;
+  }
+  @media (max-width: 768px) {
+    .layout { flex-direction: column; padding: 1rem; }
+    .sidebar { width: 100%; }
+    .topbar { padding: 0.8rem 1rem; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/">🌸 LLM Wiki</a>
+  <span class="breadcrumb">&raquo; <a href="/docs/">文档</a> &raquo; <a href="/docs/AI_CHAT/">AI_CHAT</a></span>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <h3>📄 文档导航</h3>
+    <nav>
+      <a href="/docs/">文档首页</a>
+      <a href="/docs/PROJECT/">系统架构</a>
+      <a href="/docs/MAINTENANCE/">维护指南</a>
+      <a href="/docs/TROUBLESHOOTING/">故障排查</a>
+      <a href="/docs/MIGRATION/">迁移规范</a>
+    </nav>
+  </aside>
+  <main class="main">
+    <h1 id="🤖-wiki-ai-助手">🤖 Wiki AI 助手</h1>
+    <blockquote>
+    <p>基于 Wiki 知识库的 AI 对话助手，由 Wiki 聊天面板 + Live2D 看板娘 + 登录页三模块组成</p>
+    </blockquote>
+    <hr>
+    <h2 id="一、功能特性">一、功能特性</h2>
+    <table>
+    <thead>
+    <tr>
+    <th>特性</th>
+    <th>说明</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>📚 <strong>知识库问答</strong></td>
+    <td>基于 Wiki 内容进行 RAG 检索增强回答</td>
+    </tr>
+    <tr>
+    <td>🔗 <strong>多接入方式</strong></td>
+    <td>支持 Dify / 在线 API / 直连模型三种模式</td>
+    </tr>
+    <tr>
+    <td>🐱 <strong>Live2D 看板娘</strong></td>
+    <td>页面左侧阿丽露模型，可对话、换装、换音色</td>
+    </tr>
+    <tr>
+    <td>🎙️ <strong>TTS 朗读</strong></td>
+    <td>AI 回复自动朗读，支持多种音色切换</td>
+    </tr>
+    <tr>
+    <td>🎨 <strong>Arknights 风格</strong></td>
+    <td>与网站主题一致的 UI 设计</td>
+    </tr>
+    <tr>
+    <td>⚙️ <strong>灵活配置</strong></td>
+    <td>支持自定义 System Prompt（猫女仆人设）</td>
+    </tr>
+    <tr>
+    <td>📱 <strong>响应式布局</strong></td>
+    <td>适配桌面端和移动端（含 Live2D 看板娘移动端适配）</td>
+    </tr>
+    </tbody></table>
+    <hr>
+    <h2 id="二、系统架构">二、系统架构</h2>
+    <h3 id="21-模块关系">2.1 模块关系</h3>
+    <pre><code>┌──────────────────────────────────────────────────────────────┐
+    │                       AI 助手系统                              │
+    │                                                              │
+    │  ┌─────────────────┐    ┌──────────────────┐                │
+    │  │  Wiki 聊天面板    │    │  Live2D 看板娘     │                │
+    │  │  (wiki-chat.js) │    │  (waifu-chat.js)  │                │
+    │  │                 │    │                    │                │
+    │  │  · 右下角悬浮按钮 │    │  · 左侧看板娘       │                │
+    │  │  · 设置面板      │    │  · 对话气泡         │                │
+    │  │  · Markdown 渲染 │    │  · 工具栏操作       │                │
+    │  │  · TTS 朗读     │    │  · TTS 朗读        │                │
+    │  └───────┬─────────┘    └────────┬──────────┘                │
+    │          │                       │                           │
+    │          │  共享 localStorage     │                           │
+    │          │  waifu_tts_settings   │                           │
+    │          └───────────┬───────────┘                           │
+    │                      │                                       │
+    │  ┌───────────────────▼──────────────────┐                   │
+    │  │           三模式 API 接入               │                   │
+    │  │  · Dify → 本地 Dify RAG              │                   │
+    │  │  · 在线 API → CF Worker → 远程模型    │                   │
+    │  │  · 直连 → 本地 LM Studio             │                   │
+    │  └──────────────────────────────────────┘                   │
+    │                                                              │
+    │  ┌──────────────────────────────────────┐                   │
+    │  │         登录页 (/login/)              │                   │
+    │  │  · 赛博雨幕 + 粒子星云 + 扫描线特效    │                   │
+    │  │  · 接入方式配置                       │                   │
+    │  │  · System Prompt 配置                 │                   │
+    │  └──────────────────────────────────────┘                   │
+    └──────────────────────────────────────────────────────────────┘
+    </code></pre>
+    <h3 id="22-两套-tts-系统">2.2 两套 TTS 系统</h3>
+    <p>Wiki 面板和 Live2D 看板娘各自有独立的 <code>speakText()</code> 实现，但共享 localStorage 中的 TTS 设置：</p>
+    <table>
+    <thead>
+    <tr>
+    <th>存储键</th>
+    <th>内容</th>
+    <th>读写方</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td><code>waifu_tts_settings</code></td>
+    <td><code>{ enabled, voice }</code></td>
+    <td>两套 TTS 均读写</td>
+    </tr>
+    <tr>
+    <td><code>wiki-chat-settings</code></td>
+    <td>完整配置（含 TTS）</td>
+    <td>Wiki 面板读写</td>
+    </tr>
+    </tbody></table>
+    <p><strong>同步策略</strong>：每次 <code>speakText()</code> 调用前，从 localStorage 重新读取最新设置，确保两端切换音色后立即生效。</p>
+    <p><strong>音色匹配规则</strong>：</p>
+    <ul>
+    <li>存储简短关键字（如 <code>Yunxi</code>、<code>Xiaoxiao</code>）</li>
+    <li>匹配时用 <code>includes()</code> 包含匹配，而非精确匹配</li>
+    <li>优先选择 Online Natural 版本的音色</li>
+    <li>Chrome <code>speechSynthesis.cancel()</code> 后需 ≥100ms 延迟再 <code>speak()</code></li>
+    </ul>
+    <hr>
+    <h2 id="三、接入方式">三、接入方式</h2>
+    <h3 id="31-三种模式对比">3.1 三种模式对比</h3>
+    <table>
+    <thead>
+    <tr>
+    <th>模式</th>
+    <th>说明</th>
+    <th>适用场景</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td><strong>Dify</strong></td>
+    <td>连接本地 Dify RAG 应用</td>
+    <td>需要知识库检索增强</td>
+    </tr>
+    <tr>
+    <td><strong>在线 API</strong></td>
+    <td>通过 Cloudflare Worker 代理访问远程 API</td>
+    <td>公网部署，访问内网模型</td>
+    </tr>
+    <tr>
+    <td><strong>直连模型</strong></td>
+    <td>直接连接本地 LM Studio</td>
+    <td>本地开发测试</td>
+    </tr>
+    </tbody></table>
+    <h3 id="32-dify-模式">3.2 Dify 模式</h3>
+    <p><strong>配置要求</strong>：</p>
+    <ul>
+    <li>Dify 本地部署（Docker Desktop）</li>
+    <li>配置好的 RAG 知识库应用</li>
+    <li>Dify API 地址和应用密钥</li>
+    </ul>
+    <p><strong>配置项</strong>：</p>
+    <pre><code class="language-yaml">wiki_chat:
+      mode: dify
+      dify:
+        api_url: http://localhost/v1
+        app_key: app-xxxxxxxxxxxxx
+    </code></pre>
+    <h3 id="33-在线-api-模式">3.3 在线 API 模式</h3>
+    <p><strong>配置要求</strong>：</p>
+    <ul>
+    <li>可访问的远程 API 地址</li>
+    <li>API 密钥（可选）</li>
+    </ul>
+    <p><strong>配置项</strong>：</p>
+    <pre><code class="language-yaml">wiki_chat:
+      mode: online_api
+      online_api:
+        api_url: https://your-api.com/v1/chat/completions
+        api_key: sk-xxxxxxxxxxxxx
+        model: qwen3.5-9b
+    </code></pre>
+    <p><strong>代理服务</strong>：
+    使用 Cloudflare Worker 作为代理，解决跨域问题：</p>
+    <ul>
+    <li>代理地址：<code>dify-proxy.1548324254.workers.dev</code></li>
+    <li>支持 Dify 和 OpenAI 兼容 API</li>
+    </ul>
+    <h3 id="34-直连模型模式">3.4 直连模型模式</h3>
+    <p><strong>配置要求</strong>：</p>
+    <ul>
+    <li>本地运行 LM Studio</li>
+    <li>启用 &quot;Enable API&quot; 选项</li>
+    </ul>
+    <p><strong>配置项</strong>：</p>
+    <pre><code class="language-yaml">wiki_chat:
+      mode: direct
+      direct:
+        api_url: http://localhost:1234/v1/chat/completions
+        model: qwen3.5-9b
+    </code></pre>
+    <hr>
+    <h2 id="四、system-prompt-配置">四、System Prompt 配置</h2>
+    <h3 id="41-默认-prompt（猫女仆人设）">4.1 默认 Prompt（猫女仆人设）</h3>
+    <pre><code>你是一个基于 Wiki 知识库的猫女仆助手，性格傲娇。回答会以&quot;喵&quot;结尾。
+    非工作状态要称呼我为主人。擅长回答关于编程、AI、LLM、RAG 等技术问题。
+    请用中文回答，保持简洁准确。
+    </code></pre>
+    <h3 id="42-自定义配置">4.2 自定义配置</h3>
+    <p>在设置面板或登录页中修改 System Prompt，支持：</p>
+    <ul>
+    <li>自定义角色设定</li>
+    <li>特定领域知识注入</li>
+    <li>回复风格约束</li>
+    </ul>
+    <h3 id="43-prompt-生效条件">4.3 Prompt 生效条件</h3>
+    <table>
+    <thead>
+    <tr>
+    <th>模式</th>
+    <th>System Prompt</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>Dify</td>
+    <td>由 Dify 应用端控制（前端保存备用）</td>
+    </tr>
+    <tr>
+    <td>在线 API</td>
+    <td>✅ 自动注入</td>
+    </tr>
+    <tr>
+    <td>直连模型</td>
+    <td>✅ 自动注入</td>
+    </tr>
+    </tbody></table>
+    <hr>
+    <h2 id="五、访问方式">五、访问方式</h2>
+    <h3 id="51-浮动按钮">5.1 浮动按钮</h3>
+    <ul>
+    <li><strong>位置</strong>：页面右下角</li>
+    <li><strong>图标</strong>：🔵 蓝色按钮</li>
+    <li><strong>点击</strong>：展开 AI 对话界面</li>
+    </ul>
+    <h3 id="52-live2d-看板娘">5.2 Live2D 看板娘</h3>
+    <ul>
+    <li><strong>位置</strong>：页面左侧（桌面端）/ Wiki 聊天面板内（移动端）</li>
+    <li><strong>模型</strong>：阿丽露（Ariu）</li>
+    <li><strong>功能</strong>：<ul>
+    <li>点击对话气泡进行 AI 聊天</li>
+    <li>工具栏操作：隐藏/显示、换模型、换装、音色切换</li>
+    <li>AI 回复自动 TTS 朗读</li>
+    <li>支持拖拽移动位置</li>
+    </ul>
+    </li>
+    <li><strong>移动端</strong>：看板娘在 Wiki 聊天面板的 Live2D 区域内显示（高度 200px，模型尺寸 180px）</li>
+    </ul>
+    <h3 id="53-登录页面">5.3 登录页面</h3>
+    <ul>
+    <li><strong>地址</strong>：<code>/login/</code></li>
+    <li><strong>视觉特效</strong>：<ul>
+    <li>🌧️ 赛博雨幕 — 垂直下落的字符流，带尾迹拖影</li>
+    <li>✨ 粒子星云 — 青/品红粒子，鼠标引力交互</li>
+    <li>📺 扫描线 — CRT 显示器横线扫描</li>
+    <li>🔲 网格线 — 赛博朋克风格网格</li>
+    <li>🏷️ 战术卡片 — 四角装饰 + 赛博风 UI</li>
+    </ul>
+    </li>
+    <li><strong>功能</strong>：配置接入方式、System Prompt、用户名</li>
+    <li><strong>登录动画</strong>：白色闪光 → 扫描线收缩 → 页面跳转</li>
+    </ul>
+    <h3 id="54-设置面板">5.4 设置面板</h3>
+    <ul>
+    <li><strong>入口</strong>：登录页面 / Wiki 聊天面板右上角设置按钮</li>
+    <li><strong>功能</strong>：<ul>
+    <li>选择接入方式</li>
+    <li>配置各模式参数</li>
+    <li>自定义 System Prompt</li>
+    <li>切换 TTS 音色</li>
+    <li>保存/重置配置</li>
+    </ul>
+    </li>
+    </ul>
+    <hr>
+    <h2 id="六、tts-朗读">六、TTS 朗读</h2>
+    <h3 id="61-支持的音色">6.1 支持的音色</h3>
+    <p>基于浏览器 <code>speechSynthesis.getVoices()</code> 返回的音色列表，预设以下中文音色：</p>
+    <table>
+    <thead>
+    <tr>
+    <th>预设</th>
+    <th>关键字</th>
+    <th>说明</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>云希</td>
+    <td>Yunxi</td>
+    <td>微软在线自然语音，推荐</td>
+    </tr>
+    <tr>
+    <td>晓晓</td>
+    <td>Xiaoxiao</td>
+    <td>微软在线自然语音</td>
+    </tr>
+    <tr>
+    <td>晓辰</td>
+    <td>Xiaochen</td>
+    <td>微软在线自然语音</td>
+    </tr>
+    <tr>
+    <td>云扬</td>
+    <td>Yunyang</td>
+    <td>微软在线自然语音</td>
+    </tr>
+    </tbody></table>
+    <blockquote>
+    <p>音色列表取决于操作系统和浏览器。Windows 11 + Chrome 可获得最丰富的中文自然语音。</p>
+    </blockquote>
+    <h3 id="62-切换音色">6.2 切换音色</h3>
+    <p>两种方式切换 TTS 音色，效果实时同步：</p>
+    <ol>
+    <li><strong>Live2D 工具栏</strong>：点击音色按钮，选择音色后立即试听</li>
+    <li><strong>Wiki 聊天设置面板</strong>：点击音色按钮，选择音色</li>
+    </ol>
+    <h3 id="63-注意事项">6.3 注意事项</h3>
+    <ul>
+    <li>Chrome 中 <code>speechSynthesis.cancel()</code> 后需等待 ≥100ms 才能再次 <code>speak()</code>，否则后续朗读会被吞</li>
+    <li>TTS 音色列表在 Chrome 中异步加载，首次使用时可能有短暂延迟</li>
+    <li>两套 TTS 系统（Wiki 面板 + Live2D）共享 localStorage 设置，切换即时生效</li>
+    </ul>
+    <hr>
+    <h2 id="七、cors-代理配置">七、CORS 代理配置</h2>
+    <h3 id="71-cloudflare-worker-代理">7.1 Cloudflare Worker 代理</h3>
+    <p>用于解决在线 API 模式的跨域问题：</p>
+    <pre><code class="language-javascript">// dify-proxy-worker.js 核心功能
+    - OPTIONS 预检请求处理
+    - 智能路由（Dify / OpenAI 兼容）
+    - 请求头转发
+    - 错误处理
+    </code></pre>
+    <h3 id="72-本地代理（开发模式）">7.2 本地代理（开发模式）</h3>
+    <p>开发环境下可直接连接本地服务，无需代理。</p>
+    <h3 id="73-开机自启">7.3 开机自启</h3>
+    <p>Windows 开机自启脚本：</p>
+    <pre><code class="language-powershell"># dify-proxy-start.vbs
+    wscript.CreateObject(&quot;WScript.Shell&quot;).Run &quot;启动命令&quot;, 0
+    </code></pre>
+    <hr>
+    <h2 id="八、文件结构">八、文件结构</h2>
+    <pre><code>themes/arknights/
+    ├── layout/
+    │   ├── includes/layout.pug       # 主布局（所有 script 集中在 body 尾部加载）
+    │   ├── login.pug                 # 登录页路由
+    │   └── custom/
+    │       ├── wiki-login.ejs        # 登录页内容模板（纯 HTML + CSS，不含 script）
+    │       └── wiki-chat-btn.ejs     # AI 对话按钮模板
+    ├── source/
+    │   ├── css/_custom/
+    │   │   ├── wiki-chat.styl        # AI 对话面板样式
+    │   │   └── wiki-login.styl       # 登录页样式（赛博雨幕 + 战术面板）
+    │   ├── js/
+    │   │   ├── wiki-chat.js          # AI 对话面板逻辑 + TTS 朗读
+    │   │   └── wiki-login.js         # 登录页逻辑（特效 + 配置，IIFE 封装）
+    │   └── live2d/
+    │       ├── live2d.js             # Live2D 主入口
+    │       ├── Core/
+    │       │   ├── live2d-sdk.js     # Live2D SDK
+    │       │   ├── live2dcubismcore.js # Cubism Core
+    │       │   └── waifu-tips.js     # 工具栏逻辑（换模型、换音色、换装）
+    │       ├── chatCore/
+    │       │   ├── waifu-chat.js     # AI 对话核心 + TTS 朗读
+    │       │   └── waifu-chat.css    # 对话 UI 样式
+    │       ├── config/
+    │       │   ├── model_list.json   # 模型列表
+    │       │   ├── waifu-chat.json   # 对话配置
+    │       │   └── waifu-tips.json   # 工具栏配置
+    │       └── model/
+    │           └── ariu/             # 阿丽露模型资源
+    └── _config.yml                   # 主题配置
+    </code></pre>
+    <blockquote>
+    <p>⚠️ <strong>Script 加载注意事项</strong>：</p>
+    <ul>
+    <li>所有 JS 在 <code>layout.pug</code> 的 body 尾部加载，<strong>不要</strong>在 EJS 模板（<code>&lt;article&gt;</code> 内）中放置 <code>&lt;script&gt;</code> 标签</li>
+    <li>Pjax 切换页面时不执行 <code>&lt;article&gt;</code> 内的 script</li>
+    <li><code>wiki-login.js</code> 通过条件加载（<code>if page.path.indexOf(&#39;login&#39;) === 0</code>），避免其他页面加载</li>
+    </ul>
+    </blockquote>
+    <hr>
+    <h2 id="九、常见问题">九、常见问题</h2>
+    <h3 id="q1-ai-助手没有出现？">Q1: AI 助手没有出现？</h3>
+    <ol>
+    <li>检查浏览器 Console 是否有报错（特别是 SyntaxError）</li>
+    <li>确认 JS 文件是否加载成功（Network 面板查看）</li>
+    <li>检查 <code>layout.pug</code> 中的 script 加载配置</li>
+    <li>清除浏览器缓存后重试</li>
+    </ol>
+    <h3 id="q2-api-请求失败？">Q2: API 请求失败？</h3>
+    <ol>
+    <li>确认对应服务是否运行（Dify / LM Studio）</li>
+    <li>检查 API 地址和密钥配置</li>
+    <li>查看浏览器 Network 面板的具体错误</li>
+    </ol>
+    <h3 id="q3-cors-错误？">Q3: CORS 错误？</h3>
+    <ol>
+    <li>在线 API 模式：确认 Cloudflare Worker 代理地址正确</li>
+    <li>直连模式：确保 LM Studio 启用了 CORS</li>
+    </ol>
+    <h3 id="q4-tts-朗读没有声音？">Q4: TTS 朗读没有声音？</h3>
+    <ol>
+    <li>确认 TTS 开关已开启</li>
+    <li>检查浏览器是否允许自动播放音频</li>
+    <li>Chrome 中首次使用 TTS 可能需要用户交互触发</li>
+    <li>尝试切换音色后再试</li>
+    </ol>
+    <h3 id="q5-切换-tts-音色后仍然用旧音色？">Q5: 切换 TTS 音色后仍然用旧音色？</h3>
+    <ol>
+    <li>两套 TTS 系统共享设置，但需刷新页面才能完全同步</li>
+    <li>Chrome 的 <code>speechSynthesis.cancel()</code> 后需要 ≥100ms 延迟</li>
+    <li>清除 localStorage 后重新配置</li>
+    </ol>
+    <h3 id="q6-登录页特效不显示？">Q6: 登录页特效不显示？</h3>
+    <ol>
+    <li>检查浏览器 Console 是否有 JS 语法错误</li>
+    <li>确认 <code>wiki-login.js</code> 在 body 尾部加载（不在 <code>&lt;article&gt;</code> 内）</li>
+    <li>清除浏览器缓存后重试</li>
+    </ol>
+    <h3 id="q7-如何关闭-ai-助手？">Q7: 如何关闭 AI 助手？</h3>
+    <p>在 <code>_config.yml</code> 中设置：</p>
+    <pre><code class="language-yaml">wiki_chat:
+      enable: false
+    </code></pre>
+    <h3 id="q8-设置页面关闭后看板娘消失了？">Q8: 设置页面关闭后看板娘消失了？</h3>
+    <p>这是 v8.5 的已知 Bug，已在 v8.6 修复。关闭设置面板(✕)时未恢复 Live2D 区域。更新到最新代码即可。</p>
+    <h3 id="q9-手机上看不到-live2d-看板娘？">Q9: 手机上看不到 Live2D 看板娘？</h3>
+    <p>v8.5 及之前版本在 <code>live2d.js</code> 中硬编码了 <code>screen.width &gt;= 768</code> 限制，导致移动端跳过 Live2D 初始化。v8.6 已移除此限制，手机打开 Wiki 聊天面板即可看到看板娘。</p>
+    <hr>
+    <h2 id="十、相关链接">十、相关链接</h2>
+    <table>
+    <thead>
+    <tr>
+    <th>资源</th>
+    <th>链接</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>Dify 官网</td>
+    <td><a href="https://dify.ai/">https://dify.ai/</a></td>
+    </tr>
+    <tr>
+    <td>LM Studio</td>
+    <td><a href="https://lmstudio.ai/">https://lmstudio.ai/</a></td>
+    </tr>
+    <tr>
+    <td>Cloudflare Workers</td>
+    <td><a href="https://workers.cloudflare.com/">https://workers.cloudflare.com/</a></td>
+    </tr>
+    <tr>
+    <td>Live2D Cubism</td>
+    <td><a href="https://www.live2d.com/">https://www.live2d.com/</a></td>
+    </tr>
+    <tr>
+    <td>Web Speech API</td>
+    <td><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API">https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API</a></td>
+    </tr>
+    </tbody></table>
+    
+  </main>
+</div>
+<footer class="footer">
+  由 LLM Wiki 文档系统生成 &middot; <a href="/">返回博客</a>
+</footer>
+</body>
+</html>

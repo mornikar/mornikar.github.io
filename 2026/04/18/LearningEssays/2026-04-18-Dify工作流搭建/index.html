@@ -1,0 +1,312 @@
+<!DOCTYPE html><html lang="zh-CN" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Dify工作流搭建 | Mornikar's Blog</title><meta name="keywords" content="wiki, AI部署, Dify, OpenClaw, 私有化"><meta name="description" content="解决Dify与本地模型兼容性问题的最优解之一，彻底绕过原生节点的model.mode校验限制，同时规避你之前遇到的ASCII编码错误。以下是具体操作细节和注意事项：  一、方案核心逻辑原生问题分类器节点强制要求model.mode字段，而本地模型（如通过stvlynn&#x2F;lms接入的）可能未被Dify正确识别为chat模式。用HTTP请求节点直接调用本地模型API，完全脱离Dify的原生模型封装">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dify工作流搭建">
+<meta property="og:url" content="https://mornikar.github.io/2026/04/18/LearningEssays/2026-04-18-Dify%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="Mornikar&#39;s Blog">
+<meta property="og:description" content="解决Dify与本地模型兼容性问题的最优解之一，彻底绕过原生节点的model.mode校验限制，同时规避你之前遇到的ASCII编码错误。以下是具体操作细节和注意事项：  一、方案核心逻辑原生问题分类器节点强制要求model.mode字段，而本地模型（如通过stvlynn&#x2F;lms接入的）可能未被Dify正确识别为chat模式。用HTTP请求节点直接调用本地模型API，完全脱离Dify的原生模型封装">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-18T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-18T00:00:00.000Z">
+<meta property="article:author" content="Mornikar">
+<meta property="article:tag" content="wiki, AI部署, Dify, OpenClaw, 私有化">
+<meta name="twitter:card" content="summary"><link rel="canonical" href="https://mornikar.github.io/2026/04/18/LearningEssays/2026-04-18-Dify%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%90%AD%E5%BB%BA/"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":false,"search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@11.12.2/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: 'confirm'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@11.12.2/dist/mermaid.esm.min.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {window.giscusSettings = {
+ repo: 'mornikar/mornikar.github.io',
+ repoId: 'R_kgDOPto6vw',
+ category: 'Announcements',
+ categoryId: 'DIC_kwDOPto6v84C7YeI',
+ mapping: 'pathname',
+ strict: '0',
+ reactionsEnabled: '1',
+ emitMetadata: '1',
+ inputPosition: 'top',
+ lang: 'zh-CN',
+ crossorigin: 'anonymous' , loading: 'lazy'};window.giscusThemeConfig = { theme: 'preferred_color_scheme' };document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Mornikar's Blog" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/assets-archive/"><span class="navItemTitle">资源</span></a></li><li class="navItem"><a class="navBlock" href="/wiki-changelog/"><span class="navItemTitle">更新日志</span></a></li><li class="navItem"><a class="navBlock" href="/infinite-menu/"><span class="navItemTitle">∞导航</span></a></li></ol></nav></header><article><div id="post-bg"><!-- CMS 编辑按钮（对齐标题右上角）--><a class="cms-edit-btn" href="/admin/?edit=source%2F_posts%2FLearningEssays%2F2026-04-18-Dify%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%90%AD%E5%BB%BA.md" title="编辑此文章" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg></a><style>.cms-edit-btn {
+  position: absolute;
+  top: 22px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border: 1px solid rgba(34, 187, 255, 0.25);
+  border-radius: 6px;
+  color: rgba(34, 187, 255, 0.5);
+  text-decoration: none;
+  transition: all 0.2s;
+  background: rgba(34, 187, 255, 0.05);
+  z-index: 10;
+}
+.cms-edit-btn:hover {
+  color: #2bf;
+  border-color: #2bf;
+  background: rgba(34, 187, 255, 0.12);
+  transform: scale(1.1);
+}
+.cms-edit-btn svg {
+  width: 16px;
+  height: 16px;
+}</style><div id="post-title"><h1>Dify工作流搭建<!-- Phase 3: Wiki 来源标记--></h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2026-04-18T00:00:00.000Z" id="date"> 2026-04-18</time></div></span><br><span>Last Update: <div class="control"><time datetime="2026-04-18T00:00:00.000Z" id="updated"> 2026-04-18</time></div></span></div><hr><!-- Phase 3: Wiki 来源信息--></div><div id="post-content"><!-- 此文章来自 LLM Wiki: raw/articles/AI部署/Dify工作流搭建.md -->
+
+<p>解决Dify与本地模型兼容性问题的<strong>最优解之一</strong>，彻底绕过原生节点的<code>model.mode</code>校验限制，同时规避你之前遇到的ASCII编码错误。以下是具体操作细节和注意事项：</p>
+<hr>
+<h3 id="一、方案核心逻辑"><a href="#一、方案核心逻辑" class="headerlink" title="一、方案核心逻辑"></a>一、方案核心逻辑</h3><p>原生问题分类器节点强制要求<code>model.mode</code>字段，而本地模型（如通过<code>stvlynn/lms</code>接入的）可能未被Dify正确识别为<code>chat</code>模式。用HTTP请求节点直接调用本地模型API，<strong>完全脱离Dify的原生模型封装层</strong>，从根源解决问题。</p>
+<hr>
+<h3 id="二、操作步骤细化"><a href="#二、操作步骤细化" class="headerlink" title="二、操作步骤细化"></a>二、操作步骤细化</h3><ol>
+<li><p><strong>删除原问题分类器节点</strong>：避免原生节点的校验逻辑干扰。</p>
+</li>
+<li><p><strong>配置HTTP请求节点</strong>：</p>
+<ul>
+<li><p><strong>URL</strong>：填写本地模型API地址（如<code>http://localhost:8000/v1/chat/completions</code>；若Dify是Docker部署，需用<code>http://host.docker.internal:8000/v1/chat/completions</code>访问宿主机服务）。</p>
+</li>
+<li><p><strong>Headers</strong>：必须添加<code>Content-Type: application/json; charset=utf-8</code>（解决你之前的ASCII编码错误，确保中文Prompt能被正确序列化）。</p>
+</li>
+<li><p><strong>Body</strong>：严格遵循OpenAI规范（示例）：<br>   {</p>
+<pre><code> &quot;model&quot;: &quot;your-local-model&quot;,
+ &quot;messages&quot;: [
+   &#123;&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;你是一个分类器，请将用户输入分为：A. 闲聊 B. 查知识库 C. 写代码。只返回字母。&quot;&#125;,
+   &#123;&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;&amp;#123;&amp;#123;#start.user_input#&amp;#125;&amp;#125;&quot;&#125;
+ ],
+ &quot;max_tokens&quot;: 5,
+ &quot;temperature&quot;: 0.1
+</code></pre>
+<p>   }</p>
+</li>
+</ul>
+</li>
+<li><p><strong>添加条件分支节点</strong>：解析HTTP返回的<code>choices[0].message.content</code>（如”A”&#x2F;“B”&#x2F;“C”），根据结果路由到不同下游链路（如闲聊走聊天模型，查知识库走RAG流程）。</p>
+</li>
+</ol>
+<p>这是解决Dify与本地模型兼容性问题的<strong>最优解之一</strong>，彻底绕过原生节点的<code>model.mode</code>校验限制，同时规避你之前遇到的ASCII编码错误。以下是具体操作细节和注意事项：</p>
+<hr>
+<h3 id="一、方案核心逻辑-1"><a href="#一、方案核心逻辑-1" class="headerlink" title="一、方案核心逻辑"></a>一、方案核心逻辑</h3><p>原生问题分类器节点强制要求<code>model.mode</code>字段，而本地模型（如通过<code>stvlynn/lms</code>接入的）可能未被Dify正确识别为<code>chat</code>模式。用HTTP请求节点直接调用本地模型API，<strong>完全脱离Dify的原生模型封装层</strong>，从根源解决问题。</p>
+<hr>
+<h3 id="二、操作步骤细化-1"><a href="#二、操作步骤细化-1" class="headerlink" title="二、操作步骤细化"></a>二、操作步骤细化</h3><ol>
+<li><p><strong>删除原问题分类器节点</strong>：避免原生节点的校验逻辑干扰。</p>
+</li>
+<li><p><strong>配置HTTP请求节点</strong>：</p>
+<ul>
+<li><p><strong>URL</strong>：填写本地模型API地址（如<code>http://localhost:8000/v1/chat/completions</code>；若Dify是Docker部署，需用<code>http://host.docker.internal:8000/v1/chat/completions</code>访问宿主机服务）。</p>
+</li>
+<li><p><strong>Headers</strong>：必须添加<code>Content-Type: application/json; charset=utf-8</code>（解决你之前的ASCII编码错误，确保中文Prompt能被正确序列化）。</p>
+</li>
+<li><p><strong>Body</strong>：严格遵循OpenAI规范（示例）：<br>   {</p>
+<pre><code> &#123;
+  &quot;model&quot;: &quot;qwen/qwen3.5-9b@q4_k_m&quot;,
+  &quot;input&quot;: &quot;你是一个分类器，请将用户输入分为：A. 闲聊 B. 查知识库 C. 写代码。只返回字母。\n\n用户输入：&amp;#123;&amp;#123;#start.user_input#&amp;#125;&amp;#125;&quot;,
+  &quot;temperature&quot;: 0.1
+&#125;
+</code></pre>
+<p>   }</p>
+</li>
+</ul>
+</li>
+<li><p><strong>添加条件分支节点</strong>：解析HTTP返回的<code>choices[0].message.content</code>（如”A”&#x2F;“B”&#x2F;“C”），根据结果路由到不同下游链路（如闲聊走聊天模型，查知识库走RAG流程）。</p>
+</li>
+</ol>
+<hr>
+<h3 id="三、方案优势"><a href="#三、方案优势" class="headerlink" title="三、方案优势"></a>三、方案优势</h3><table>
+<thead>
+<tr>
+<th>优势</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>彻底解耦</td>
+<td>不依赖Dify的原生模型适配，只要本地模型支持OpenAI格式API就能用。</td>
+</tr>
+<tr>
+<td>避免编码错误</td>
+<td>手动控制Body编码为UTF-8，解决你之前遇到的<code>&#39;ascii&#39; codec can&#39;t encode</code>问题。</td>
+</tr>
+<tr>
+<td>性能提升</td>
+<td>省去Dify原生节点的封装层消耗，响应速度更快。</td>
+</tr>
+<tr>
+<td>灵活性强</td>
+<td>可自定义Headers（如鉴权）、调整请求参数（如<code>max_tokens</code>），适配任何本地模型。</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="四、注意事项"><a href="#四、注意事项" class="headerlink" title="四、注意事项"></a>四、注意事项</h3><ul>
+<li><p>若本地模型需要鉴权，在Headers中添加<code>Authorization: Bearer YOUR_TOKEN</code>。</p>
+</li>
+<li><p>测试时先用手动输入（如<code>&#123;&quot;content&quot;: &quot;你好&quot;&#125;</code>）验证API连通性，再接入Dify变量。</p>
+</li>
+<li><p>若HTTP请求仍报错，检查本地模型日志（如FastAPI&#x2F;Uvicorn日志），确认是否接收到正确请求。</p>
+</li>
+</ul>
+<p>在 Dify 的 <strong>HTTP 请求节点</strong>​ 中，<strong>Params</strong>​ 通常指的是 <strong>URL Query Parameters</strong>（URL 参数，即 <code>?key=value</code>的部分）。</p>
+<p>针对你正在配置的 <strong>本地模型分类器</strong>，绝大多数情况下：</p>
+<h3 id="✅-结论：Params-留空（不需要填）"><a href="#✅-结论：Params-留空（不需要填）" class="headerlink" title="✅ 结论：Params 留空（不需要填）"></a>✅ 结论：Params 留空（不需要填）</h3><p>因为你的请求体（Body）已经是标准的 JSON 格式，参数主要通过 Body 传递。</p>
+<h3 id="📋-正确的填写姿势"><a href="#📋-正确的填写姿势" class="headerlink" title="📋 正确的填写姿势"></a>📋 正确的填写姿势</h3><h4 id="1-Params-栏（通常留空）"><a href="#1-Params-栏（通常留空）" class="headerlink" title="1. Params 栏（通常留空）"></a>1. <strong>Params 栏（通常留空）</strong></h4><table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>(空)</em></td>
+<td><em>(空)</em></td>
+<td><strong>直接留空</strong>​</td>
+</tr>
+</tbody></table>
+<p>只有在你的本地模型 API <strong>强制要求</strong>​ URL 参数时才填，例如：<br>    <a target="_blank" rel="noopener" href="http://192.168.153.1:1234/api/v1/chat?api_key=xxx">http://192.168.153.1:1234/api/v1/chat?api_key=xxx</a></p>
+<p>这种情况下：</p>
+<ul>
+<li><p><strong>Key</strong>: <code>api_key</code></p>
+</li>
+<li><p><strong>Value</strong>: <code>xxx</code></p>
+</li>
+</ul>
+<hr>
+<h4 id="2-Headers-栏（必须填）"><a href="#2-Headers-栏（必须填）" class="headerlink" title="2. Headers 栏（必须填）"></a>2. <strong>Headers 栏（必须填）</strong></h4><p>这是<strong>最容易出错的地方</strong>，一定要填：</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Content-Type</code></td>
+<td><code>application/json; charset=utf-8</code></td>
+</tr>
+</tbody></table>
+<p>⚠️ <strong>特别注意</strong>：</p>
+<p><code>charset=utf-8</code>是解决你之前 <code>&#39;ascii&#39; codec can&#39;t encode</code>错误的<strong>关键</strong>。</p>
+<hr>
+<h4 id="3-Body-栏（核心逻辑）"><a href="#3-Body-栏（核心逻辑）" class="headerlink" title="3. Body 栏（核心逻辑）"></a>3. <strong>Body 栏（核心逻辑）</strong></h4><p>选择 <strong>Raw</strong>，填入 JSON：<br>    {<br>      “model”: “<a target="_blank" rel="noopener" href="http://192.168.153.1:1234/api/v1/chat">http://192.168.153.1:1234/api/v1/chat</a>“,<br>      “messages”: [<br>        {<br>          “role”: “system”,<br>          “content”: “你是一个分类器，请将用户输入分为：A. 闲聊 B. 查知识库 C. 写代码。只返回字母。”<br>        },<br>        {<br>          “role”: “user”,<br>          “content”: “&#123;&#123;#start.user_input#&#125;&#125;”<br>        }<br>      ],<br>      “max_tokens”: 5,<br>      “temperature”: 0.1<br>    }</p>
+<p>这是因为：</p>
+<ul>
+<li><p>Dify 默认用 ASCII 编码序列化 HTTP Body</p>
+</li>
+<li><p>你的 Prompt 包含中文</p>
+</li>
+<li><p><strong>没有显式声明 <code>charset=utf-8</code></strong></p>
+</li>
+</ul>
+<p>✅ 加上 <code>Content-Type: application/json; charset=utf-8</code>后，问题会消失。</p>
+<hr>
+<h3 id="✅-最终-Checklist（100-可用）"><a href="#✅-最终-Checklist（100-可用）" class="headerlink" title="✅ 最终 Checklist（100% 可用）"></a>✅ 最终 Checklist（100% 可用）</h3><table>
+<thead>
+<tr>
+<th>项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Method</td>
+<td>POST</td>
+</tr>
+<tr>
+<td>URL</td>
+<td><code>http://192.168.153.1:1234/api/v1/chat</code></td>
+</tr>
+<tr>
+<td>Headers</td>
+<td><code>Content-Type: application/json; charset=utf-8</code></td>
+</tr>
+<tr>
+<td>Body</td>
+<td>✅ JSON</td>
+</tr>
+<tr>
+<td>model</td>
+<td>✅ <strong>真实模型名</strong>​</td>
+</tr>
+<tr>
+<td>input</td>
+<td>✅ 字符串</td>
+</tr>
+<tr>
+<td>max_tokens</td>
+<td>❌ 删除</td>
+</tr>
+</tbody></table>
+<div class="wiki-backlinks">
+<h4 class="wiki-backlinks-title">🔗 反向链接</h4>
+<p class="wiki-backlinks-desc">以下页面引用了本文：</p>
+<ul class="wiki-backlinks-list">
+  <li><a href="/2026/04/27/LearningNote/2026-04-27-log/">log</a></li>
+</ul>
+</div><div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2026/04/18/LearningEssays/2026-04-18-Dialoqbase%E9%83%A8%E7%BD%B2/">← Next Dialoqbase部署</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2026/04/18/LearningEssays/2026-04-18-Dify%E7%A7%81%E6%9C%89%E5%8C%96%E9%83%A8%E7%BD%B2/">Dify私有化部署 Prev →</a></div></div></div><div id="comments"><div id="giscus"></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" onClick="tocControl.change()" title="To Catalog"><span class="tocBtnIconBar"></span><span class="tocBtnIconBar"></span><span class="tocBtnIconBar"></span></a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="Change Theme"></a><a onclick="BgmControl()"><svg id="bgm-control" viewBox="0 0 30 34" fill="currentColor" style="width: 24px; transition: transform .3s;margin-top: 4px"><path d="M25.998 23.422V11.29h3.999v12.132h-3.999zM19.497 6.234h4.001v22.243h-4.001V6.234zM12.998.867h4v32.978h-4V.867zm-6.5 5.367h4.001v22.243H6.498V6.234zm-6.5 5.056h4v12.132h-4V11.29z"></path></svg><audio id="bgm" src="/audio/bgm.mp3" loop crossorigin="anonymous"> </audio></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Mornikar's Blog" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">Mornikar</a></h1><div id="description"><p>记录AI产品、技术学习与成长</p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%96%B9%E6%A1%88%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91"><span class="toc-number">1.</span> <span class="toc-text">一、方案核心逻辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%93%8D%E4%BD%9C%E6%AD%A5%E9%AA%A4%E7%BB%86%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">二、操作步骤细化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%96%B9%E6%A1%88%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91-1"><span class="toc-number">3.</span> <span class="toc-text">一、方案核心逻辑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%93%8D%E4%BD%9C%E6%AD%A5%E9%AA%A4%E7%BB%86%E5%8C%96-1"><span class="toc-number">4.</span> <span class="toc-text">二、操作步骤细化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%96%B9%E6%A1%88%E4%BC%98%E5%8A%BF"><span class="toc-number">5.</span> <span class="toc-text">三、方案优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">6.</span> <span class="toc-text">四、注意事项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E7%BB%93%E8%AE%BA%EF%BC%9AParams-%E7%95%99%E7%A9%BA%EF%BC%88%E4%B8%8D%E9%9C%80%E8%A6%81%E5%A1%AB%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">✅ 结论：Params 留空（不需要填）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%8B-%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%A1%AB%E5%86%99%E5%A7%BF%E5%8A%BF"><span class="toc-number">8.</span> <span class="toc-text">📋 正确的填写姿势</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Params-%E6%A0%8F%EF%BC%88%E9%80%9A%E5%B8%B8%E7%95%99%E7%A9%BA%EF%BC%89"><span class="toc-number">8.1.</span> <span class="toc-text">1. Params 栏（通常留空）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Headers-%E6%A0%8F%EF%BC%88%E5%BF%85%E9%A1%BB%E5%A1%AB%EF%BC%89"><span class="toc-number">8.2.</span> <span class="toc-text">2. Headers 栏（必须填）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Body-%E6%A0%8F%EF%BC%88%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91%EF%BC%89"><span class="toc-number">8.3.</span> <span class="toc-text">3. Body 栏（核心逻辑）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E6%9C%80%E7%BB%88-Checklist%EF%BC%88100-%E5%8F%AF%E7%94%A8%EF%BC%89"><span class="toc-number">9.</span> <span class="toc-text">✅ 最终 Checklist（100% 可用）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-number">9.1.</span> <span class="toc-text">🔗 反向链接</span></a></li></ol></li></ol></div></div><footer></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script><script defer src="/js/wiki-chat.js"></script><script defer src="/js/wiki-tree.js"></script><script defer src="/live2d/live2d.js"></script></body></html>

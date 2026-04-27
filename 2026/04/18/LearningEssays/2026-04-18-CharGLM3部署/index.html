@@ -1,0 +1,211 @@
+<!DOCTYPE html><html lang="zh-CN" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CharGLM3部署 | Mornikar's Blog</title><meta name="keywords" content="wiki, AI部署, Dify, OpenClaw, 私有化"><meta name="description" content="作为智谱AI推出的开源对话模型，其应用场景覆盖企业服务、内容创作、教育辅助、多模态交互等多个领域，核心围绕“自然语言理解与生成”能力展开建议：60G存储的服务器 1.提前更新准备： 1.更新软件包 1234sudo apt update2.sudo apt upgrade    3.安装git 1sudo apt install git    12344.安装项目    git clone h">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CharGLM3部署">
+<meta property="og:url" content="https://mornikar.github.io/2026/04/18/LearningEssays/2026-04-18-CharGLM3%E9%83%A8%E7%BD%B2/index.html">
+<meta property="og:site_name" content="Mornikar&#39;s Blog">
+<meta property="og:description" content="作为智谱AI推出的开源对话模型，其应用场景覆盖企业服务、内容创作、教育辅助、多模态交互等多个领域，核心围绕“自然语言理解与生成”能力展开建议：60G存储的服务器 1.提前更新准备： 1.更新软件包 1234sudo apt update2.sudo apt upgrade    3.安装git 1sudo apt install git    12344.安装项目    git clone h">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-18T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-18T00:00:00.000Z">
+<meta property="article:author" content="Mornikar">
+<meta property="article:tag" content="wiki, AI部署, Dify, OpenClaw, 私有化">
+<meta name="twitter:card" content="summary"><link rel="canonical" href="https://mornikar.github.io/2026/04/18/LearningEssays/2026-04-18-CharGLM3%E9%83%A8%E7%BD%B2/"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":false,"search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@11.12.2/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: 'confirm'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@11.12.2/dist/mermaid.esm.min.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {window.giscusSettings = {
+ repo: 'mornikar/mornikar.github.io',
+ repoId: 'R_kgDOPto6vw',
+ category: 'Announcements',
+ categoryId: 'DIC_kwDOPto6v84C7YeI',
+ mapping: 'pathname',
+ strict: '0',
+ reactionsEnabled: '1',
+ emitMetadata: '1',
+ inputPosition: 'top',
+ lang: 'zh-CN',
+ crossorigin: 'anonymous' , loading: 'lazy'};window.giscusThemeConfig = { theme: 'preferred_color_scheme' };document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Mornikar's Blog" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/assets-archive/"><span class="navItemTitle">资源</span></a></li><li class="navItem"><a class="navBlock" href="/wiki-changelog/"><span class="navItemTitle">更新日志</span></a></li><li class="navItem"><a class="navBlock" href="/infinite-menu/"><span class="navItemTitle">∞导航</span></a></li></ol></nav></header><article><div id="post-bg"><!-- CMS 编辑按钮（对齐标题右上角）--><a class="cms-edit-btn" href="/admin/?edit=source%2F_posts%2FLearningEssays%2F2026-04-18-CharGLM3%E9%83%A8%E7%BD%B2.md" title="编辑此文章" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg></a><style>.cms-edit-btn {
+  position: absolute;
+  top: 22px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border: 1px solid rgba(34, 187, 255, 0.25);
+  border-radius: 6px;
+  color: rgba(34, 187, 255, 0.5);
+  text-decoration: none;
+  transition: all 0.2s;
+  background: rgba(34, 187, 255, 0.05);
+  z-index: 10;
+}
+.cms-edit-btn:hover {
+  color: #2bf;
+  border-color: #2bf;
+  background: rgba(34, 187, 255, 0.12);
+  transform: scale(1.1);
+}
+.cms-edit-btn svg {
+  width: 16px;
+  height: 16px;
+}</style><div id="post-title"><h1>CharGLM3部署<!-- Phase 3: Wiki 来源标记--></h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2026-04-18T00:00:00.000Z" id="date"> 2026-04-18</time></div></span><br><span>Last Update: <div class="control"><time datetime="2026-04-18T00:00:00.000Z" id="updated"> 2026-04-18</time></div></span></div><hr><!-- Phase 3: Wiki 来源信息--></div><div id="post-content"><!-- 此文章来自 LLM Wiki: raw/articles/AI部署/CharGLM3部署.md -->
+
+<h1 id="作为智谱AI推出的开源对话模型，其应用场景覆盖企业服务、内容创作、教育辅助、多模态交互等多个领域，核心围绕“自然语言理解与生成”能力展开"><a href="#作为智谱AI推出的开源对话模型，其应用场景覆盖企业服务、内容创作、教育辅助、多模态交互等多个领域，核心围绕“自然语言理解与生成”能力展开" class="headerlink" title="作为智谱AI推出的开源对话模型，其应用场景覆盖企业服务、内容创作、教育辅助、多模态交互等多个领域，核心围绕“自然语言理解与生成”能力展开"></a>作为智谱AI推出的开源对话模型，其应用场景覆盖<strong>企业服务、内容创作、教育辅助、多模态交互</strong>等多个领域，核心围绕“自然语言理解与生成”能力展开</h1><p>建议：60G存储的服务器</p>
+<p>1.提前更新准备：</p>
+<p>1.更新软件包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line"></span><br><span class="line">2.sudo apt upgrade</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>3.安装git</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install git</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">4.安装项目</span><br><span class="line">    git clone https://github.com/THUDM/ChatGLM3.git</span><br><span class="line">如果克隆失败可以加学术加速 </span><br><span class="line">source /etc/network_turbo</span><br></pre></td></tr></table></figure>
+
+
+
+<p>5.创建虚拟环境</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conda create --name myenv python</span><br><span class="line">或者sudo apt install python3.12-venv</span><br><span class="line">python3 -m venv myenv</span><br><span class="line">激活环境：source myenv/bin/activate</span><br></pre></td></tr></table></figure>
+
+
+
+<p>6.初始化conda</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda init</span><br></pre></td></tr></table></figure>
+
+
+
+<p>7.激活虚拟环境</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda activate myenv</span><br><span class="line">或者source myenv/bin/activate</span><br></pre></td></tr></table></figure>
+
+
+
+<p>8.进入项目目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd chatGLM3</span><br></pre></td></tr></table></figure>
+
+
+
+<p>9.更新pip包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install --upgrade pip</span><br></pre></td></tr></table></figure>
+
+
+
+<p>10.下载相应依赖包（可以选择soure &#x2F;etc&#x2F;network_turbo）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pip install -r requirements.txt</span><br><span class="line"></span><br><span class="line">pip install jupyter_client</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>下载模型三种方式：</p>
+<p>第一种：（huggingface直接拉取）（推荐）</p>
+<p>切换目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /root/autodl-tmp</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">更新软件包</span><br><span class="line"></span><br><span class="line">sudo apt update</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">安装git-lfs</span><br><span class="line"></span><br><span class="line">sudo apt-get install git-lfs</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">启动学术加速（可选）</span><br><span class="line"></span><br><span class="line">source /etc/network_turbo</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">初始化git-lfs</span><br><span class="line"></span><br><span class="line">git lfs install</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">克隆项目的小文件</span><br><span class="line">            git clone https://huggingface.co/THUDM/chatglm3-6b（选这个命令）</span><br><span class="line">            (unset http_proxy &amp;&amp; unset https_proxy)</span><br><span class="line">            git clone https://www.modelscope.cn/ZhipuAI/chatglm3-6b.git（备选）</span><br><span class="line">    初始化git-lfs</span><br><span class="line">            git lfs install</span><br><span class="line"></span><br><span class="line">            Ctrl键+c退出</span><br><span class="line"></span><br><span class="line">            进入项目目录</span><br><span class="line">            cd chatglm3-6b</span><br><span class="line"></span><br><span class="line">            拉取大文件</span><br><span class="line">            git lfs pull</span><br><span class="line"></span><br><span class="line">            验证文件完整性</span><br><span class="line">            git lfs ls-files</span><br><span class="line"></span><br><span class="line">        （备用方法）</span><br><span class="line">        第二种（百度网盘下载）</span><br><span class="line">            链接：https://pan.baidu.com/s/1L_4-Ico1T64Hn7hhhvbMjQ </span><br><span class="line">            提取码：0000</span><br><span class="line"></span><br><span class="line">            下载到本地后上传到自己的阿里云盘</span><br><span class="line">            再从阿里云盘下载到autodl的项目目录（一般是autodl-tmp，不用管）</span><br><span class="line"></span><br><span class="line">        （备用方法）</span><br><span class="line">        第三种（镜像站下载模型）</span><br><span class="line">            地址：https://hf-mirror.com/THUDM/chatglm3-6b/tree/main</span><br><span class="line"></span><br><span class="line">            下载到本地后上传阿里云盘</span><br><span class="line">            再从阿里云盘下载到autodl的项目目录（一般是autodl-tmp，不用管）</span><br></pre></td></tr></table></figure>
+
+
+
+<p>THUDM&#x2F;chatglm3-6b？（不用管）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">修改模型地址（如果选择不同启动方式，修改对应的文件）</span><br><span class="line">    /root/autodl-tmp/chatglm3-6b</span><br><span class="line">    wq保存</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 1. 确认虚拟环境激活</span><br><span class="line">which python</span><br><span class="line">python --version</span><br><span class="line"></span><br><span class="line"># 2. 安装 transformers</span><br><span class="line">pip install transformers</span><br><span class="line"></span><br><span class="line"># 3. 如果还缺其他依赖，一起装</span><br><span class="line">pip install torch transforme</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 查看是否有依赖文件</span><br><span class="line">ls ~/ChatGLM3/requirements.txt</span><br><span class="line"></span><br><span class="line"># 如果有就用它安装所有依赖</span><br><span class="line">pip install -r ~/ChatGLM3/requirements.txt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    启动项目（测试能否启动）</span><br><span class="line">    python cli_demo.py（终端启动）</span><br><span class="line">    python web_demo.py（网页启动）</span><br><span class="line">    python web_demo.py</span><br><span class="line">        粘贴来的命令：ssh -p 21133 root@connect.westb.seetacloud.com（将root@connect.westb.seetacloud.com替换下面的对应位置1）（24712替换下面对应位置2）</span><br><span class="line">             修改后的命令：ssh -CNg -L 6006:127.0.0.1:8501 root@connect.westb.seetacloud.com -p 21133</span><br><span class="line">          密码：Ap/u32aKvCAY</span><br><span class="line">        http://127.0.0.1:6006</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">多轮对话微调</span><br><span class="line">（先激活虚拟环境，如果已经激活了就不用了）</span><br><span class="line">    安装依赖</span><br><span class="line">    pip install transformers==4.30.2 accelerate sentencepiece astunparse deepspeed</span><br><span class="line">    克隆项目</span><br><span class="line">    cd ~</span><br><span class="line">    git clone https://github.com/tangqiaoyu/ToolAlpaca.git</span><br><span class="line">    调整数据格式</span><br><span class="line">    chmod +x /root/ChatGLM3/finetune_chatmodel_demo/scripts/format_tool_alpaca.py（视频里没有这一步，但也必须要执行）</span><br><span class="line">    /root/ChatGLM3/finetune_chatmodel_demo/scripts/format_tool_alpaca.py --path &quot;/root/ToolAlpaca/data/train_data.json&quot;</span><br><span class="line">    进入修改参数</span><br><span class="line">    cd /root/ChatGLM3/finetune_chatmodel_demo/scripts</span><br><span class="line">    找到这个文件</span><br><span class="line">    finetune_pt_multiturn.sh</span><br><span class="line"></span><br><span class="line">    进入修改训练数据路径</span><br><span class="line">    BASE_MODEL_PATH=/root/autodl-tmp/chatglm3-6b</span><br><span class="line">    DATASET_PATH=看自己情况（一般是：/root/formatted_data/tool_alpaca.jsonl）</span><br><span class="line"></span><br><span class="line">    微调开始</span><br><span class="line">    cd /root/ChatGLM3/finetune_chatmodel_demo</span><br><span class="line">    chmod +x /root/ChatGLM3/finetune_chatmodel_demo/scripts/finetune_pt_multiturn.sh（视频里没有这一步，但也必须要执行）</span><br><span class="line">    /root/ChatGLM3/finetune_chatmodel_demo/scripts/finetune_pt_multiturn.sh</span><br><span class="line"></span><br><span class="line">    微调结束（大概3个小时）（微调显示）</span><br><span class="line">    &#123;&#x27;train_runtime&#x27;: 12381.253, &#x27;train_samples_per_second&#x27;: 1.292, &#x27;train_steps_per_second&#x27;: 0.081, &#x27;train_loss&#x27;: 0.26453141117095946, &#x27;epoch&#x27;: 3.95&#125;</span><br><span class="line">    100%|█████████████████████████████████████████████████████████████| 1000/1000 [3:26:21&lt;00:00, 12.38s/it]</span><br><span class="line">    Saving PrefixEncoder</span><br><span class="line">    [INFO|configuration_utils.py:458] 2023-11-11 00:32:07,299 &gt;&gt; Configuration saved in output/tool_alpaca_pt-20231110-210524-128-2e-2/config.json</span><br><span class="line">    [INFO|configuration_utils.py:364] 2023-11-11 00:32:07,300 &gt;&gt; Configuration saved in output/tool_alpaca_pt-20231110-210524-128-2e-2/generation_config.json</span><br><span class="line">    [INFO|modeling_utils.py:1853] 2023-11-11 00:32:07,310 &gt;&gt; Model weights saved in output/tool_alpaca_pt-20231110-210524-128-2e-2/pytorch_model.bin</span><br><span class="line">    [INFO|tokenization_utils_base.py:2194] 2023-11-11 00:32:07,311 &gt;&gt; tokenizer config file saved in output/tool_alpaca_pt-20231110-210524-128-2e-2/tokenizer_config.json</span><br><span class="line">    [INFO|tokenization_utils_base.py:2201] 2023-11-11 00:32:07,311 &gt;&gt; Special tokens file saved in output/tool_alpaca_pt-20231110-210524-128-2e-2/special_tokens_map.json,</span><br><span class="line"></span><br><span class="line">    调用微调模型</span><br><span class="line">        进入对应目录</span><br><span class="line">        cd /root/ChatGLM3/composite_demo</span><br><span class="line"></span><br><span class="line">        启动微调后的模型</span><br><span class="line">        MODEL_PATH=&quot;/root/autodl-tmp/chatglm3-6b&quot; PT_PATH=&quot;/root/ChatGLM3/finetune_chatmodel_demo/output/tool_alpaca_pt-20231110-210524-128-2e-2&quot; streamlit run main.py</span><br><span class="line"></span><br><span class="line">            粘贴来的命令：ssh -p 17077 root@connect.westb.seetacloud.com（将root@connect.westb.seetacloud.com替换下面的对应位置1）（24712替换下面对应位置2）</span><br><span class="line">                 修改后的命令：ssh -CNg -L 6006:127.0.0.1:8501 root@connect.westb.seetacloud.com -p 17077</span><br><span class="line">              密码：12cClLO9/KdN</span><br><span class="line"></span><br><span class="line">            http://127.0.0.1:6006</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">输入-输出格式微调</span><br><span class="line">（先激活虚拟环境，如果已经激活了就不用了）</span><br><span class="line">    安装依赖</span><br><span class="line">    pip install transformers==4.30.2 accelerate sentencepiece astunparse deepspeed</span><br><span class="line">    下载数据集</span><br><span class="line">    cd ~</span><br><span class="line">    wget -O AdvertiseGen.tar.gz https://cloud.tsinghua.edu.cn/f/b3f119a008264b1cabd1/?dl=1</span><br><span class="line">    tar -xzvf AdvertiseGen.tar.gz</span><br><span class="line">    调整数据格式</span><br><span class="line">    chmod +x /root/ChatGLM3/finetune_chatmodel_demo/scripts/format_advertise_gen.py（视频里没有这一步，但也必须要执行）</span><br><span class="line">    /root/ChatGLM3/finetune_chatmodel_demo/scripts/format_advertise_gen.py --path &quot;/root/AdvertiseGen/train.json&quot;</span><br><span class="line">    进入修改参数</span><br><span class="line">    cd /root/ChatGLM3/finetune_chatmodel_demo/scripts</span><br><span class="line">    找到这个文件</span><br><span class="line">    finetune_pt.sh</span><br><span class="line">    进入修改训练数据路径</span><br><span class="line">    BASE_MODEL_PATH=/root/autodl-tmp/chatglm3-6b</span><br><span class="line">    DATASET_PATH=看自己情况（一般是：/root/formatted_data/advertise_gen.jsonl）</span><br><span class="line"></span><br><span class="line">    微调开始</span><br><span class="line">    cd /root/ChatGLM3/finetune_chatmodel_demo</span><br><span class="line">    pip install astunparse（视频里没有这一步，但也必须要执行）</span><br><span class="line">    chmod +x /root/ChatGLM3/finetune_chatmodel_demo/scripts/finetune_pt.sh（视频里没有这一步，但也必须要执行）</span><br><span class="line">    /root/ChatGLM3/finetune_chatmodel_demo/scripts/finetune_pt.sh</span><br><span class="line"></span><br><span class="line">    调用微调模型</span><br><span class="line">        进入对应目录</span><br><span class="line">        cd /root/ChatGLM3/finetune_chatmodel_demo</span><br><span class="line"></span><br><span class="line">        测试模型</span><br><span class="line">        python inference.py \</span><br><span class="line">           --pt-checkpoint &quot;/root/ChatGLM3/finetune_chatmodel_demo/output/advertise_gen_pt-20231201-155239-128-2e-2&quot; \</span><br><span class="line">            --model /root/autodl-tmp/chatglm3-6b</span><br><span class="line"></span><br><span class="line">        启动微调后的模型</span><br><span class="line">        cd /root/ChatGLM3/composite_demo</span><br><span class="line">        MODEL_PATH=&quot;/root/autodl-tmp/chatglm3-6b&quot; PT_PATH=&quot;/root/ChatGLM3/finetune_chatmodel_demo/output/advertise_gen_pt-20231201-155239-128-2e-2&quot; streamlit run main.py</span><br><span class="line"></span><br><span class="line">            粘贴来的命令：ssh -p 26185 root@connect.westb.seetacloud.com（将root@connect.westb.seetacloud.com替换下面的对应位置1）（24712替换下面对应位置2）</span><br><span class="line">                 修改后的命令：ssh -CNg -L 6006:127.0.0.1:8501 root@connect.westb.seetacloud.com -p 26185</span><br><span class="line">              密码：KbUhLQF47v44</span><br><span class="line"></span><br><span class="line">            http://127.0.0.1:6006</span><br></pre></td></tr></table></figure>
+
+
+
+<p>文档著者：GT &#x2F; github:morniakr.git.io</p>
+<div class="wiki-backlinks">
+<h4 class="wiki-backlinks-title">🔗 反向链接</h4>
+<p class="wiki-backlinks-desc">以下页面引用了本文：</p>
+<ul class="wiki-backlinks-list">
+  <li><a href="/2026/04/27/LearningNote/2026-04-27-log/">log</a></li>
+</ul>
+</div><div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2026/04/18/LearningEssays/2026-04-18-AI%E7%A8%B3%E5%AE%9A%E4%B8%8A%E7%BA%BF%E5%B7%A5%E7%A8%8B%E5%8C%96/">← Next AI稳定上线工程化</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2026/04/18/LearningEssays/2026-04-18-ChatGPT%E5%90%84%E7%89%88%E6%9C%AC%E5%B7%AE%E5%BC%82%E8%B0%83%E7%A0%94/">ChatGPT各版本差异调研 Prev →</a></div></div></div><div id="comments"><div id="giscus"></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" onClick="tocControl.change()" title="To Catalog"><span class="tocBtnIconBar"></span><span class="tocBtnIconBar"></span><span class="tocBtnIconBar"></span></a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="Change Theme"></a><a onclick="BgmControl()"><svg id="bgm-control" viewBox="0 0 30 34" fill="currentColor" style="width: 24px; transition: transform .3s;margin-top: 4px"><path d="M25.998 23.422V11.29h3.999v12.132h-3.999zM19.497 6.234h4.001v22.243h-4.001V6.234zM12.998.867h4v32.978h-4V.867zm-6.5 5.367h4.001v22.243H6.498V6.234zm-6.5 5.056h4v12.132h-4V11.29z"></path></svg><audio id="bgm" src="/audio/bgm.mp3" loop crossorigin="anonymous"> </audio></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Mornikar's Blog" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">Mornikar</a></h1><div id="description"><p>记录AI产品、技术学习与成长</p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BA%E6%99%BA%E8%B0%B1AI%E6%8E%A8%E5%87%BA%E7%9A%84%E5%BC%80%E6%BA%90%E5%AF%B9%E8%AF%9D%E6%A8%A1%E5%9E%8B%EF%BC%8C%E5%85%B6%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E8%A6%86%E7%9B%96%E4%BC%81%E4%B8%9A%E6%9C%8D%E5%8A%A1%E3%80%81%E5%86%85%E5%AE%B9%E5%88%9B%E4%BD%9C%E3%80%81%E6%95%99%E8%82%B2%E8%BE%85%E5%8A%A9%E3%80%81%E5%A4%9A%E6%A8%A1%E6%80%81%E4%BA%A4%E4%BA%92%E7%AD%89%E5%A4%9A%E4%B8%AA%E9%A2%86%E5%9F%9F%EF%BC%8C%E6%A0%B8%E5%BF%83%E5%9B%B4%E7%BB%95%E2%80%9C%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E7%90%86%E8%A7%A3%E4%B8%8E%E7%94%9F%E6%88%90%E2%80%9D%E8%83%BD%E5%8A%9B%E5%B1%95%E5%BC%80"><span class="toc-number">1.</span> <span class="toc-text">作为智谱AI推出的开源对话模型，其应用场景覆盖企业服务、内容创作、教育辅助、多模态交互等多个领域，核心围绕“自然语言理解与生成”能力展开</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">🔗 反向链接</span></a></li></ol></li></ol></li></ol></li></ol></div></div><footer></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script><script defer src="/js/wiki-chat.js"></script><script defer src="/js/wiki-tree.js"></script><script defer src="/live2d/live2d.js"></script></body></html>
