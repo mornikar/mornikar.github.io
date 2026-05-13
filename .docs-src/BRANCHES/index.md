@@ -5,7 +5,7 @@ title: 分支架构说明
 # 🌲 分支架构说明
 
 > 本文件说明 mornikar.github.io 仓库的分支结构与工作流程。
-> **最后更新**：2026-04-22
+> **最后更新**：2026-05-14
 
 ---
 
@@ -137,15 +137,46 @@ main 分支（项目文档）
 | 路径 | 说明 |
 :|------|------|
 | `.wiki/**` | Wiki 源文档变更 |
-| `scripts/wiki-to-hexo.js` | 转换脚本更新 |
+| `scripts/wiki-to-hexo.js` | Wiki → Hexo 转换脚本 |
+| `scripts/wiki-compile.js` | AI 编译脚本（raw 素材 → wiki 页面） |
 | `scripts/build_docs_html.js` | 文档构建脚本 |
 | `scripts/compile_css.js` | CSS 编译脚本 |
-| `tools/sync-wiki-to-dify.js` | Dify 同步脚本 |
+| `scripts/copy-assets.js` | 资产复制脚本 |
+| `scripts/auto-maintain.js` | 定时自维护脚本 |
+| `scripts/wiki-lint.js` | Wiki 健康检查脚本 |
+| `tools/sync-wiki-to-dify.js` | Dify 知识库同步脚本 |
 | `_config.yml` | Hexo 配置 |
 | `themes/**` | 主题代码 |
 | `.github/workflows/**` | CI 工作流 |
 | `*.md` | 项目文档（根目录） |
 | `.docs-src/**` | 项目文档源文件 |
+| `source/admin/**` | Decap CMS 管理界面 |
+| `tools/**` | 工具脚本（OAuth Worker 等） |
+
+### 自动触发机制
+
+| 触发器 | 说明 |
+|:--------|:------|
+| **push** | 推送到 `source` 分支时自动触发构建 |
+| **schedule** | 每天 UTC 3:00（北京时间 11:00）自动运行 `auto-maintain.js` 自维护任务 |
+| **workflow_dispatch** | 手动触发，支持 `normal` / `force` / `dry-run` 三种模式 |
+
+### CI 构建流程
+
+```
+push / schedule / dispatch
+    ↓
+┌─ AI 编译 raw 素材（可选，需 API_KEY）
+├─ AI 自动审阅（可选，需 API_KEY）
+├─ Wiki Lint 健康检查
+├─ Wiki → Hexo 转换
+├─ hexo generate
+├─ compile_css.js（Stylus 编译）
+├─ Pagefind 搜索索引
+├─ build_docs_html.js（.docs-src → HTML）
+├─ copy-assets.js（资产复制）
+└─ peaceiris/actions-gh-pages（部署）
+```
 
 ---
 
@@ -166,9 +197,12 @@ main 分支（项目文档）
 
 | 命令 | 说明 |
 :|------|------|
-| `wiki-sync.bat` | 一键同步（清理→转换→生成→搜索→提交→推送） |
-| `wiki-sync.bat --dry-run` | 预览转换结果 |
+| `wiki-sync.bat` | 一键同步（清理→Dify同步→AI编译→转换→生成→搜索→提交→推送） |
+| `wiki-sync.bat --dry-run` | 预览转换结果（不写入文件） |
+| `wiki-sync.bat --force` | 强制全量转换 |
 | `hexo server` | 本地预览（端口 4000） |
+| `hexo clean` | 清理构建缓存 |
+| `node scripts/wiki-lint.js --audit` | 运行 Wiki 健康检查 |
 
 ### 手动触发 CI
 
@@ -176,6 +210,14 @@ main 分支（项目文档）
 1. 打开 https://github.com/mornikar/mornikar.github.io/actions
 2. 点击「Wiki-Hexo 自动部署」
 3. 点击右侧「Run workflow」→ 选择 `source` 分支
+4. 可选：选择构建模式（`normal` / `force` / `dry-run`）
+
+### 定时自维护
+
+`deploy.yml` 配置了每日定时任务（Cron: `0 3 * * *`，北京时间 11:00）：
+- 自动运行 `scripts/auto-maintain.js --audit-fix`
+- 自动修复 Wiki 健康检查发现的问题
+- 自动重新构建并部署
 
 ---
 
@@ -198,3 +240,20 @@ main 分支（项目文档）
 - 权限改为 `contents: write`（移除了 `pages: write` 和 `id-token: write`）
 
 **结论**：如果 Pages 环境的 `custom_branch_policies: true`，必须使用分支推送方式，不能用 `deploy-pages@v4` artifact 方式。
+
+### 2026-05-14: CI 工作流新增自动化功能
+
+**新增功能**：
+1. **AI 编译**：`scripts/wiki-compile.js` — 自动将 `.wiki/raw/` 原始素材编译为结构化 wiki 页面
+2. **AI 审阅**：`scripts/wiki-compile.js --review` — 自动审阅新提交的 wiki 内容
+3. **Wiki Lint**：`scripts/wiki-lint.js --audit` — 健康检查，检测 broken links、missing frontmatter 等问题
+4. **定时自维护**：`scripts/auto-maintain.js --audit-fix` — 每日自动修复 Wiki 问题并重新部署
+5. **资产复制**：`scripts/copy-assets.js` — 自动复制 wiki 资产到 `public/assets/`
+6. **Dify 同步**：`tools/sync-wiki-to-dify.js` — 自动将 wiki 内容同步到 Dify 知识库
+
+**环境变量配置**（GitHub Secrets）：
+- `WIKI_COMPILE_API_KEY` — AI 编译/审阅 API Key
+- `WIKI_COMPILE_ENDPOINT` — AI 编译 API 端点
+- `WIKI_COMPILE_MODEL` — AI 编译模型名称
+
+**注意**：AI 相关步骤均为可选，未配置 API Key 时自动跳过，不影响整体构建流程。
