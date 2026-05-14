@@ -1,13 +1,13 @@
 ---
 title: 资源存档
-date: 2026-04-27 00:00:00
+date: 2026-05-14 00:00:00
 layout: page
 permalink: /assets-archive/
 ---
 
 # 📦 资源存档
 
-> 共 **15** 个文件，来自 `.wiki/raw/assets/` 和 `.wiki/raw/snippets/`
+> 共 **23** 个文件，来自 `.wiki/raw/assets/` 和 `.wiki/raw/snippets/`
 
 ---
 
@@ -23,7 +23,22 @@ permalink: /assets-archive/
 | 📄 | [familyjewels.pdf](/assets/familyjewels.pdf) | 20.9 MB |
 | 🖼️ | [ml-snipaste-2021.png](/assets/ml-snipaste-2021.png) | 539.0 KB |
 | 📄 | [ProjectBlueBook-Harrisonburg-Virginia-12211964.pdf](/assets/ProjectBlueBook-Harrisonburg-Virginia-12211964.pdf) | 11.8 MB |
+| 📄 | [uf015.pdf](/assets/uf015.pdf) | 14.7 MB |
+| 📄 | [ufo4.pdf](/assets/ufo4.pdf) | 5.7 MB |
 | 📄 | [water.pdf](/assets/water.pdf) | 2.5 MB |
+
+---
+
+### 爱泼斯坦案
+
+| 类型 | 文件名 | 大小 |
+|------|--------|------|
+| 📄 | [Jeffrey Epstein Part 12 of 12.pdf](/assets/爱泼斯坦案/Jeffrey Epstein Part 12 of 12.pdf) | 3.4 MB |
+| 📄 | [Jeffrey Epstein Part 14 of 14.PDF](/assets/爱泼斯坦案/Jeffrey Epstein Part 14 of 14.PDF) | 3.4 MB |
+| 📄 | [Jeffrey Epstein Part 17 of 17.PDF](/assets/爱泼斯坦案/Jeffrey Epstein Part 17 of 17.PDF) | 4.8 MB |
+| 📄 | [Jeffrey Epstein Part 18 of 18.PDF](/assets/爱泼斯坦案/Jeffrey Epstein Part 18 of 18.PDF) | 5.3 MB |
+| 📄 | [Jeffrey Epstein Part 19 of 19.pdf](/assets/爱泼斯坦案/Jeffrey Epstein Part 19 of 19.pdf) | 1.8 MB |
+| 📄 | [Jeffrey Epstein Part 21 of 21.pdf](/assets/爱泼斯坦案/Jeffrey Epstein Part 21 of 21.pdf) | 2.8 MB |
 
 ---
 
