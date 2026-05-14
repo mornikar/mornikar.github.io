@@ -25,6 +25,7 @@ title: 故障排查
 | URL 含双横线/转义字符 | slugify 清洗不完整 | [§13](#13-url-异常双横线转义字符) |
 | WikiLink 跳转 404 | 客户端和服务端 URL 不一致 | [§14](#14-wikilink-跳转-404) |
 | CMS 保存 wiki 文件格式错误 | 保存时被包装 Hexo frontmatter | [§15](#15-cms-保存-wiki-文件格式错误) |
+| PDF 资源未更新/存档页白色字 | 文件未提交/构建产物未生成 | [§16](#16-pdf-资源未更新-assets-archive-页面白色字无法打开) |
 
 ---
 
@@ -623,3 +624,90 @@ updated: 2026-04-25
 v4.2 的 CMS 会根据集合类型自动选择保存逻辑：
 - **Posts 集合**：自动包装 Hexo frontmatter
 - **Wiki 集合**：原样保存，不包装
+
+---
+
+## 16. PDF 资源未更新 / assets-archive 页面白色字无法打开
+
+**症状**：
+- 推送了 `.wiki/raw/assets/` 下的 PDF/图片文件后，`https://mornikar.github.io/assets-archive/` 页面显示白色字或链接无法打开
+- 新文件（如"爱泼斯坦案"文件夹）没有出现在资源存档页面
+- 直接访问 PDF URL 返回 404
+
+**根本原因**：
+1. **`.wiki/raw/assets/` 下的文件必须先提交到 git，CI 才会处理** — 未提交的文件不会被 CI 检测到
+2. **`public/assets/` 是构建产物，不应该手动提交** — 它被 `.gitignore` 忽略，每次 CI 构建时由 `copy-assets.js` 自动生成
+3. **`source/assets-archive.md` 是 Hexo 文章，由 `copy-assets.js` 自动生成** — 手动编辑会被覆盖
+
+### 正确流程（一步到位）
+
+```powershell
+# Step 1: 把 PDF/图片文件放进 .wiki/raw/assets/ 目录
+# 示例：.wiki/raw/assets/爱泼斯坦案/Jeffrey Epstein Part 12 of 12.pdf
+
+# Step 2: 提交到 git（触发 CI）
+git add .wiki/raw/assets/
+git commit -m "docs: 添加 XXX PDF 资源"
+git push origin source
+
+# Step 3: 等待 CI 自动完成（2-5 分钟）
+# CI 会自动执行：
+#   ├─ hexo generate
+#   ├─ copy-assets.js（复制 PDF 到 public/assets/）
+#   ├─ 生成 source/assets-archive.md（更新存档页面）
+#   └─ 部署到 GitHub Pages
+```
+
+### 本地调试（可选）
+
+如果需要立即验证效果，可以本地运行 `copy-assets.js`：
+
+```powershell
+# 复制 PDF 到 public/assets/ 并生成 assets-archive.md
+node scripts/copy-assets.js
+
+# 验证文件已复制
+dir public\assets\爱泼斯坦案\
+
+# 验证存档页面已生成
+Get-Content source\assets-archive.md
+
+# 本地预览
+hexo server
+# 访问 http://localhost:4000/assets-archive/
+```
+
+> ⚠️ **注意**：本地生成的 `public/assets/` 和 `source/assets-archive.md` 需要提交到 git，CI 才会重新构建并部署到线上。
+
+### 常见问题
+
+| 问题 | 原因 | 解决方案 |
+|------|------|----------|
+| 页面白色字/链接无效 | PDF 未复制到 public/assets/ | 运行 `node scripts/copy-assets.js` |
+| 新文件没出现在存档页 | assets-archive.md 未更新 | 运行 `node scripts/copy-assets.js` |
+| CI 不处理新 PDF | 文件未提交到 git | `git add .wiki/raw/assets/ && git push` |
+| 直接访问 PDF 返回 404 | 文件未部署到 GitHub Pages | 等待 CI 构建完成（2-5 分钟） |
+
+### 架构说明
+
+```
+.wiki/raw/assets/          # 源文件（你手动添加 PDF 的地方）
+    ↓ git push
+CI 自动触发
+    ├─ hexo generate
+    ├─ copy-assets.js ← 扫描 .wiki/raw/assets/
+    │   ├─ 复制所有 .pdf/.png/.jpg 到 public/assets/
+    │   └─ 生成 source/assets-archive.md（存档页面）
+    └─ 部署 public/ 到 GitHub Pages
+    ↓
+https://mornikar.github.io/assets-archive/  # 在线资源存档
+https://mornikar.github.io/assets/XXX.pdf    # 直接访问 PDF
+```
+
+### 铁律
+
+1. **添加 PDF 只需一步**：放进 `.wiki/raw/assets/` → `git add && git push` → CI 自动处理
+2. **不要手动编辑 `public/assets/`** — 这是构建产物，会被 CI 覆盖
+3. **不要手动编辑 `source/assets-archive.md`** — 这是 `copy-assets.js` 自动生成的
+4. **文件必须先提交到 git** — 未提交的文件 CI 不会处理
+5. **CI 构建需要 2-5 分钟** — 推送后耐心等待，不要重复推送
