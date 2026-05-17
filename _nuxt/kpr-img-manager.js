@@ -3,6 +3,8 @@
 
   var title = "Mornikar | Portfolio";
   var description = "MMO_index - Mornikar root index and project navigation shell";
+  var siteUrl = "https://mornikar.github.io/";
+  var ogImage = "https://mornikar.github.io/og.jpg";
 
   function setMeta(selector, value) {
     var el = document.querySelector(selector);
@@ -17,8 +19,15 @@
     }
     setMeta('meta[name="twitter:title"]', title);
     setMeta('meta[property="og:title"]', title);
+    setMeta('meta[property="og:site_name"]', title);
     setMeta('meta[name="description"]', description);
+    setMeta('meta[name="twitter:description"]', description);
     setMeta('meta[property="og:description"]', description);
+    setMeta('meta[name="twitter:url"]', siteUrl);
+    setMeta('meta[property="og:url"]', siteUrl);
+    setMeta('meta[name="twitter:image"]', ogImage);
+    setMeta('meta[property="og:image"]', ogImage);
+    setMeta('meta[property="og:image:secure_url"]', ogImage);
   }
 
   applySiteMeta();
