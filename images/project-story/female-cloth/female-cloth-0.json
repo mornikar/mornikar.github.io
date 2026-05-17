@@ -1,0 +1,173 @@
+{"frames": [
+
+{
+	"filename": "female_cloth_00000.png",
+	"frame": {"x":1,"y":1,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00001.png",
+	"frame": {"x":488,"y":1,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00002.png",
+	"frame": {"x":975,"y":1,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00003.png",
+	"frame": {"x":1462,"y":1,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00004.png",
+	"frame": {"x":1,"y":407,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00005.png",
+	"frame": {"x":488,"y":407,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00006.png",
+	"frame": {"x":975,"y":407,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00007.png",
+	"frame": {"x":1462,"y":407,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00008.png",
+	"frame": {"x":1,"y":813,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00009.png",
+	"frame": {"x":488,"y":813,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00010.png",
+	"frame": {"x":975,"y":813,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00011.png",
+	"frame": {"x":1462,"y":813,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00012.png",
+	"frame": {"x":1,"y":1219,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00013.png",
+	"frame": {"x":488,"y":1219,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00014.png",
+	"frame": {"x":975,"y":1219,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00015.png",
+	"frame": {"x":1462,"y":1219,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00016.png",
+	"frame": {"x":1,"y":1625,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00017.png",
+	"frame": {"x":488,"y":1625,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00018.png",
+	"frame": {"x":975,"y":1625,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+},
+{
+	"filename": "female_cloth_00019.png",
+	"frame": {"x":1462,"y":1625,"w":485,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":485,"h":404},
+	"sourceSize": {"w":485,"h":404}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "female-cloth-0.png",
+	"format": "RGBA8888",
+	"size": {"w":2048,"h":2048},
+	"scale": "0.37",
+	"related_multi_packs": [ "female-cloth-1.json", "female-cloth-2.json" ],
+	"smartupdate": "$TexturePacker:SmartUpdate:116034cb3cb4320e0d9814b260dfe21c:38840771744796b3a671195e1636adde:dd7b6c7f081b654f6e8076b3d598be19$"
+}
+}
