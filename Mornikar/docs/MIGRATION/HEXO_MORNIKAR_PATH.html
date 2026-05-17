@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HEXO_MORNIKAR_PATH - LLM Wiki 文档</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.7;
+    color: #e0e0e0;
+    background: #1a1a2e;
+    min-height: 100vh;
+  }
+  a { color: #4fc3f7; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .topbar {
+    background: #16213e;
+    border-bottom: 1px solid #0f3460;
+    padding: 0.8rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .topbar .brand { font-weight: 700; font-size: 1.1rem; color: #e94560; }
+  .topbar .brand:hover { text-decoration: none; }
+  .breadcrumb { color: #888; font-size: 0.9rem; }
+  .breadcrumb span { color: #ccc; }
+  .layout { display: flex; max-width: 1200px; margin: 0 auto; padding: 2rem; gap: 2rem; }
+  .sidebar { width: 200px; flex-shrink: 0; }
+  .sidebar h3 { color: #e94560; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+  .sidebar nav a {
+    display: block;
+    padding: 0.3rem 0.5rem;
+    color: #a0a0a0;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    margin-bottom: 2px;
+  }
+  .sidebar nav a:hover { color: #4fc3f7; background: rgba(79,195,247,0.1); text-decoration: none; }
+  .sidebar nav a.active { color: #e94560; background: rgba(233,69,96,0.1); }
+  .main { flex: 1; min-width: 0; }
+  .main h1 { color: #e94560; font-size: 1.8rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #333; }
+  .main h2 { color: #4fc3f7; font-size: 1.3rem; margin: 1.8rem 0 0.8rem; }
+  .main h3 { color: #80cbc4; font-size: 1.1rem; margin: 1.5rem 0 0.6rem; }
+  .main h4 { color: #fff; font-size: 1rem; margin: 1.2rem 0 0.5rem; }
+  .main p { margin: 0.8rem 0; color: #d0d0d0; }
+  .main ul, .main ol { margin: 0.8rem 0; padding-left: 1.5rem; }
+  .main li { margin: 0.3rem 0; color: #d0d0d0; }
+  .main code {
+    background: #0f3460;
+    color: #e94560;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-family: "Fira Code", "Consolas", monospace;
+    font-size: 0.88em;
+  }
+  .main pre {
+    background: #0f3460;
+    border: 1px solid #1a4a7a;
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+  }
+  .main pre code { background: none; color: #e0e0e0; padding: 0; font-size: 0.85rem; }
+  .main blockquote {
+    border-left: 3px solid #e94560;
+    padding: 0.5rem 1rem;
+    margin: 1rem 0;
+    background: rgba(233,69,96,0.05);
+    color: #a0a0a0;
+  }
+  .main table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  .main th { background: #0f3460; color: #4fc3f7; padding: 0.6rem 1rem; text-align: left; }
+  .main td { padding: 0.5rem 1rem; border-bottom: 1px solid #2a2a4a; color: #d0d0d0; }
+  .main tr:hover td { background: rgba(79,195,247,0.05); }
+  .main hr { border: none; border-top: 1px solid #333; margin: 2rem 0; }
+  .main img { max-width: 100%; border-radius: 4px; }
+  .main a { color: #4fc3f7; }
+  .main strong { color: #fff; }
+  .main em { color: #a0a0a0; }
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: #555;
+    font-size: 0.8rem;
+    border-top: 1px solid #222;
+    margin-top: 3rem;
+  }
+  @media (max-width: 768px) {
+    .layout { flex-direction: column; padding: 1rem; }
+    .sidebar { width: 100%; }
+    .topbar { padding: 0.8rem 1rem; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/Mornikar/">🌸 LLM Wiki</a>
+  <span class="breadcrumb">&raquo; <a href="/Mornikar/docs/">文档</a> &raquo; <a href="/Mornikar/docs/MIGRATION/">迁移规范</a> &raquo; <span>HEXO_MORNIKAR_PATH</span></span>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <h3>📄 文档导航</h3>
+    <nav>
+      <a href="/Mornikar/docs/">文档首页</a>
+      <a href="/Mornikar/docs/PROJECT/">系统架构</a>
+      <a href="/Mornikar/docs/MAINTENANCE/">维护指南</a>
+      <a href="/Mornikar/docs/TROUBLESHOOTING/">故障排查</a>
+      <a href="/Mornikar/docs/MIGRATION/">迁移规范</a>
+    </nav>
+  </aside>
+  <main class="main">
+    <h1 id="hexo-迁移到-mornikar-路径说明">Hexo 迁移到 /Mornikar/ 路径说明</h1>
+    <blockquote>
+    <p>2026-05-17 起，<code>https://mornikar.github.io/</code> 根站由 <code>mornikar/mornikar_index</code> 仓库中的 <code>MMO_index</code> 首页项目承载。旧 Hexo 博客继续保留在 <code>mornikar/mornikar.github.io</code> 仓库，但线上访问路径迁移为 <code>https://mornikar.github.io/Mornikar/</code>。</p>
+    </blockquote>
+    <h2 id="目标边界">目标边界</h2>
+    <table>
+    <thead>
+    <tr>
+    <th>项目</th>
+    <th>仓库</th>
+    <th>线上路径</th>
+    <th>说明</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>MMO_index 首页</td>
+    <td><code>mornikar/mornikar_index</code></td>
+    <td><code>https://mornikar.github.io/</code></td>
+    <td>新首页和导航 shell</td>
+    </tr>
+    <tr>
+    <td>旧 Hexo 博客</td>
+    <td><code>mornikar/mornikar.github.io</code></td>
+    <td><code>https://mornikar.github.io/Mornikar/</code></td>
+    <td>历史博客、Wiki、CMS、文档</td>
+    </tr>
+    <tr>
+    <td>MMO_CMS</td>
+    <td><code>mornikar/mornikar.github.io</code> 的 <code>source/admin</code></td>
+    <td><code>https://mornikar.github.io/Mornikar/admin/</code></td>
+    <td>GitHub OAuth CMS 入口</td>
+    </tr>
+    </tbody></table>
+    <p>不要把 Hexo 内容推到 <code>mornikar_index</code>，也不要把 <code>MMO_index</code> 内容提交到 Hexo 仓库。两个仓库职责分离。</p>
+    <h2 id="已调整的关键位置">已调整的关键位置</h2>
+    <table>
+    <thead>
+    <tr>
+    <th>文件</th>
+    <th>改动原因</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td><code>_config.yml</code></td>
+    <td><code>url</code> 改为 <code>https://mornikar.github.io/Mornikar</code>，<code>root</code> 改为 <code>/Mornikar/</code>。</td>
+    </tr>
+    <tr>
+    <td><code>.github/workflows/deploy.yml</code></td>
+    <td>Pages 部署写入 <code>gh-pages/Mornikar</code>，并使用 <code>keep_files: true</code> 保留根站 MMO_index 文件。</td>
+    </tr>
+    <tr>
+    <td><code>source/admin/config.yml</code></td>
+    <td>Decap/Sveltia CMS 的 <code>site_url</code>、<code>public_folder</code> 对齐 <code>/Mornikar/</code>。</td>
+    </tr>
+    <tr>
+    <td><code>source/admin/callback.html</code></td>
+    <td>OAuth 回调完成后回到 <code>/Mornikar/admin/</code>。<code>postMessage</code> 的 target origin 仍必须是 <code>https://mornikar.github.io</code>，不能加路径。</td>
+    </tr>
+    <tr>
+    <td><code>tools/decap-oauth-worker.js</code>、<code>tools/wiki-cms-unified-worker.js</code></td>
+    <td>OAuth 成功/失败回跳地址改为 <code>/Mornikar/admin/</code>。</td>
+    </tr>
+    <tr>
+    <td><code>tools/cms-worker.js</code>、<code>tools/wiki-cms-unified-worker.js</code></td>
+    <td>CMS 上传图片后返回 <code>/Mornikar/images/wiki/...</code>，避免文章插图落到根站。</td>
+    </tr>
+    <tr>
+    <td><code>themes/arknights/layout/post.pug</code></td>
+    <td>文章编辑按钮通过 <code>config.root + &#39;admin/&#39;</code> 生成，避免写死 <code>/admin/</code>。</td>
+    </tr>
+    <tr>
+    <td><code>themes/arknights/source/js/wiki-chat.js</code></td>
+    <td>Pagefind 动态导入跟随 <code>config.root</code>，实际加载 <code>/Mornikar/pagefind/pagefind.js</code>。</td>
+    </tr>
+    <tr>
+    <td><code>themes/arknights/layout/custom/page-search.ejs</code></td>
+    <td>Pagefind UI 本地兜底脚本通过 <code>url_for(&#39;/pagefind/pagefind-ui.js&#39;)</code> 生成。</td>
+    </tr>
+    <tr>
+    <td><code>themes/arknights/layout/custom/infinite-menu.ejs</code>、<code>themes/arknights/source/js/infinite-menu.js</code></td>
+    <td>首页、归档、分类、登录、资源等菜单项跟随 <code>/Mornikar/</code>。</td>
+    </tr>
+    <tr>
+    <td><code>themes/arknights/source/404.html</code></td>
+    <td>静态 404 页字体和首页链接改为 <code>/Mornikar/</code>。</td>
+    </tr>
+    <tr>
+    <td><code>scripts/build_docs_html.js</code></td>
+    <td>自建文档站 HTML 的导航、面包屑和品牌链接增加 <code>/Mornikar/</code> 前缀。</td>
+    </tr>
+    <tr>
+    <td><code>scripts/copy-assets.js</code></td>
+    <td>资源存档页面中的文件链接输出为 <code>/Mornikar/assets/...</code>。</td>
+    </tr>
+    <tr>
+    <td><code>scripts/auto-maintain.js</code></td>
+    <td>增加 <code>require.main === module</code> 保护，避免 Hexo 自动加载 <code>scripts/</code> 时误触发 git pull/commit/push。</td>
+    </tr>
+    </tbody></table>
+    <h2 id="脚本审计清单">脚本审计清单</h2>
+    <p>迁移后每次改 Hexo 脚本，需要优先检查这些类型：</p>
+    <table>
+    <thead>
+    <tr>
+    <th>类型</th>
+    <th>检查重点</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>Hexo 构建脚本</td>
+    <td>是否写死 <code>/docs/</code>、<code>/pagefind/</code>、<code>/assets/</code>、<code>/admin/</code>。</td>
+    </tr>
+    <tr>
+    <td>CMS/OAuth worker</td>
+    <td>回跳 URL 是否为 <code>https://mornikar.github.io/Mornikar/admin/</code>；GitHub 仓库目标仍是 <code>mornikar.github.io</code>。</td>
+    </tr>
+    <tr>
+    <td>前端主题脚本</td>
+    <td>浏览器里使用 <code>config.root</code> 或 Hexo <code>url_for()</code>，不要直接写 <code>/login/</code>、<code>/pagefind/...</code>。</td>
+    </tr>
+    <tr>
+    <td>静态复制文件</td>
+    <td><code>themes/arknights/source/**</code> 里的文件不经过 Pug/EJS helpers，需要手动写 <code>/Mornikar/</code> 或使用相对路径。</td>
+    </tr>
+    <tr>
+    <td>自动维护脚本</td>
+    <td><code>scripts/auto-maintain.js</code> 只有直接执行时才应运行；<code>hexo generate</code> 不应产生 git 提交或推送。</td>
+    </tr>
+    </tbody></table>
+    <h2 id="推荐复查命令">推荐复查命令</h2>
+    <pre><code class="language-powershell"># 查旧根站线上 URL；旧 Hexo 文档和代码应指向 /Mornikar/，只有说明 MMO_index 根站时可保留根地址。
+    rg -n -F &quot;https://mornikar.github.io/&quot; _config.yml README.md BRANCHES.md source themes scripts tools .github .docs-src
+    
+    # 查旧根路径入口
+    rg -n -F &quot;/admin/&quot; README.md BRANCHES.md source themes scripts tools .github .docs-src
+    rg -n -F &quot;/pagefind/&quot; README.md BRANCHES.md source themes scripts tools .github .docs-src
+    rg -n -F &quot;/assets/&quot; .wiki source scripts .docs-src
+    
+    # 查构建时是否会误执行维护脚本
+    npm run build
+    git status --short
+    </code></pre>
+    <h2 id="验证清单">验证清单</h2>
+    <ol>
+    <li><code>npm run build</code> 不应触发 <code>git pull</code>、<code>git commit</code>、<code>git push</code>。</li>
+    <li><code>public/index.html</code>、文章页、文档页、资源页应在 <code>/Mornikar/</code> 下可访问。</li>
+    <li>CMS 入口应为 <code>https://mornikar.github.io/Mornikar/admin/</code>。</li>
+    <li>Pagefind 应加载 <code>/Mornikar/pagefind/pagefind.js</code> 或 <code>/Mornikar/pagefind/pagefind-ui.js</code>。</li>
+    <li>资源存档页里的 PDF/图片链接应是 <code>/Mornikar/assets/...</code>。</li>
+    <li><code>gh-pages</code> 根目录仍应保留 MMO_index 文件，Hexo 部署只写入 <code>Mornikar/</code> 子目录。</li>
+    </ol>
+    <h2 id="高风险提醒">高风险提醒</h2>
+    <ul>
+    <li><code>postMessage</code> 的 target origin 只能是 origin，不能写成 <code>https://mornikar.github.io/Mornikar</code>。</li>
+    <li><code>scripts/auto-maintain.js</code> 的保护不要移除，否则本地构建可能再次自动提交/推送。</li>
+    <li><code>destination_dir: Mornikar</code> 和 <code>keep_files: true</code> 必须同时保留，否则可能覆盖根站 MMO_index。</li>
+    <li>旧 Hexo 的源码仓库仍是 <code>mornikar/mornikar.github.io</code>，不要因为线上路径变成 <code>/Mornikar/</code> 而改仓库名或 worker 的 GitHub API repo。</li>
+    </ul>
+    
+  </main>
+</div>
+<footer class="footer">
+  由 LLM Wiki 文档系统生成 &middot; <a href="/Mornikar/">返回博客</a>
+</footer>
+</body>
+</html>

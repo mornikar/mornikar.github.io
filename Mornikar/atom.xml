@@ -102,34 +102,6 @@
   </entry>
   
   <entry>
-    <title>Conda必要操作</title>
-    <link href="https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%BF%85%E8%A6%81%E6%93%8D%E4%BD%9C/"/>
-    <id>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%BF%85%E8%A6%81%E6%93%8D%E4%BD%9C/</id>
-    <published>2026-04-18T00:00:00.000Z</published>
-    <updated>2026-04-18T00:00:00.000Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/python/Conda必要操作.md --&gt;
-
-&lt;p&gt;进入虚拟环境&lt;br&gt; source activate env_name &lt;/p&gt;
-&lt;p&gt;安装命令:&lt;br&gt; conda install</summary>
-        
-      
-    
-    
-    
-    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/Mornikar/categories/AIGC/"/>
-    
-    
-    <category term="wiki, Python, Conda, 环境管理" scheme="https://mornikar.github.io/Mornikar/tags/wiki-Python-Conda-%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Conda基础命令</title>
     <link href="https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/"/>
     <id>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/</id>
@@ -145,6 +117,34 @@
 
 &lt;p&gt;查看虚拟环境 conda info -e&lt;/p&gt;
 &lt;p&gt;2019-05-16 update:</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/Mornikar/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Python, Conda, 环境管理" scheme="https://mornikar.github.io/Mornikar/tags/wiki-Python-Conda-%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Conda必要操作</title>
+    <link href="https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%BF%85%E8%A6%81%E6%93%8D%E4%BD%9C/"/>
+    <id>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%BF%85%E8%A6%81%E6%93%8D%E4%BD%9C/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/python/Conda必要操作.md --&gt;
+
+&lt;p&gt;进入虚拟环境&lt;br&gt; source activate env_name &lt;/p&gt;
+&lt;p&gt;安装命令:&lt;br&gt; conda install</summary>
         
       
     
@@ -238,33 +238,6 @@
   </entry>
   
   <entry>
-    <title>DRF框架</title>
-    <link href="https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-DRF%E6%A1%86%E6%9E%B6/"/>
-    <id>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-DRF%E6%A1%86%E6%9E%B6/</id>
-    <published>2026-04-18T00:00:00.000Z</published>
-    <updated>2026-04-18T00:00:00.000Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/web/DRF框架.md --&gt;
-
-&lt;h1 id=&quot;DRF框架就是RestFramework框架（rest-framework-导入的方式-）&quot;&gt;&lt;a</summary>
-        
-      
-    
-    
-    
-    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/Mornikar/categories/AIGC/"/>
-    
-    
-    <category term="wiki, Web, HTTP, REST" scheme="https://mornikar.github.io/Mornikar/tags/wiki-Web-HTTP-REST/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Flask基础</title>
     <link href="https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E5%9F%BA%E7%A1%80/"/>
     <id>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E5%9F%BA%E7%A1%80/</id>
@@ -289,6 +262,33 @@
     
     
     <category term="wiki, Flask, Python, Web" scheme="https://mornikar.github.io/Mornikar/tags/wiki-Flask-Python-Web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>DRF框架</title>
+    <link href="https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-DRF%E6%A1%86%E6%9E%B6/"/>
+    <id>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-DRF%E6%A1%86%E6%9E%B6/</id>
+    <published>2026-04-18T00:00:00.000Z</published>
+    <updated>2026-04-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/web/DRF框架.md --&gt;
+
+&lt;h1 id=&quot;DRF框架就是RestFramework框架（rest-framework-导入的方式-）&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/Mornikar/categories/AIGC/"/>
+    
+    
+    <category term="wiki, Web, HTTP, REST" scheme="https://mornikar.github.io/Mornikar/tags/wiki-Web-HTTP-REST/"/>
     
   </entry>
   
@@ -538,9 +538,9 @@
   </entry>
   
   <entry>
-    <title>PDF嵌入Snippet</title>
-    <link href="https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-PDF%E5%B5%8C%E5%85%A5Snippet/"/>
-    <id>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-PDF%E5%B5%8C%E5%85%A5Snippet/</id>
+    <title>Pip环境导出导入</title>
+    <link href="https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Pip%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%87%BA%E5%AF%BC%E5%85%A5/"/>
+    <id>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Pip%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%87%BA%E5%AF%BC%E5%85%A5/</id>
     <published>2026-04-18T00:00:00.000Z</published>
     <updated>2026-04-18T00:00:00.000Z</updated>
     
@@ -549,9 +549,10 @@
       
         
         
-    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/snippets/PDF嵌入Snippet.md --&gt;
+    <summary type="html">&lt;!-- 此文章来自 LLM Wiki: raw/skills/python/Pip环境导出导入.md --&gt;
 
-&lt;h2 id=&quot;使用方法&quot;&gt;&lt;a href=&quot;#使用方法&quot; class=&quot;headerlink&quot; title=&quot;使用方法&quot;&gt;&lt;/a&gt;使用方法&lt;/h2&gt;&lt;p&gt;在 wiki</summary>
+&lt;p&gt;导出 &lt;/p&gt;
+&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td</summary>
         
       
     
@@ -560,7 +561,7 @@
     <category term="AIGC笔记随笔" scheme="https://mornikar.github.io/Mornikar/categories/AIGC/"/>
     
     
-    <category term="PDF, 嵌入, Snippet, wiki" scheme="https://mornikar.github.io/Mornikar/tags/PDF-%E5%B5%8C%E5%85%A5-Snippet-wiki/"/>
+    <category term="wiki, Python, Conda, 环境管理" scheme="https://mornikar.github.io/Mornikar/tags/wiki-Python-Conda-%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86/"/>
     
   </entry>
   

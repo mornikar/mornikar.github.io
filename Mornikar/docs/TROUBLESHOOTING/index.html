@@ -113,6 +113,8 @@
     </nav>
   </aside>
   <main class="main">
+    <h2 id="----title-故障排查">﻿---
+    title: 故障排查</h2>
     <h1 id="🔍-故障排查">🔍 故障排查</h1>
     <blockquote>
     <p>遇到问题时，先确认错误类型，再按对应章节排查。常见问题一般可在 5 分钟内解决。</p>
@@ -271,7 +273,7 @@
     <p>观察输出中是否有 <code>[error]</code> 字样。</p>
     <p><strong>Step 5</strong>：检查文章路径</p>
     <p>生成的 URL 应为 <code>/YYYY/MM/DD/标题/</code> 格式，如：
-    <code>https://mornikar.github.io/2025/09/12/RAG检索增强生成/</code></p>
+    <code>https://mornikar.github.io/Mornikar/2025/09/12/RAG检索增强生成/</code></p>
     <hr>
     <h2 id="3-ci-构建失败">3. CI 构建失败</h2>
     <p><strong>症状</strong>：GitHub Actions 显示红色 ❌。</p>
@@ -345,8 +347,8 @@
     <p><strong>Step 2</strong>：检查 JS 文件是否存在</p>
     <p>访问以下 URL，确认返回 200：</p>
     <ul>
-    <li><code>https://mornikar.github.io/js/wiki-chat.js</code></li>
-    <li><code>https://mornikar.github.io/js/wikilink.js</code></li>
+    <li><code>https://mornikar.github.io/Mornikar/js/wiki-chat.js</code></li>
+    <li><code>https://mornikar.github.io/Mornikar/js/wikilink.js</code></li>
     </ul>
     <p><strong>Step 3</strong>：检查 GitHub Pages 上的 JS 内容</p>
     <pre><code class="language-javascript">// 在 Console 中执行
@@ -356,7 +358,7 @@
     </code></pre>
     <p>确认文件内容是最新的（不是旧版本）。</p>
     <p><strong>Step 4</strong>：检查 CSS 文件</p>
-    <p>访问 <code>https://mornikar.github.io/css/arknights.css</code>，确认包含 wiki-chat 相关样式。</p>
+    <p>访问 <code>https://mornikar.github.io/Mornikar/css/arknights.css</code>，确认包含 wiki-chat 相关样式。</p>
     <hr>
     <h2 id="5-ai-助手对话失败">5. AI 助手对话失败</h2>
     <p><strong>症状</strong>：AI 助手显示但无法发送消息，或收到错误回复。</p>
@@ -498,7 +500,7 @@
       &quot;source&quot;: { &quot;branch&quot;: &quot;main&quot;, &quot;path&quot;: &quot;/&quot; }
     }
     </code></pre>
-    <p>如果显示 <code>gh-pages</code> 或其他分支，需要切换（见 <a href="/docs/BRANCHES/">BRANCHES.md</a>）。</p>
+    <p>如果显示 <code>gh-pages</code> 或其他分支，需要切换（见 <a href="/Mornikar/docs/BRANCHES/">BRANCHES.md</a>）。</p>
     <p><strong>Step 2</strong>：确认 CI 已成功推送</p>
     <ol>
     <li>打开 <a href="https://github.com/mornikar/mornikar.github.io/actions">https://github.com/mornikar/mornikar.github.io/actions</a></li>
@@ -759,7 +761,7 @@
     
     **Step 1**：确认 CMS 版本
     
-    访问 `https://mornikar.github.io/admin/`，检查是否能看到 Wiki 集合（📚 Wiki 概念、✍️ Wiki 随笔等）。
+    访问 `https://mornikar.github.io/Mornikar/admin/`，检查是否能看到 Wiki 集合（📚 Wiki 概念、✍️ Wiki 随笔等）。
     
     如果没有 Wiki 集合，说明 CMS 版本过旧。
     
@@ -782,7 +784,7 @@
     ## 16. PDF 资源未更新 / assets-archive 页面白色字无法打开
     
     **症状**：
-    - 推送了 `.wiki/raw/assets/` 下的 PDF/图片文件后，`https://mornikar.github.io/assets-archive/` 页面显示白色字或链接无法打开
+    - 推送了 `.wiki/raw/assets/` 下的 PDF/图片文件后，`https://mornikar.github.io/Mornikar/assets-archive/` 页面显示白色字或链接无法打开
     - 新文件（如&quot;爱泼斯坦案&quot;文件夹）没有出现在资源存档页面
     - 直接访问 PDF URL 返回 404
     
@@ -822,7 +824,7 @@
     
     # 本地预览
     hexo server
-    # 访问 http://localhost:4000/assets-archive/
+    # 访问 http://localhost:4000/Mornikar/assets-archive/
     </code></pre>
     <blockquote>
     <p>⚠️ <strong>注意</strong>：本地生成的 <code>public/assets/</code> 和 <code>source/assets-archive.md</code> 需要提交到 git，CI 才会重新构建并部署到线上。</p>
@@ -867,8 +869,8 @@
         │   └─ 生成 source/assets-archive.md（存档页面）
         └─ 部署 public/ 到 GitHub Pages
         ↓
-    https://mornikar.github.io/assets-archive/  # 在线资源存档
-    https://mornikar.github.io/assets/XXX.pdf    # 直接访问 PDF
+    https://mornikar.github.io/Mornikar/assets-archive/  # 在线资源存档
+    https://mornikar.github.io/Mornikar/assets/XXX.pdf    # 直接访问 PDF
     </code></pre>
     <h3 id="铁律">铁律</h3>
     <ol>
@@ -882,7 +884,7 @@
     <p><strong>症状</strong>：</p>
     <ul>
     <li>资源存档页面中，包含中文字符的 PDF 链接显示为白色纯文本，无法点击</li>
-    <li>例如：<code>[Jeffrey Epstein Part 12 of 12.pdf](/assets/爱泼斯坦案/Jeffrey Epstein Part 12 of 12.pdf)</code> 而不是 <code>&lt;a href=&quot;/assets/...&quot;&gt;Jeffrey Epstein Part 12 of 12.pdf&lt;/a&gt;</code></li>
+    <li>例如：<code>[Jeffrey Epstein Part 12 of 12.pdf](/Mornikar/assets/爱泼斯坦案/Jeffrey Epstein Part 12 of 12.pdf)</code> 而不是 <code>&lt;a href=&quot;/Mornikar/assets/...&quot;&gt;Jeffrey Epstein Part 12 of 12.pdf&lt;/a&gt;</code></li>
     </ul>
     <p><strong>根本原因</strong>：</p>
     <ul>

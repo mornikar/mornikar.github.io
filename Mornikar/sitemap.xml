@@ -38,15 +38,6 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/docs/GISCUS.html</loc>
-    
-    <lastmod>2026-05-17</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://mornikar.github.io/Mornikar/infinite-menu/index.html</loc>
     
     <lastmod>2026-05-17</lastmod>
@@ -57,6 +48,15 @@
   
   <url>
     <loc>https://mornikar.github.io/Mornikar/login/index.html</loc>
+    
+    <lastmod>2026-05-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mornikar.github.io/Mornikar/docs/GISCUS.html</loc>
     
     <lastmod>2026-05-17</lastmod>
     
@@ -119,7 +119,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%BF%85%E8%A6%81%E6%93%8D%E4%BD%9C/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -128,7 +128,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E5%BF%85%E8%A6%81%E6%93%8D%E4%BD%9C/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -164,7 +164,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-DRF%E6%A1%86%E6%9E%B6/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E5%9F%BA%E7%A1%80/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -173,7 +173,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Flask%E5%9F%BA%E7%A1%80/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-DRF%E6%A1%86%E6%9E%B6/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -263,7 +263,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-PDF%E5%B5%8C%E5%85%A5Snippet/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Pip%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%87%BA%E5%AF%BC%E5%85%A5/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -272,7 +272,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Pip%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%87%BA%E5%AF%BC%E5%85%A5/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-PDF%E5%B5%8C%E5%85%A5Snippet/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -344,7 +344,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-%E9%9D%A2%E8%AF%95%E4%BF%AE%E6%94%B9%E6%84%8F%E8%A7%81%E5%8F%82%E8%80%83/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-%E7%AE%80%E5%8E%86%E4%B8%9A%E5%8A%A1%E7%9B%98%E7%82%B9/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -353,7 +353,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-%E7%AE%80%E5%8E%86%E4%B8%9A%E5%8A%A1%E7%9B%98%E7%82%B9/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-%E9%9D%A2%E8%AF%95%E4%BF%AE%E6%94%B9%E6%84%8F%E8%A7%81%E5%8F%82%E8%80%83/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -380,7 +380,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-AIGC%E9%9A%8F%E7%AC%94/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-AI%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -407,7 +407,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-AI%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-AIGC%E9%9A%8F%E7%AC%94/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -533,7 +533,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-Skill%E5%B0%81%E8%A3%85%E4%B8%8E%E4%BC%98%E5%8C%96/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-PRD%E6%A8%A1%E6%9D%BF%E9%80%9A%E7%94%A8%E7%89%88/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -542,7 +542,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-PRD%E6%A8%A1%E6%9D%BF%E9%80%9A%E7%94%A8%E7%89%88/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-Skill%E5%B0%81%E8%A3%85%E4%B8%8E%E4%BC%98%E5%8C%96/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -578,7 +578,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-%E5%A4%9A%E6%A8%A1%E6%80%81AI%E7%AC%94%E8%AE%B0/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%A7%A3%E6%9E%84/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -587,7 +587,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%A7%A3%E6%9E%84/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-%E5%A4%9A%E6%A8%A1%E6%80%81AI%E7%AC%94%E8%AE%B0/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -605,15 +605,6 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-%E7%94%B5%E5%95%86AI-Claw%E6%96%B9%E6%A1%88/</loc>
-    
-    <lastmod>2026-04-18</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E4%B8%8E%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86/</loc>
     
     <lastmod>2026-04-18</lastmod>
@@ -623,7 +614,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-%E7%AE%80%E5%8E%86%E4%B8%9A%E5%8A%A1%E7%9B%98%E7%82%B9/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-%E7%94%B5%E5%95%86AI-Claw%E6%96%B9%E6%A1%88/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -633,6 +624,15 @@
   
   <url>
     <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-%E7%94%B5%E5%95%86%E8%87%AA%E5%8A%A8%E5%8C%96Skills/</loc>
+    
+    <lastmod>2026-04-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-%E7%AE%80%E5%8E%86%E4%B8%9A%E5%8A%A1%E7%9B%98%E7%82%B9/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -668,7 +668,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/2026-04-18-Pandas%E5%9F%BA%E7%A1%80/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/2026-04-18-Numpy%E5%9F%BA%E7%A1%80/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -677,7 +677,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2026/04/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/2026-04-18-Numpy%E5%9F%BA%E7%A1%80/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2026/04/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/2026-04-18-Pandas%E5%9F%BA%E7%A1%80/</loc>
     
     <lastmod>2026-04-18</lastmod>
     
@@ -722,7 +722,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2025/09/12/LearningEssays/2025-09-12-Hexo%E5%8D%9A%E5%AE%A2%E5%8D%87%E7%BA%A7%E8%AE%B0%E5%BD%95/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2025/09/12/LearningNote/2025-09-12-RAG%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90/</loc>
     
     <lastmod>2025-09-12</lastmod>
     
@@ -740,7 +740,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/2025/09/12/LearningNote/2025-09-12-RAG%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90/</loc>
+    <loc>https://mornikar.github.io/Mornikar/2025/09/12/LearningEssays/2025-09-12-Hexo%E5%8D%9A%E5%AE%A2%E5%8D%87%E7%BA%A7%E8%AE%B0%E5%BD%95/</loc>
     
     <lastmod>2025-09-12</lastmod>
     
@@ -758,6 +758,20 @@
 
   
   <url>
+    <loc>https://mornikar.github.io/Mornikar/tags/wiki-AI-RAG-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA-LLM/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://mornikar.github.io/Mornikar/tags/wiki-AI-%E5%A4%A7%E6%A8%A1%E5%9E%8B-%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96-LLM/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://mornikar.github.io/Mornikar/tags/wiki-Python-Conda-%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86/</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
@@ -765,14 +779,14 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/tags/wiki-Web-HTTP-REST/</loc>
+    <loc>https://mornikar.github.io/Mornikar/tags/wiki-Flask-Python-Web/</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/tags/wiki-Flask-Python-Web/</loc>
+    <loc>https://mornikar.github.io/Mornikar/tags/wiki-Web-HTTP-REST/</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -821,13 +835,6 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/tags/wiki-AI%E8%A1%8C%E4%B8%9A-LLM-RAG-AIGC/</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://mornikar.github.io/Mornikar/tags/wiki-Hexo-%E5%8D%9A%E5%AE%A2-%E5%BC%80%E5%8F%91/</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
@@ -835,7 +842,7 @@
   </url>
   
   <url>
-    <loc>https://mornikar.github.io/Mornikar/tags/wiki-%E9%9A%8F%E7%AC%94/</loc>
+    <loc>https://mornikar.github.io/Mornikar/tags/wiki-AI%E8%A1%8C%E4%B8%9A-LLM-RAG-AIGC/</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -843,6 +850,13 @@
   
   <url>
     <loc>https://mornikar.github.io/Mornikar/tags/wiki-AI%E4%BA%A7%E5%93%81-PRD-%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://mornikar.github.io/Mornikar/tags/wiki-%E9%9A%8F%E7%AC%94/</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -857,20 +871,6 @@
   
   <url>
     <loc>https://mornikar.github.io/Mornikar/tags/wiki-%E5%A4%9A%E6%A8%A1%E6%80%81-AI/</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://mornikar.github.io/Mornikar/tags/wiki-AI-%E5%A4%A7%E6%A8%A1%E5%9E%8B-%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96-LLM/</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://mornikar.github.io/Mornikar/tags/wiki-AI-RAG-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA-LLM/</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -893,6 +893,13 @@
 
   
   <url>
+    <loc>https://mornikar.github.io/Mornikar/categories/%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://mornikar.github.io/Mornikar/categories/AIGC/</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
@@ -901,13 +908,6 @@
   
   <url>
     <loc>https://mornikar.github.io/Mornikar/categories/%E9%9A%8F%E7%AC%94/</loc>
-    <lastmod>2026-05-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://mornikar.github.io/Mornikar/categories/%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
