@@ -1,0 +1,144 @@
+<!DOCTYPE html><html lang="zh-CN" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Conda环境导入2 | Mornikar's Blog</title><meta name="keywords" content="wiki, Python, Conda, 环境管理"><meta name="description" content="conda本身的命令里是有移植这个选项的。假如前提是，在本地的conda里已经有一个AAA的环境，我想创建一个新环境跟它一模一样的叫BBB，那么这样一句就搞定了： conda create -n BBB –clone AAA1但是如果是跨计算机呢。 其实是一样的。 查询conda create命令的原来说明，是这样的： –clone ENVPath to (or name of) existi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Conda环境导入2">
+<meta property="og:url" content="https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%85%A52/index.html">
+<meta property="og:site_name" content="Mornikar&#39;s Blog">
+<meta property="og:description" content="conda本身的命令里是有移植这个选项的。假如前提是，在本地的conda里已经有一个AAA的环境，我想创建一个新环境跟它一模一样的叫BBB，那么这样一句就搞定了： conda create -n BBB –clone AAA1但是如果是跨计算机呢。 其实是一样的。 查询conda create命令的原来说明，是这样的： –clone ENVPath to (or name of) existi">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-18T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-18T00:00:00.000Z">
+<meta property="article:author" content="Mornikar">
+<meta property="article:tag" content="wiki, Python, Conda, 环境管理">
+<meta name="twitter:card" content="summary"><link rel="canonical" href="https://mornikar.github.io/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%85%A52/"><link rel="icon" type="image/x-icon" href="/Mornikar/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/Mornikar/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/Mornikar/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/Mornikar/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/Mornikar/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/Mornikar/font/Bender.ttf"), url("/Mornikar/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/Mornikar/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/Mornikar/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/Mornikar/","code_fold":false,"search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/Mornikar/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@11.12.2/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/Mornikar/lib/fontawesome/css/all.min.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/Mornikar/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/Mornikar/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/Mornikar/img/bk.jpg');
+ --theme-encrypt-confirm: 'confirm'
+}</style><script defer src="/Mornikar/js/arknights.js"></script><script defer src="/Mornikar/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@11.12.2/dist/mermaid.esm.min.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/Mornikar/lib/encrypt/hbe.js"></script><script async src="/Mornikar/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {window.giscusSettings = {
+ repo: 'mornikar/mornikar.github.io',
+ repoId: 'R_kgDOPto6vw',
+ category: 'Announcements',
+ categoryId: 'DIC_kwDOPto6v84C7YeI',
+ mapping: 'pathname',
+ strict: '0',
+ reactionsEnabled: '1',
+ emitMetadata: '1',
+ inputPosition: 'top',
+ lang: 'zh-CN',
+ crossorigin: 'anonymous' , loading: 'lazy'};window.giscusThemeConfig = { theme: 'preferred_color_scheme' };document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/Mornikar/atom.xml" title="Mornikar's Blog" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/Mornikar/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/Mornikar/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/Mornikar/assets-archive/"><span class="navItemTitle">资源</span></a></li><li class="navItem"><a class="navBlock" href="/Mornikar/wiki-changelog/"><span class="navItemTitle">更新日志</span></a></li><li class="navItem"><a class="navBlock" href="/Mornikar/infinite-menu/"><span class="navItemTitle">∞导航</span></a></li></ol></nav></header><article><div id="post-bg"><!-- CMS 编辑按钮（对齐标题右上角）--><a class="cms-edit-btn" href="/Mornikar/admin/?edit=source%2F_posts%2FAIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94%2F2026-04-18-Conda%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%85%A52.md" title="编辑此文章" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg></a><style>.cms-edit-btn {
+  position: absolute;
+  top: 22px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border: 1px solid rgba(34, 187, 255, 0.25);
+  border-radius: 6px;
+  color: rgba(34, 187, 255, 0.5);
+  text-decoration: none;
+  transition: all 0.2s;
+  background: rgba(34, 187, 255, 0.05);
+  z-index: 10;
+}
+.cms-edit-btn:hover {
+  color: #2bf;
+  border-color: #2bf;
+  background: rgba(34, 187, 255, 0.12);
+  transform: scale(1.1);
+}
+.cms-edit-btn svg {
+  width: 16px;
+  height: 16px;
+}</style><div id="post-title"><h1>Conda环境导入2<!-- Phase 3: Wiki 来源标记--></h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2026-04-18T00:00:00.000Z" id="date"> 2026-04-18</time></div></span><br><span>Last Update: <div class="control"><time datetime="2026-04-18T00:00:00.000Z" id="updated"> 2026-04-18</time></div></span></div><hr><!-- Phase 3: Wiki 来源信息--></div><div id="post-content"><!-- 此文章来自 LLM Wiki: raw/skills/python/Conda环境导入2.md -->
+
+<p>conda本身的命令里是有移植这个选项的。<br>假如前提是，在本地的conda里已经有一个AAA的环境，我想创建一个新环境跟它一模一样的叫BBB，那么这样一句就搞定了：</p>
+<p>conda create -n BBB –clone AAA<br>1<br>但是如果是跨计算机呢。</p>
+<p>其实是一样的。</p>
+<p>查询conda create命令的原来说明，是这样的：</p>
+<p>–clone ENV<br>Path to (or name of) existing local environment.<br>1<br>2<br>–clone这个参数后面的不仅可以是环境的名字，也可以是环境的路径。</p>
+<p>所以，很自然地，我们可以把原来电脑上目标conda环境的目录复制到新电脑上，然后再用：</p>
+<p>conda create -n BBB –clone ~&#x2F;path<br>1<br>就直接一步安装了所有的包，完成了环境的移植。<br>原来的电脑上的环境的地址可以用<br>conda info -e 查询到。</p>
+<p>但是注意有个小的问题：<br>移植过来的环境只是安装了你原来环境里用conda install等命令直接安装的包，你用pip之类装的东西没有移植过来，需要你重新安装。</p>
+<p>在服务器上想要使用别人搭好的环境，但是又怕自己对环境的修改更新会影响他人的使用，这个时候可以使用conda命令进行复制环境。<br>首先假设已经安装了Anaconda。</p>
+<p>根据已有环境名复制生成新的环境<br>假设已有环境名为A，需要生成的环境名为B：</p>
+<p>conda create -n B –clone A<br>1<br>根据已有环境路径复制生成新的环境<br>假设已有环境路径为D:\A，需要生成的新的环境名为B：</p>
+<p>conda create -n B –clone D:\A<br>1<br>生成的新的环境的位置在anaconda的安装路径下，一般情况在D:\Anaconda3\envs\文件夹下。</p>
+<div class="wiki-backlinks">
+<h4 class="wiki-backlinks-title">🔗 反向链接</h4>
+<p class="wiki-backlinks-desc">以下页面引用了本文：</p>
+<ul class="wiki-backlinks-list">
+  <li><a href="/2026/05/17/LearningNote/2026-05-17-log/">log</a></li>
+</ul>
+</div><div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%85%A5/">← Next Conda环境导入</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/Mornikar/2026/04/18/AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94/2026-04-18-Conda%E7%8E%AF%E5%A2%83%E5%AF%BC%E5%85%A53/">Conda环境导入3 Prev →</a></div></div></div><div id="comments"><div id="giscus"></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" onClick="tocControl.change()" title="To Catalog"><span class="tocBtnIconBar"></span><span class="tocBtnIconBar"></span><span class="tocBtnIconBar"></span></a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="Change Theme"></a><a onclick="BgmControl()"><svg id="bgm-control" viewBox="0 0 30 34" fill="currentColor" style="width: 24px; transition: transform .3s;margin-top: 4px"><path d="M25.998 23.422V11.29h3.999v12.132h-3.999zM19.497 6.234h4.001v22.243h-4.001V6.234zM12.998.867h4v32.978h-4V.867zm-6.5 5.367h4.001v22.243H6.498V6.234zm-6.5 5.056h4v12.132h-4V11.29z"></path></svg><audio id="bgm" src="/audio/bgm.mp3" loop crossorigin="anonymous"> </audio></a></div></div></article><aside><div id="about"><a href="/Mornikar/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Mornikar's Blog" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">Mornikar</a></h1><div id="description"><p>记录AI产品、技术学习与成长</p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">🔗 反向链接</span></a></li></ol></div></div><footer></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script><script defer src="/Mornikar/js/wiki-chat.js"></script><script defer src="/Mornikar/js/wiki-tree.js"></script><script defer src="/Mornikar/live2d/live2d.js"></script></body></html>

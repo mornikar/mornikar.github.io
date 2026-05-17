@@ -1,0 +1,562 @@
+<!DOCTYPE html><html lang="zh-CN" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>AIGC架构面试八股文 | Mornikar's Blog</title><meta name="keywords" content="wiki, AI行业, LLM, RAG, AIGC"><meta name="description" content="AIGC环境生态：    应用 APPLICATIONS AI    模型 MODELS IS A   基础设施 INFRASTRUCTURE FIVE   芯片 CHIPS LAYER   能源 ENERGY CAKE   从0到1设计一个Agent智能体： 明确核心问题→拆解核心能力→做分层架构→打磨设计细节→快速MVP验证效果→根据数据持续迭代优化 1.熟悉具体公司业务流程，根据业务确定">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AIGC架构面试八股文">
+<meta property="og:url" content="https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-AIGC%E6%9E%B6%E6%9E%84%E9%9D%A2%E8%AF%95%E5%85%AB%E8%82%A1%E6%96%87/index.html">
+<meta property="og:site_name" content="Mornikar&#39;s Blog">
+<meta property="og:description" content="AIGC环境生态：    应用 APPLICATIONS AI    模型 MODELS IS A   基础设施 INFRASTRUCTURE FIVE   芯片 CHIPS LAYER   能源 ENERGY CAKE   从0到1设计一个Agent智能体： 明确核心问题→拆解核心能力→做分层架构→打磨设计细节→快速MVP验证效果→根据数据持续迭代优化 1.熟悉具体公司业务流程，根据业务确定">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:\Users\Q\Documents\%E5%B7%A5%E4%BD%9C%E8%B5%84%E6%96%99\%E7%AE%80%E5%8E%86\AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94\%E5%A4%9A%E6%A8%A1%E6%80%81Image\QQ_1774177466778.png">
+<meta property="og:image" content="c:\Users\Q\Documents\%E5%B7%A5%E4%BD%9C%E8%B5%84%E6%96%99\%E7%AE%80%E5%8E%86\AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94\%E5%A4%9A%E6%A8%A1%E6%80%81Image\e2e51ebd-df5e-40f4-972d-1de1d1f44fd1.png">
+<meta property="article:published_time" content="2026-04-18T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-18T00:00:00.000Z">
+<meta property="article:author" content="Mornikar">
+<meta property="article:tag" content="wiki, AI行业, LLM, RAG, AIGC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:\Users\Q\Documents\%E5%B7%A5%E4%BD%9C%E8%B5%84%E6%96%99\%E7%AE%80%E5%8E%86\AIGC%E7%AC%94%E8%AE%B0%E9%9A%8F%E7%AC%94\%E5%A4%9A%E6%A8%A1%E6%80%81Image\QQ_1774177466778.png"><link rel="canonical" href="https://mornikar.github.io/Mornikar/2026/04/18/LearningEssays/2026-04-18-AIGC%E6%9E%B6%E6%9E%84%E9%9D%A2%E8%AF%95%E5%85%AB%E8%82%A1%E6%96%87/"><link rel="icon" type="image/x-icon" href="/Mornikar/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/Mornikar/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/Mornikar/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/Mornikar/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/Mornikar/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/Mornikar/font/Bender.ttf"), url("/Mornikar/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/Mornikar/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/Mornikar/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/Mornikar/","code_fold":false,"search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/Mornikar/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@11.12.2/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/Mornikar/lib/fontawesome/css/all.min.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/Mornikar/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/Mornikar/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/Mornikar/img/bk.jpg');
+ --theme-encrypt-confirm: 'confirm'
+}</style><script defer src="/Mornikar/js/arknights.js"></script><script defer src="/Mornikar/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@11.12.2/dist/mermaid.esm.min.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/Mornikar/lib/encrypt/hbe.js"></script><script async src="/Mornikar/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {window.giscusSettings = {
+ repo: 'mornikar/mornikar.github.io',
+ repoId: 'R_kgDOPto6vw',
+ category: 'Announcements',
+ categoryId: 'DIC_kwDOPto6v84C7YeI',
+ mapping: 'pathname',
+ strict: '0',
+ reactionsEnabled: '1',
+ emitMetadata: '1',
+ inputPosition: 'top',
+ lang: 'zh-CN',
+ crossorigin: 'anonymous' , loading: 'lazy'};window.giscusThemeConfig = { theme: 'preferred_color_scheme' };document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/Mornikar/atom.xml" title="Mornikar's Blog" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/Mornikar/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/Mornikar/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/Mornikar/assets-archive/"><span class="navItemTitle">资源</span></a></li><li class="navItem"><a class="navBlock" href="/Mornikar/wiki-changelog/"><span class="navItemTitle">更新日志</span></a></li><li class="navItem"><a class="navBlock" href="/Mornikar/infinite-menu/"><span class="navItemTitle">∞导航</span></a></li></ol></nav></header><article><div id="post-bg"><!-- CMS 编辑按钮（对齐标题右上角）--><a class="cms-edit-btn" href="/Mornikar/admin/?edit=source%2F_posts%2FLearningEssays%2F2026-04-18-AIGC%E6%9E%B6%E6%9E%84%E9%9D%A2%E8%AF%95%E5%85%AB%E8%82%A1%E6%96%87.md" title="编辑此文章" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg></a><style>.cms-edit-btn {
+  position: absolute;
+  top: 22px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border: 1px solid rgba(34, 187, 255, 0.25);
+  border-radius: 6px;
+  color: rgba(34, 187, 255, 0.5);
+  text-decoration: none;
+  transition: all 0.2s;
+  background: rgba(34, 187, 255, 0.05);
+  z-index: 10;
+}
+.cms-edit-btn:hover {
+  color: #2bf;
+  border-color: #2bf;
+  background: rgba(34, 187, 255, 0.12);
+  transform: scale(1.1);
+}
+.cms-edit-btn svg {
+  width: 16px;
+  height: 16px;
+}</style><div id="post-title"><h1>AIGC架构面试八股文<!-- Phase 3: Wiki 来源标记--></h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2026-04-18T00:00:00.000Z" id="date"> 2026-04-18</time></div></span><br><span>Last Update: <div class="control"><time datetime="2026-04-18T00:00:00.000Z" id="updated"> 2026-04-18</time></div></span></div><hr><!-- Phase 3: Wiki 来源信息--></div><div id="post-content"><!-- 此文章来自 LLM Wiki: raw/articles/AI行业分析/AIGC架构面试八股文.md -->
+
+<p>AIGC环境生态：</p>
+<table>
+<thead>
+<tr>
+<th>应用</th>
+<th>APPLICATIONS</th>
+<th>AI</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>模型</td>
+<td>MODELS</td>
+<td>IS A</td>
+</tr>
+<tr>
+<td>基础设施</td>
+<td>INFRASTRUCTURE</td>
+<td>FIVE</td>
+</tr>
+<tr>
+<td>芯片</td>
+<td>CHIPS</td>
+<td>LAYER</td>
+</tr>
+<tr>
+<td>能源</td>
+<td>ENERGY</td>
+<td>CAKE</td>
+</tr>
+</tbody></table>
+<p>从0到1设计一个Agent智能体：</p>
+<p>明确核心问题→拆解核心能力→做分层架构→打磨设计细节→快速MVP验证效果→根据数据持续迭代优化</p>
+<p>1.熟悉具体公司业务流程，根据业务确定核心问题，锁定具体清晰的场景。如自动处理客服工单，按需生成周报，聚焦问题，明确设计主体</p>
+<p>2.拆解Agent要具备的核心能力，按感知、决策、执行、闭环来思考。感知是用户输入，确定是纯文本还是多模态的能力，决策是任务规划，选React模式还是规划式，执行是确定可调用的工具和API，如能不能调用搜索数据库生成文件。</p>
+<p>3.分层的架构设计，最底层是大模型作为核心大脑，然后就是工具层，封装后让Agemt能和外部交互。</p>
+<p>再往上就是记忆层，短期记忆存上下文，长期记忆用向量数据库存知识。</p>
+<p>最上层就是编排层，把控整个任务流程，</p>
+<p>分层的架构设计好处是让各层职责清晰，后续迭代调整更加方便。</p>
+<p>4.考虑关键的设计细节，比如决策逻辑简单的任务用Flow就可以，需要灵活应变地设计React循环，能根据反馈调整策略。</p>
+<p>工具设计要标准化，每个工具入参、出参的描述都要清晰，让模型能够正确调用。做好容错机制，针对调用失败，决策错误的情况，设置重试机制和人工接入点</p>
+<p>5.做MVP最小可用版本验证，先搭建简单版本，用真实数据跑通，重点关注任务完成率，平均轮次，工具调用准确率，用户满意度等核心指标，根据数据反馈持续迭代。比如调整工具设计，优化提示词，增加逻辑判断。</p>
+<p>6.做好上线的闭环和持续优化。上线后持续收集数据，分析失败案例，整理用户反馈，再针对性优化，比如微调模型，调整提示词，扩充工具集</p>
+<p>写代码三个步骤：</p>
+<p>1.和cloud ops讨论需求（其他中端模型也行）</p>
+<p>2.让Cloud ops写设计文档的文案（其他中端模型也行）</p>
+<p>3.让Cloudx去执行（或者cc）</p>
+<h1 id="一。多Agent系列"><a href="#一。多Agent系列" class="headerlink" title="一。多Agent系列"></a>一。多Agent系列</h1><h5 id="1-单Agent-or-多Agent？"><a href="#1-单Agent-or-多Agent？" class="headerlink" title="1.单Agent or 多Agent？"></a>1.单Agent or 多Agent？</h5><h6 id="基于Anthropic核心原则：“简单优先”，默认从单agent架构开始，如果引入复杂性能够显著”提高效果“时，才考虑。"><a href="#基于Anthropic核心原则：“简单优先”，默认从单agent架构开始，如果引入复杂性能够显著”提高效果“时，才考虑。" class="headerlink" title="基于Anthropic核心原则：“简单优先”，默认从单agent架构开始，如果引入复杂性能够显著”提高效果“时，才考虑。"></a>基于Anthropic核心原则：“简单优先”，默认从单agent架构开始，如果引入复杂性能够显著”<strong>提高效果</strong>“时，才考虑。</h6><p>当Agent遇到无法解决的瓶颈时，就升级为复杂的多Agent</p>
+<p>如何判断？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">1.上下文的容量瓶颈</span><br><span class="line"></span><br><span class="line">例子：一个上下文窗口，遇到几十个网页分析</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2.单一路径依赖带来的高失败风险</span><br><span class="line"></span><br><span class="line">例子：有其中一个任务失败时，如遇到API失效等，就会任务流卡死</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">3.效率瓶颈</span><br><span class="line"></span><br><span class="line">例子：要求时效性的任务，就直接上多Agent</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="验证是否真的适合多Agent"><a href="#验证是否真的适合多Agent" class="headerlink" title="验证是否真的适合多Agent"></a>验证是否真的适合多Agent</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">1.技术可行性</span><br><span class="line"></span><br><span class="line">例如：任务能否被拆分成多个独立可并行的子任务。如分析市场分析报告可以，如写代码就不行，因为是强依赖上下文，同时修改一个复杂的代码库不冲突</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2.商业价值</span><br><span class="line"></span><br><span class="line">多Agent任务是普通聊天的15倍价格</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果不行，就优化单agent或者寻找其他方案</p>
+<p>2.搭建高效Agent：</p>
+<p>代理式系统Agentc systems→工作流</p>
+<p>                                                →智能体</p>
+<p>差异：决策权在哪里，流程是否固定</p>
+<p>技术选项：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第三层（高级）：智能体<br/>应用开放性、无法预测步骤 的任务</td>
+</tr>
+<tr>
+<td>第二层（中级）：工作流<br/>流程固定、追求高质量和可靠性</td>
+</tr>
+<tr>
+<td>第一层（基础）：优化单个LLM调用<br/>优先尝试！通姑婆RAG和Few-shot解决</td>
+</tr>
+</tbody></table>
+<p>何时使用或不使用框架：</p>
+<p>复杂场景时，需要嗑底层细节，极致的模型优化，产品性能时，就能不使用框架尽量不使用框架</p>
+<p>3.Workflows工作流选择</p>
+<h3 id="1-Prompt-Chaining-基于Prompt的穿行流水线"><a href="#1-Prompt-Chaining-基于Prompt的穿行流水线" class="headerlink" title="1.Prompt Chaining 基于Prompt的穿行流水线"></a>1.Prompt Chaining 基于Prompt的穿行流水线</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">定义：独立节点：串行工作流、显式流：处理前不输出，避免黑盒操作</span><br><span class="line"></span><br><span class="line">适用情形：任务可以拆分子任务，步骤固定且稳定。不关重要的场景节点用便宜的模型，重要决策的场景节点才用贵的</span><br><span class="line"></span><br><span class="line">牺牲：调用次数与延迟、 收益：准确率与稳定性高</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Routing-精准分类分发-、如退款纠纷，退款需要高准确度与多重校验，寒暄需要速度与廉价"><a href="#2-Routing-精准分类分发-、如退款纠纷，退款需要高准确度与多重校验，寒暄需要速度与廉价" class="headerlink" title="2.Routing 精准分类分发   、如退款纠纷，退款需要高准确度与多重校验，寒暄需要速度与廉价"></a>2.Routing 精准分类分发   、如退款纠纷，退款需要高准确度与多重校验，寒暄需要速度与廉价</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">核心定义：在任务真正开始之前，对输入进行分类，并将其引导到不同处理器路径的系统结构</span><br><span class="line"></span><br><span class="line">核心价值：关注点分离：避免为了优化A而伤害b的结构性冲突，让每一条路径只为负责问题而极致优化</span><br><span class="line"></span><br><span class="line">使用前提：输入可以被清晰、可靠地分类，不同类别的处理逻辑存在本质区别，合并路径会产生明显的“目标冲突”</span><br><span class="line"></span><br><span class="line">实现方法：LLM判定：利用大模型语义理解，传统模型：专用的分类模型或算法，规则系统：基于关键词或业务逻辑判定</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="3-Sectionning-并行协作-聚合"><a href="#3-Sectionning-并行协作-聚合" class="headerlink" title="3.Sectionning 并行协作&#x2F;聚合"></a>3.Sectionning 并行协作&#x2F;聚合</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">定义与价值：是吧一个大任务拆成多个彼此独立的子任务，并行执行，最后进行结果回报</span><br><span class="line"></span><br><span class="line">价值：用并行换效率</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">适用前提：独立性：子任务间无中间结果依赖，固定性：子任务类型固定（区别于multiagent的子任务动态规划），可以拆分成多个子任务</span><br><span class="line"></span><br><span class="line">核心决策点：效率优先vs成本优先（不用）</span><br><span class="line"></span><br><span class="line">效率优先：延迟敏感如：安全护栏并行</span><br><span class="line"></span><br><span class="line">（不用）成本优先：吞吐瓶颈：自动化测评，通过并发对冲海量数据</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-Voting（投票机制）"><a href="#4-Voting（投票机制）" class="headerlink" title="4.Voting（投票机制）"></a>4.Voting（投票机制）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">核心定义：对同一个判断任务进行多次独立运行，通过程序化规则聚合结果</span><br><span class="line"></span><br><span class="line">目的：提高整体置信度与系统鲁棒性</span><br><span class="line"></span><br><span class="line">结构直觉：承认波动：非确定性是LLM的客观属性</span><br><span class="line"></span><br><span class="line">                   拒绝博彩：不把安全性建立在单次输出上</span><br><span class="line"></span><br><span class="line">                    并行定位：这是可靠性并型，而非效型</span><br><span class="line"></span><br><span class="line">核心决策点：“如果判断错了，业务能否承受代价”</span><br><span class="line"></span><br><span class="line">不可容错：如代码安全审查，一次报警即刻拦截</span><br><span class="line"></span><br><span class="line">可容错：内容审核，通过阈值权衡假阳性和假阴性</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="5-Orchestrator-workers-动态编排调度"><a href="#5-Orchestrator-workers-动态编排调度" class="headerlink" title="5.Orchestrator-workers 动态编排调度"></a>5.Orchestrator-workers 动态编排调度</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">核心定义：动态并行：在运行中根据输入动态拆解子任务</span><br><span class="line"></span><br><span class="line">                    任务规划：orchestrator 决定接下来做什么，worker负责执行</span><br><span class="line"></span><br><span class="line">                    目标：解决无法提前预设固定步骤的效率挑战</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">对比：Sectioning </span><br><span class="line"></span><br><span class="line">Sectioning 子任务是提前固定好的步骤</span><br><span class="line"></span><br><span class="line">Orchestrator拆分是动态根据执行进展实事派发任务</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">什么时候用该模式？</span><br><span class="line"></span><br><span class="line">广度优先：覆盖大量对象或信息源</span><br><span class="line"></span><br><span class="line">超长上下文：整体信息量已超过单一Prompt承载上限</span><br><span class="line"></span><br><span class="line">可拆分独立子任务：子任务需在执行中不断发现，调整和补充</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6-Eval-Opt-循环评价优化"><a href="#6-Eval-Opt-循环评价优化" class="headerlink" title="6.Eval-Opt 循环评价优化"></a>6.Eval-Opt 循环评价优化</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">核心定义：单点打磨：围绕同一结果反复修改而非横向选优</span><br><span class="line"></span><br><span class="line">                    标准驱动：根据明确标注提供反馈</span><br><span class="line"></span><br><span class="line">                    闭环迭代：直到满足标准或达到停止条件</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">核心前提：掌握改进权</span><br><span class="line"></span><br><span class="line">1.标准极其明确：是否清楚滴知道什么是好</span><br><span class="line"></span><br><span class="line">2.改进方向清晰是否能支出哪里不好，并知道怎么改</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">与voting对比：</span><br><span class="line"></span><br><span class="line">voting ：不知道答案，选多个里最好的投票（逻辑：多版本的横向对比，场景：没有唯一正确答案，而且单次判断不稳定，目标：见底单次判断失误带来的系统性风险）</span><br><span class="line"></span><br><span class="line">Eval-opt：讲一个答案向质量上限迭代（逻辑：单点迭代+反馈驱动迭代，场景：对语气、准确性、风格有明确指标，目标：一个答案向质量上限迭代）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="核心决策逻辑维度：质量（准确率与容错率）、成本（模型选择与调用量）、速度（响应时间与吞吐量）"><a href="#核心决策逻辑维度：质量（准确率与容错率）、成本（模型选择与调用量）、速度（响应时间与吞吐量）" class="headerlink" title="** 核心决策逻辑维度：质量（准确率与容错率）、成本（模型选择与调用量）、速度（响应时间与吞吐量）**"></a>** 核心决策逻辑维度：质量（准确率与容错率）、成本（模型选择与调用量）、速度（响应时间与吞吐量）**</h1><h4 id=""><a href="#" class="headerlink" title=""></a></h4><h4 id="-1"><a href="#-1" class="headerlink" title=""></a></h4><h1 id="3-多智能体A2A"><a href="#3-多智能体A2A" class="headerlink" title="3.多智能体A2A"></a>3.多智能体A2A</h1><p>1.传统脚本（硬编码路劲）→2.单智能体（动态转向）→3.多智能体（Agent并行协作）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">核心定义：Agent在循环自主使用工具的LLM</span><br><span class="line"></span><br><span class="line">                    Multi-Agent：通过分工突破个体极限的协作系统</span><br><span class="line"></span><br><span class="line">上下文工程终极策略：隔离lsolation</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>1.核心架构（Architecture）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">指挥官-工人模式</span><br><span class="line"></span><br><span class="line">2.核心优势：并行化：同时处理多任务，效率up</span><br><span class="line"></span><br><span class="line">                    隔离性：独立上下文窗口，降低噪音</span><br><span class="line"></span><br><span class="line">                    压缩：提炼洞见，而非堆砌数据</span><br><span class="line"></span><br><span class="line">3.适用场景：</span><br><span class="line"></span><br><span class="line">广度优先：需要同时探索多个方向。如调研</span><br><span class="line"></span><br><span class="line">任务可并行：子任务间无强依赖。如50家公司财报</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">效果验证：Token缩放定律</span><br><span class="line"></span><br><span class="line">实战数据：标普500董事成员查询</span><br><span class="line"></span><br><span class="line">单体：失败</span><br><span class="line"></span><br><span class="line">多提：90.2%准确率</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">物理原理：推理时计算80%性能差异源于Token使用量，需要堆智力</span><br><span class="line"></span><br><span class="line">能力边界：</span><br><span class="line"></span><br><span class="line">成本与局限：15倍代价</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>说明</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>成本（cost）</td>
+<td>Token消耗约为普通对话的15倍，仅仅适合高价值任务</td>
+<td></td>
+</tr>
+<tr>
+<td>使用（Pro）</td>
+<td>重阅读：研究，分析。<br/>特点独立可并行</td>
+<td></td>
+</tr>
+<tr>
+<td>不适用（Con）</td>
+<td>重写入：复杂编程。特点：高耦合，强依赖</td>
+<td></td>
+</tr>
+</tbody></table>
+<h1 id="4-高级架构概览（High-level-Architecture）"><a href="#4-高级架构概览（High-level-Architecture）" class="headerlink" title="4.高级架构概览（High-level Architecture）"></a>4.高级架构概览（High-level Architecture）</h1><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>citations</td>
+<td>Lead agent(主智能体)<br/>用户请求传进来主智能体，主智能体分发后最终生成报告</td>
+<td>Memory</td>
+</tr>
+<tr>
+<td>Search<br/>subagent</td>
+<td>Search<br/>sybagent</td>
+<td>Search<br/>subagent</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">1.用户请求传进来主智能体，指挥官接单</span><br><span class="line"></span><br><span class="line">2.指挥官开始思考和规划</span><br><span class="line"></span><br><span class="line">3.指挥官根据规划向下方派出多个工人</span><br><span class="line"></span><br><span class="line">4.各工人把结果返回指挥官，进行汇总与初稿</span><br><span class="line"></span><br><span class="line">5.添加引用来源并且生成最终报告输出回用户</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">主Agent分发原理：</span><br><span class="line"></span><br><span class="line">深度思考（Think&amp;Plan）：插接需求，列出维度：1.硬件2.算法3.市场</span><br><span class="line"></span><br><span class="line">↓</span><br><span class="line"></span><br><span class="line">确定人设（Define Personas）：决定生成3个工人，并分别定义其topic</span><br><span class="line"></span><br><span class="line">↓</span><br><span class="line"></span><br><span class="line">工具调用（Tool Call）：发起Function Call</span><br><span class="line"></span><br><span class="line">↓</span><br><span class="line"></span><br><span class="line">现场实例化（Instantiation）：后台启动新Session System Prompt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>范式对比：静态RAGvs动态智能体</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>传统RAG</th>
+<th>多智能体</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>机制（Mechanism）</td>
+<td>静态检索（static Retrieval）一次抓取</td>
+<td>动态搜索（Dynamic Search）（多步迭代）</td>
+</tr>
+<tr>
+<td>行为（Behavior）</td>
+<td>图书馆管理员（搬书）</td>
+<td>资深研究员（适应与修正）</td>
+</tr>
+<tr>
+<td>可信度（Trust）</td>
+<td>隐式信任（容易幻觉）</td>
+<td>显式审计Citation Agent（独立验证层）</td>
+</tr>
+</tbody></table>
+<h4 id="-2"><a href="#-2" class="headerlink" title=""></a></h4><h1 id="5-多Agent提示词工程"><a href="#5-多Agent提示词工程" class="headerlink" title="5.多Agent提示词工程"></a>5.多Agent提示词工程</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">1.管理层原则：心智与授权（要做到“可控”，“高效”，“可靠”）</span><br><span class="line"></span><br><span class="line">1.像智能体一样思考：行动：简历模拟器，观察失败步骤</span><br><span class="line"></span><br><span class="line">                                    避免黑盒操作</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2.教会指挥官权限：四要素：目标+格式+工具+边界</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">3.匹配力度（Scale effort）规则：简单任务（1agent），普通任务（5agent），复杂任务（10 agent）</span><br><span class="line"></span><br><span class="line">.在prompt中嵌入明确的缩放规则。</span><br><span class="line"></span><br><span class="line">根据任务复杂度匹配投入力度，避免简单任务过度投入，复杂任务投入不足问题</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">4.工具设计至关重要</span><br><span class="line"></span><br><span class="line">    1.工具描述= 用户手册</span><br><span class="line"></span><br><span class="line">    2.必须提供显式启发法：“优先使用专用工具”</span><br><span class="line"></span><br><span class="line">    3.糟糕的描述=错误的路径</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">5.让智能体自我进化</span><br><span class="line"></span><br><span class="line">试用工具→报错→重写文档</span><br><span class="line"></span><br><span class="line">Result：任务耗时减少40%</span><br><span class="line"></span><br><span class="line">如何帮助智能体自我进化？</span><br><span class="line"></span><br><span class="line">“测试所以可用工具，思考工具的描述有没有存在缺陷，观察报错原因、分析失败模式，是否能补充，自动生成新的工具描述来避免未来的错误”</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">6.先宽后窄策略（Start Wide）</span><br><span class="line"></span><br><span class="line">策略：先搜宽泛概念→再聚焦细节（drill down）</span><br><span class="line"></span><br><span class="line">起步：1.短、宽泛的查询词，再进行评估，2.看看信息是否足够，3.最终逐步收窄范围、进入细节</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">7.引导思维过程（Thinking）</span><br><span class="line"></span><br><span class="line">工具：Extended Thinking作为草稿纸</span><br><span class="line"></span><br><span class="line">循环：Search → Interleacved Thinking →Next Act</span><br><span class="line"></span><br><span class="line">            工具结果→思考评估→ 再搜索（循环进行）</span><br><span class="line"></span><br><span class="line">让模型输出可见思考轨迹，帮助主Agent规划查询步骤，决定用哪些工具，判断查询复杂度，明确子智能体角色，子智能体使用交错石思维</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">8.并行工具调用（parallel）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">速度来源：宏观并行（多Agent）+微观并行（每个字Agent内部同时使用多个工具）</span><br><span class="line"></span><br><span class="line">Impact：研究时间缩短90%</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="6-Lead-Agent提示词"><a href="#6-Lead-Agent提示词" class="headerlink" title="6.Lead Agent提示词"></a>6.Lead Agent提示词</h1><p>1.核心人设（Persona）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">核心能力：战略（Strategy）、规划（planing）、委派（Delegation）</span><br><span class="line"></span><br><span class="line">定位：像课题组长一样思考“怎么解题最高效”?你是专业研究负责人，专注于高层研究战略、规划、高效派委subagent以及报告撰写</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">核心目标：</span><br><span class="line"></span><br><span class="line">定义:领导一个流程（lead a process）</span><br><span class="line"></span><br><span class="line">交付：产出卓越的研究报告（Produce 按excellentresearch report）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>2.研究过程：四步思考循环</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">1.评估Assessment →2.分类Query Type→3.计划Plan→4.执行Execution</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2.多方案：需要探索至少三种不同的应答方法，最终选择最优方案（思维发散）</span><br><span class="line"></span><br><span class="line">避免了模型即使错了也要走到黑的毛病</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>一.评估与分解（Assessment）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">深度解构（Breakdown）</span><br><span class="line"></span><br><span class="line">实体与关系（concepts&amp;Emtotoes）：谁是主角？有什么关联？</span><br><span class="line"></span><br><span class="line">数据锚点（Facts&amp;Data）：需要哪些具体数字</span><br><span class="line"></span><br><span class="line">约束条件（Constraints）：时间、上下文</span><br><span class="line"></span><br><span class="line">What matters most？用户最在意是什么</span><br><span class="line"></span><br><span class="line">Desired format？是一份详细报告、实体列表、还是视觉分析？</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>二.查询类别判定（Query Type）</p>
+<table>
+<thead>
+<tr>
+<th>1.深度优先<br/>depath-first</th>
+<th>特征：多视角（Multiple Perspectives、深挖单一话题）<br/>策略：平行Agent探索不同观点&#x2F;方法论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2.广度优先<br/>Breadth-furst</td>
+<td>特征：独立子问题（Distinct Sub-questions）、“Ging wide”<br/>策略：平行Agent分头抓取数据包，再汇报</td>
+</tr>
+<tr>
+<td>3.直截了当<br/>Straightforward</td>
+<td>特征：聚焦、定义明确、单次调查即可<br/>策略：单一Sub-agent高效执行</td>
+</tr>
+</tbody></table>
+<p>三.基于分类的计划制定</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">For Depth-first</span><br><span class="line"></span><br><span class="line">定义3--5个具体的方法论或者视角，列出具体的专家观点或者证据源，Synthesis Plan：规划如何融合不同的观点。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">For Breadth-furst</span><br><span class="line"></span><br><span class="line">枚举所有子任务</span><br><span class="line"></span><br><span class="line">划定清晰的边界（Crisp Boundaries）以防重叠</span><br><span class="line"></span><br><span class="line">按重要顺序排序</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">对每一步都自我评价：</span><br><span class="line"></span><br><span class="line">这一步能并行吗？</span><br><span class="line"></span><br><span class="line">这一步真的有必要吗？</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>四.执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">有条不紊的动态闭环</span><br><span class="line"></span><br><span class="line">动态监控：持续监控进度，跟进智能体的结果“更新搜索计划”</span><br><span class="line"></span><br><span class="line">贝叶斯推理：更新先验指示表知识，方向错了立刻掉头，发现线索立刻追中。</span><br><span class="line"></span><br><span class="line">时间管理： 若时间不够停止部署，立刻开始撰写报告（避免超时）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>3.兵力部署：Sub-agent数量法则</p>
+<p>More Subagents &#x3D; More overhead</p>
+<table>
+<thead>
+<tr>
+<th align="left">简单任务</th>
+<th>1个（即使简单任务也要派一个，确保隔离）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">标准任务</td>
+<td>2-3个（多视角验证）</td>
+</tr>
+<tr>
+<td align="left">高复杂度</td>
+<td>5-10个（海量信息收集，超过20个需要重构）</td>
+</tr>
+</tbody></table>
+<h4 id="-3"><a href="#-3" class="headerlink" title=""></a></h4><p>4.委派指令：部署与分配</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">工具落地：必须调用run_blocking_subagent+ 清晰Prompt</span><br><span class="line"></span><br><span class="line">时效性：马上部署，优先跑“”阻塞任务“。</span><br><span class="line"></span><br><span class="line">空窗期：“Use time effciently”等待分析已经有结果</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>5.任务分配原则：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">深度优先：按顺序部署（验证假设→补充视角）</span><br><span class="line"></span><br><span class="line">广度优先：按重要性排序（核心实事→边缘细节）</span><br><span class="line"></span><br><span class="line">直接查询：单个综合子智能体</span><br><span class="line"></span><br><span class="line">Ruler：避免重叠（No overlap） &amp;即使简单也要委派</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>4.3为Sub-agent提供明确指引</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">Sub-agent Prompt 必须包含：</span><br><span class="line"></span><br><span class="line">1.核心目标（Objective）：最好每个Agent只专注一个核心目标</span><br><span class="line"></span><br><span class="line">2.输出格式（Format）：列表？报告？还是特定答案？</span><br><span class="line"></span><br><span class="line">3.背景上下文（Context）：让下属知道为什么要做这个。</span><br><span class="line"></span><br><span class="line">4.工具与范围（Tool &amp;Scope）：指定用什么工具，划定边界</span><br><span class="line"></span><br><span class="line">5.推荐/黑名单信源（Sources）：“Use SEC EDGAR，avoid news aggregators”</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>4.4综合协调职责（Synthesis Responsibility）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">Lead Agent：</span><br><span class="line"></span><br><span class="line">    Negative Constraints ：不要自己做初级搜索（除非非常简单）、不要为了琐碎任务开Sub-Agent</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Positive Responsibility：Coordinate：协调、同步，Synthesize：整合不同来源的信息，Fill Gaps：发现缺漏根据需要增派人手</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>5.答案格式（Answer Formatting）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">交付三部曲：</span><br><span class="line"></span><br><span class="line">1.Review:重新审查所有事实清单</span><br><span class="line"></span><br><span class="line">2.Reflect：深度反思-“这些事实真的能充分回答用户的问题吗？”</span><br><span class="line"></span><br><span class="line">3.Output：只有确认无误后，才生成Markdown格式的最终答案</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">特殊禁令：</span><br><span class="line"></span><br><span class="line">不要在报告里加md引用，因为后面会有专门的Citation Agent来处理。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>6.进阶：如何使用内部工具？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">链接Slack，Jira，Drive等企业数据</span><br><span class="line"></span><br><span class="line">探索模式（Read-only First）</span><br><span class="line"></span><br><span class="line">在委派之前，自己先用read-only tools（如“slack_search”）试探一下</span><br><span class="line"></span><br><span class="line">目的：了解数据结构，确认信息是否存在，以便写出更好的指令</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">专用Sub-Agent模式</span><br><span class="line"></span><br><span class="line">对于特定数据源，创建Specialized Sub-agents。</span><br><span class="line"></span><br><span class="line">Example：“Asana Subagent”，“Slack Subagent”</span><br><span class="line"></span><br><span class="line">明确指示他们仅用特定工具，避免公网干扰</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>7.并行工具调用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">串行（Sequentia）：Call A→Wait→CallB</span><br><span class="line"></span><br><span class="line">并行（Parallel）：Call A+CallB+CallC</span><br><span class="line"></span><br><span class="line">标准：启动阶段默认并行运行3个子智能体（获取足够信息面）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>8.核心规则（7 Guidelines）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">1.沟通：极高信息密度。用最少字说清楚</span><br><span class="line"></span><br><span class="line">2.事实审查：日期、数字、量化数据。Lead Agent必须定期回顾核心事实</span><br><span class="line"></span><br><span class="line">3.冲突解决：新近度（Recency）&amp;一致性。不同来源信息打架时</span><br><span class="line">4.审慎思考：对新奇信息“Thinkcarefully”</span><br><span class="line"></span><br><span class="line">5.及时止损：边际收益递减→Stop</span><br><span class="line"></span><br><span class="line">6.边界：Lead必须亲自写报告</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">7.安全红线：严禁研究仇恨/暴力内容？</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="-4"><a href="#-4" class="headerlink" title=""></a></h4><p>AIGC往后发展个人预期：</p>
+<p>2026Q1-2月：</p>
+<p>养虾热潮，聚集大量用户关注者</p>
+<p>2026Q2-3月：</p>
+<p>极简部署与运行形成生态化</p>
+<p>社区与虾粉互动生态</p>
+<p>本地化插件生态</p>
+<p>2026Q2-5月</p>
+<p>沉淀优质资产，打造中国开发的SKills生态圈与杀手级应用</p>
+<p>打造中国Skills本地生态</p>
+<p>Killer Apps杀手级落地</p>
+<p>如Coze的工作流被Skills代替</p>
+<p>大模型评估&amp;红队测试：Promptfoo</p>
+<p>交付安全可靠的人工智能应用，被openAI收购并入功能</p>
+<p>AIAgent架构</p>
+<p>Skills决定上限</p>
+<p>skills架构</p>
+<p class='item-img' data-src='C:\Users\Q\Documents\工作资料\简历\AIGC笔记随笔\多模态Image\QQ_1774177466778.png'><img src="C:\Users\Q\Documents\工作资料\简历\AIGC笔记随笔\多模态Image\QQ_1774177466778.png" alt="QQ_1774177466778"></p>
+<p>1.skill.md：必须的（Required，核心大脑）教用户如何使用</p>
+<p>2.references：参考内容、知识库</p>
+<p>3.scripts：脚本工具箱</p>
+<p>4.templates：模板输出库</p>
+<p>5.LICENSE.txt</p>
+<p class='item-img' data-src='C:\Users\Q\Documents\工作资料\简历\AIGC笔记随笔\多模态Image\e2e51ebd-df5e-40f4-972d-1de1d1f44fd1.png'><img src="C:\Users\Q\Documents\工作资料\简历\AIGC笔记随笔\多模态Image\e2e51ebd-df5e-40f4-972d-1de1d1f44fd1.png" alt="e2e51ebd-df5e-40f4-972d-1de1d1f44fd1"></p>
+<p>为什么Skill比工作流强：</p>
+<p>1.降低模型幻觉</p>
+<p>2.复用性强，移植性强</p>
+<p>3.自由度，边界，可以更好做复杂的工作流</p>
+<ol>
+<li>OpenClaw 蓝皮书 &#x2F; Claude Skill 构建指南</li>
+</ol>
+<hr>
+<table>
+<thead>
+<tr>
+<th>链接</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://openclawlog.com/2026/02/25/the-complete-guide-to-building-skill-for-claude/">Claude构建技能（skill）官方完全指南 – OpenClawLog</a></td>
+<td>最全的官方指南</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://docs.openclaw.ai/zh-CN/tools/skills">OpenClaw Skills 官方文档</a></td>
+<td>官方文档</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://skillsclaude.com/guides/skill-creator">Skill Creator 实战指南</a></td>
+<td>英文版实战指南</td>
+</tr>
+</tbody></table>
+<hr>
+<ol start="2">
+<li>国内 Skill 构建指南（WorkBuddy &#x2F; Claude Code 中文生态）</li>
+</ol>
+<hr>
+<table>
+<thead>
+<tr>
+<th>链接</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/ephemeraldew/skill-creator-cn">GitHub - skill-creator-cn 中文版</a></td>
+<td>中文版 Skill Creator，带完整中文提示</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.xmsumi.com/detail/2691">WorkBuddy Skills 完全上手指南</a></td>
+<td>国内作者的上手教程</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.skill-cn.com/practice/256">Skill Hub 中国 - Skill-creator 教程</a></td>
+<td>中文 Skill 社区</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2641104">WorkBuddy 自定义技能拓展实践</a></td>
+<td>腾讯云社区</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="OpenClaw架构"><a href="#OpenClaw架构" class="headerlink" title="OpenClaw架构"></a>OpenClaw架构</h1><p>UI&#x2F;命令符</p>
+<p>↓</p>
+<p>多Agent（外层封装）</p>
+<p>↓</p>
+<p>本地推理引擎如：</p>
+<ul>
+<li>（Ollama&#x2F;LM Studio）</li>
+</ul>
+<p>↓</p>
+<p>Agent智能体</p>
+<p>                ↓（包含模块）模块流程：</p>
+<p>1,感知模块接收用户输入(如“生成行业报告” )</p>
+<p>                ↓</p>
+<p>2.Agent大脑模型（决策模块LLM）：</p>
+<ul>
+<li><p>**Qwen3-Coder (7B&#x2F;14B)**：目前开源界最适合处理代码和逻辑指令的模型之一。</p>
+</li>
+<li><p><strong>DeepSeek-R1-Distill-Llama-8B</strong>：推理能力强，适合处理复杂任务拆解。</p>
+</li>
+<li><p>**Llama-3.2 (8B)**：综合性能均衡，响应速度快。</p>
+</li>
+</ul>
+<p>下载命令示例（以 Ollama 为例）：</p>
+<p><code>ollama pull qwen2.5-coder:7b</code></p>
+<p>                ↓</p>
+<p>3.调用工具模块执行(搜索引擎+数据分析工具)</p>
+<p>        调用工具模块属于Skills,本质是Tools的流程化封装 </p>
+<p>        底层执行通过 Function Calling 和 MCP 协议实现</p>
+<p>                ↓</p>
+<p>4.记忆模块记录中间结果</p>
+<p>                 ↓</p>
+<ol start="5">
+<li>最终输出报告</li>
+</ol>
+<p>文档著者：GT &#x2F; github:morniakr.git.io</p>
+<div class="wiki-backlinks">
+<h4 class="wiki-backlinks-title">🔗 反向链接</h4>
+<p class="wiki-backlinks-desc">以下页面引用了本文：</p>
+<ul class="wiki-backlinks-list">
+  <li><a href="/2026/05/17/LearningNote/2026-05-17-log/">log</a></li>
+</ul>
+</div><div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/Mornikar/2026/04/18/LearningEssays/2026-04-18-AIGC%E6%8C%87%E6%A0%87%E6%A2%B3%E7%90%86/">← Next AIGC指标梳理</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/Mornikar/2026/04/18/LearningEssays/2026-04-18-AIGC%E9%9A%8F%E7%AC%94/">AIGC随笔 Prev →</a></div></div></div><div id="comments"><div id="giscus"></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" onClick="tocControl.change()" title="To Catalog"><span class="tocBtnIconBar"></span><span class="tocBtnIconBar"></span><span class="tocBtnIconBar"></span></a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="Change Theme"></a><a onclick="BgmControl()"><svg id="bgm-control" viewBox="0 0 30 34" fill="currentColor" style="width: 24px; transition: transform .3s;margin-top: 4px"><path d="M25.998 23.422V11.29h3.999v12.132h-3.999zM19.497 6.234h4.001v22.243h-4.001V6.234zM12.998.867h4v32.978h-4V.867zm-6.5 5.367h4.001v22.243H6.498V6.234zm-6.5 5.056h4v12.132h-4V11.29z"></path></svg><audio id="bgm" src="/audio/bgm.mp3" loop crossorigin="anonymous"> </audio></a></div></div></article><aside><div id="about"><a href="/Mornikar/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Mornikar's Blog" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">Mornikar</a></h1><div id="description"><p>记录AI产品、技术学习与成长</p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%82%E5%A4%9AAgent%E7%B3%BB%E5%88%97"><span class="toc-number">1.</span> <span class="toc-text">一。多Agent系列</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-%E5%8D%95Agent-or-%E5%A4%9AAgent%EF%BC%9F"><span class="toc-number">1.0.0.0.1.</span> <span class="toc-text">1.单Agent or 多Agent？</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8EAnthropic%E6%A0%B8%E5%BF%83%E5%8E%9F%E5%88%99%EF%BC%9A%E2%80%9C%E7%AE%80%E5%8D%95%E4%BC%98%E5%85%88%E2%80%9D%EF%BC%8C%E9%BB%98%E8%AE%A4%E4%BB%8E%E5%8D%95agent%E6%9E%B6%E6%9E%84%E5%BC%80%E5%A7%8B%EF%BC%8C%E5%A6%82%E6%9E%9C%E5%BC%95%E5%85%A5%E5%A4%8D%E6%9D%82%E6%80%A7%E8%83%BD%E5%A4%9F%E6%98%BE%E8%91%97%E2%80%9D%E6%8F%90%E9%AB%98%E6%95%88%E6%9E%9C%E2%80%9C%E6%97%B6%EF%BC%8C%E6%89%8D%E8%80%83%E8%99%91%E3%80%82"><span class="toc-number">1.0.0.0.1.1.</span> <span class="toc-text">基于Anthropic核心原则：“简单优先”，默认从单agent架构开始，如果引入复杂性能够显著”提高效果“时，才考虑。</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E6%98%AF%E5%90%A6%E7%9C%9F%E7%9A%84%E9%80%82%E5%90%88%E5%A4%9AAgent"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">验证是否真的适合多Agent</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Prompt-Chaining-%E5%9F%BA%E4%BA%8EPrompt%E7%9A%84%E7%A9%BF%E8%A1%8C%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="toc-number">1.0.1.</span> <span class="toc-text">1.Prompt Chaining 基于Prompt的穿行流水线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Routing-%E7%B2%BE%E5%87%86%E5%88%86%E7%B1%BB%E5%88%86%E5%8F%91-%E3%80%81%E5%A6%82%E9%80%80%E6%AC%BE%E7%BA%A0%E7%BA%B7%EF%BC%8C%E9%80%80%E6%AC%BE%E9%9C%80%E8%A6%81%E9%AB%98%E5%87%86%E7%A1%AE%E5%BA%A6%E4%B8%8E%E5%A4%9A%E9%87%8D%E6%A0%A1%E9%AA%8C%EF%BC%8C%E5%AF%92%E6%9A%84%E9%9C%80%E8%A6%81%E9%80%9F%E5%BA%A6%E4%B8%8E%E5%BB%89%E4%BB%B7"><span class="toc-number">1.0.2.</span> <span class="toc-text">2.Routing 精准分类分发   、如退款纠纷，退款需要高准确度与多重校验，寒暄需要速度与廉价</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Sectionning-%E5%B9%B6%E8%A1%8C%E5%8D%8F%E4%BD%9C-%E8%81%9A%E5%90%88"><span class="toc-number">1.0.3.</span> <span class="toc-text">3.Sectionning 并行协作&#x2F;聚合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Voting%EF%BC%88%E6%8A%95%E7%A5%A8%E6%9C%BA%E5%88%B6%EF%BC%89"><span class="toc-number">1.0.4.</span> <span class="toc-text">4.Voting（投票机制）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Orchestrator-workers-%E5%8A%A8%E6%80%81%E7%BC%96%E6%8E%92%E8%B0%83%E5%BA%A6"><span class="toc-number">1.0.5.</span> <span class="toc-text">5.Orchestrator-workers 动态编排调度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-Eval-Opt-%E5%BE%AA%E7%8E%AF%E8%AF%84%E4%BB%B7%E4%BC%98%E5%8C%96"><span class="toc-number">1.0.6.</span> <span class="toc-text">6.Eval-Opt 循环评价优化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%86%B3%E7%AD%96%E9%80%BB%E8%BE%91%E7%BB%B4%E5%BA%A6%EF%BC%9A%E8%B4%A8%E9%87%8F%EF%BC%88%E5%87%86%E7%A1%AE%E7%8E%87%E4%B8%8E%E5%AE%B9%E9%94%99%E7%8E%87%EF%BC%89%E3%80%81%E6%88%90%E6%9C%AC%EF%BC%88%E6%A8%A1%E5%9E%8B%E9%80%89%E6%8B%A9%E4%B8%8E%E8%B0%83%E7%94%A8%E9%87%8F%EF%BC%89%E3%80%81%E9%80%9F%E5%BA%A6%EF%BC%88%E5%93%8D%E5%BA%94%E6%97%B6%E9%97%B4%E4%B8%8E%E5%90%9E%E5%90%90%E9%87%8F%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">** 核心决策逻辑维度：质量（准确率与容错率）、成本（模型选择与调用量）、速度（响应时间与吞吐量）**</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-number">2.0.0.1.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#-1"><span class="toc-number">2.0.0.2.</span> <span class="toc-text"></span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93A2A"><span class="toc-number">3.</span> <span class="toc-text">3.多智能体A2A</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E9%AB%98%E7%BA%A7%E6%9E%B6%E6%9E%84%E6%A6%82%E8%A7%88%EF%BC%88High-level-Architecture%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">4.高级架构概览（High-level Architecture）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#-2"><span class="toc-number">4.0.0.1.</span> <span class="toc-text"></span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E5%A4%9AAgent%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B"><span class="toc-number">5.</span> <span class="toc-text">5.多Agent提示词工程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-Lead-Agent%E6%8F%90%E7%A4%BA%E8%AF%8D"><span class="toc-number">6.</span> <span class="toc-text">6.Lead Agent提示词</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#-3"><span class="toc-number">6.0.0.1.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#-4"><span class="toc-number">6.0.0.2.</span> <span class="toc-text"></span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OpenClaw%E6%9E%B6%E6%9E%84"><span class="toc-number">7.</span> <span class="toc-text">OpenClaw架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-number">7.0.0.1.</span> <span class="toc-text">🔗 反向链接</span></a></li></ol></li></ol></li></ol></li></ol></div></div><footer></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script><script defer src="/Mornikar/js/wiki-chat.js"></script><script defer src="/Mornikar/js/wiki-tree.js"></script><script defer src="/Mornikar/live2d/live2d.js"></script></body></html>
