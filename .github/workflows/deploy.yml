@@ -170,8 +170,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+          destination_dir: Mornikar
           publish_branch: gh-pages
-          force_orphan: true
+          keep_files: true
 
   # Phase 6.D: 定时自维护任务
   auto-maintain:
@@ -230,5 +231,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+          destination_dir: Mornikar
           publish_branch: gh-pages
-          force_orphan: true
+          keep_files: true

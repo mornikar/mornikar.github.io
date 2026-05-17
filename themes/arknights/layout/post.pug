@@ -16,7 +16,7 @@ block content
     const vercount = page.vercount !== false && theme.vercount.enable
   #post-bg
     // CMS 编辑按钮（对齐标题右上角）
-    a.cms-edit-btn(href= page.hexo_path ? '/admin/?edit=' + encodeURIComponent(page.hexo_path) : (page.source_path ? '/admin/?wiki=' + encodeURIComponent(page.source_path) : '#'), title='编辑此文章', target='_blank', rel='noopener')
+    a.cms-edit-btn(href= page.hexo_path ? config.root + 'admin/?edit=' + encodeURIComponent(page.hexo_path) : (page.source_path ? config.root + 'admin/?wiki=' + encodeURIComponent(page.source_path) : '#'), title='编辑此文章', target='_blank', rel='noopener')
       svg(viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='2', stroke-linecap='round', stroke-linejoin='round')
         path(d='M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z')
     style.

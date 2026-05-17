@@ -15,8 +15,8 @@ language: zh-CN
 timezone: Asia/Shanghai
 
 # URL
-url: https://mornikar.github.io
-root: /
+url: https://mornikar.github.io/Mornikar
+root: /Mornikar/
 permalink: :year/:month/:day/:title/
 permalink_defaults:
   category: uncategorized

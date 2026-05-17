@@ -5,10 +5,10 @@ backend:
 
 # 媒体文件上传到 source/images/
 media_folder: source/images
-public_folder: /images
+public_folder: /Mornikar/images
 
 # 站点部署地址
-site_url: https://mornikar.github.io
+site_url: https://mornikar.github.io/Mornikar
 
 # 启用 editorial workflow（AI 审阅闸门）
 publish_mode: editorial_workflow

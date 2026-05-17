@@ -711,3 +711,41 @@ https://mornikar.github.io/assets/XXX.pdf    # 直接访问 PDF
 3. **不要手动编辑 `source/assets-archive.md`** — 这是 `copy-assets.js` 自动生成的
 4. **文件必须先提交到 git** — 未提交的文件 CI 不会处理
 5. **CI 构建需要 2-5 分钟** — 推送后耐心等待，不要重复推送
+
+### 2026-05-17 新增：存档页链接显示为白色纯文本（无法点击）
+
+**症状**：
+- 资源存档页面中，包含中文字符的 PDF 链接显示为白色纯文本，无法点击
+- 例如：`[Jeffrey Epstein Part 12 of 12.pdf](/assets/爱泼斯坦案/Jeffrey Epstein Part 12 of 12.pdf)` 而不是 `<a href="/assets/...">Jeffrey Epstein Part 12 of 12.pdf</a>`
+
+**根本原因**：
+- `copy-assets.js` 生成 `assets-archive.md` 时，URL 中包含未编码的中文字符
+- Hexo 的 `hexo-renderer-marked` v6.0.0 调用 `marked` 库解析 Markdown 链接语法时，无法正确识别包含未编码中文字符的 URL
+- 导致链接语法被解析为纯文本，而非 `<a>` 标签
+
+**修复方案**：
+- 在 `copy-assets.js` 第 131 行生成 Markdown 时，使用 `encodeURI()` 预编码 URL
+- `encodeURI()` 会将中文字符转换为 URL 编码格式：`爱泼斯坦案` → `%E7%88%B1%E6%B3%BC%E6%96%AF%E5%9D%A6%E6%A1%88`
+- 这样 `marked` 就能正确识别链接语法，并渲染成 `<a>` 标签
+
+```javascript
+// copy-assets.js 第 131 行
+`| ${iconMap[f.ext] || '📄'} | [${f.name}](${encodeURI(f.url)}) | ${f.sizeStr} |`
+```
+
+**为什么用 `encodeURI()` 而不是 `encodeURIComponent()`**：
+- `encodeURI()` 保留 URL 中的特殊字符（如 `:`、`/`），只编码非 ASCII 字符
+- `encodeURIComponent()` 会编码所有特殊字符，包括 `:` 和 `/`，导致 URL 失效
+
+**验证方法**：
+```powershell
+# 检查 assets-archive.md 中的链接是否已编码
+Get-Content source\assets-archive.md | Select-String "%E7"
+
+# 如果输出包含 %E7 开头的字符串，说明已正确编码
+```
+
+**铁律**：
+1. **生成 Markdown 链接时，URL 必须预编码** — 使用 `encodeURI()` 处理包含非 ASCII 字符的 URL
+2. **不要手动编辑 `assets-archive.md`** — 每次 `hexo generate` 时由 `copy-assets.js` 自动生成
+3. **`encodeURI()` ≠ `encodeURIComponent()`** — 前者保留 URL 结构字符，后者会破坏 URL

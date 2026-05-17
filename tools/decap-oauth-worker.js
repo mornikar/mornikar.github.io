@@ -66,7 +66,7 @@ export default {
         }
 
         // 整页重定向回 CMS，token 放在 URL 参数中
-        const cmsUrl = 'https://mornikar.github.io/admin/'
+        const cmsUrl = 'https://mornikar.github.io/Mornikar/admin/'
         const redirectUrl = cmsUrl +
           '?token=' + encodeURIComponent(data.access_token) +
           '&scope=' + encodeURIComponent(data.scope || 'repo') +

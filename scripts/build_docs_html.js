@@ -16,9 +16,14 @@ const marked = require('marked');
 
 const SRC_DIR = path.join(__dirname, '..', '.docs-src');
 const DST_DIR = path.join(__dirname, '..', 'public', 'docs');
+const SITE_ROOT = '/Mornikar/';
 
 // 统一用正斜杠（兼容 Windows）
 const SEP = '/';
+
+function withSiteRoot(urlPath) {
+  return SITE_ROOT + urlPath.replace(/^\/+/, '');
+}
 
 function toUnixPath(p) {
   return p.replace(/\\/g, SEP);
@@ -111,11 +116,11 @@ function extractTitle(filePath, parts) {
 
 function buildHTML({ title, body, parts }) {
   const breadcrumbs = [
-    `<a href="/docs/">文档</a>`,
+    `<a href="${withSiteRoot('docs/')}">文档</a>`,
     ...parts.slice(0, -1).map((p, i, arr) => {
       const labels = { PROJECT: '系统架构', MAINTENANCE: '维护指南', TROUBLESHOOTING: '故障排查', MIGRATION: '迁移规范' };
       const label = labels[p] || p;
-      const href = '/docs/' + arr.slice(0, i + 1).join('/') + '/';
+      const href = withSiteRoot('docs/' + arr.slice(0, i + 1).join('/') + '/');
       return `<a href="${href}">${label}</a>`;
     }),
     parts[parts.length - 1] !== 'index' ? `<span>${parts[parts.length - 1]}</span>` : '',
@@ -127,11 +132,11 @@ function buildHTML({ title, body, parts }) {
     : parts.filter(p => p !== 'index').join(SEP);
 
   const navItems = [
-    { href: '/docs/', label: '文档首页', key: 'index' },
-    { href: '/docs/PROJECT/', label: '系统架构', key: 'PROJECT' },
-    { href: '/docs/MAINTENANCE/', label: '维护指南', key: 'MAINTENANCE' },
-    { href: '/docs/TROUBLESHOOTING/', label: '故障排查', key: 'TROUBLESHOOTING' },
-    { href: '/docs/MIGRATION/', label: '迁移规范', key: 'MIGRATION' },
+    { href: withSiteRoot('docs/'), label: '文档首页', key: 'index' },
+    { href: withSiteRoot('docs/PROJECT/'), label: '系统架构', key: 'PROJECT' },
+    { href: withSiteRoot('docs/MAINTENANCE/'), label: '维护指南', key: 'MAINTENANCE' },
+    { href: withSiteRoot('docs/TROUBLESHOOTING/'), label: '故障排查', key: 'TROUBLESHOOTING' },
+    { href: withSiteRoot('docs/MIGRATION/'), label: '迁移规范', key: 'MIGRATION' },
   ].map(l => {
     const active = l.key === currentKey ? ' class="active"' : '';
     return `      <a href="${l.href}"${active}>${l.label}</a>`;
@@ -237,7 +242,7 @@ function buildHTML({ title, body, parts }) {
 </head>
 <body>
 <header class="topbar">
-  <a class="brand" href="/">🌸 LLM Wiki</a>
+  <a class="brand" href="${SITE_ROOT}">🌸 LLM Wiki</a>
   <span class="breadcrumb">&raquo; ${breadcrumbs}</span>
 </header>
 <div class="layout">
@@ -252,7 +257,7 @@ ${body.split('\n').map(l => '    ' + l).join('\n')}
   </main>
 </div>
 <footer class="footer">
-  由 LLM Wiki 文档系统生成 &middot; <a href="/">返回博客</a>
+  由 LLM Wiki 文档系统生成 &middot; <a href="${SITE_ROOT}">返回博客</a>
 </footer>
 </body>
 </html>`;

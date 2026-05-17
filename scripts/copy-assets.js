@@ -18,6 +18,11 @@ const WIKI_DIR  = path.join(__dirname, '..', '.wiki');
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
 const ASSETS_PUBLIC = path.join(PUBLIC_DIR, 'assets');
 const ARCHIVE_SRC  = path.join(__dirname, '..', 'source', 'assets-archive.md');
+const SITE_ROOT = '/Mornikar/';
+
+function withSiteRoot(urlPath) {
+    return SITE_ROOT + urlPath.replace(/^\/+/, '');
+}
 
 function formatSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -46,10 +51,10 @@ function scanAssets(rootDir, urlBase) {
                 const ext = path.extname(item.name).toLowerCase();
                 if (['.pdf', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.txt'].includes(ext)) {
                     const stat = fs.statSync(full);
-                    // URL: /assets/subdir/file.pdf（相对于 rootDir 的路径）
+                    // URL: /Mornikar/assets/subdir/file.pdf（相对于 rootDir 的路径）
                     const relRaw = path.relative(rootDir, full); // 'subdir/file.pdf'
                     const rel = relRaw.replace(/\\/g, '/'); // 确保是 / 分隔
-                    const url = '/' + urlBase + '/' + rel;
+                    const url = withSiteRoot(urlBase + '/' + rel);
                     files.push({
                         name: item.name,
                         url: url,
@@ -90,8 +95,8 @@ console.log(`扫描到 ${uniqueFiles.length} 个资产文件（去重后）\n`);
 // 复制到 public/assets/
 let copied = 0, skipped = 0;
 for (const f of uniqueFiles) {
-    // URL: /assets/subdir/file.pdf → rel: subdir/file.pdf
-    const rel = f.url.replace(/^\/assets\//, '');
+    // URL: /Mornikar/assets/subdir/file.pdf → rel: subdir/file.pdf
+    const rel = f.url.replace(new RegExp('^' + SITE_ROOT.replace(/\//g, '\\/') + 'assets\\/'), '');
     const dst = path.join(ASSETS_PUBLIC, rel);
     const dstDir = path.dirname(dst);
 
@@ -118,7 +123,7 @@ const iconMap = {
 // 按子目录分组
 const groups = {};
 for (const f of uniqueFiles) {
-    const rel = f.url.replace(/^\/assets\//, '');
+    const rel = f.url.replace(new RegExp('^' + SITE_ROOT.replace(/\//g, '\\/') + 'assets\\/'), '');
     const parts = rel.split('/');
     const group = parts.length > 1 ? parts[0] : '根目录';
     if (!groups[group]) groups[group] = [];

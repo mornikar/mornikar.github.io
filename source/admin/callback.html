@@ -107,7 +107,7 @@
     statusText.className = 'error';
     statusDetail.textContent = decodeURIComponent(oauthError);
     spinner.style.display = 'none';
-    setTimeout(function() { window.location.href = '/admin/'; }, 3000);
+    setTimeout(function() { window.location.href = '/Mornikar/admin/'; }, 3000);
     return;
   }
 
@@ -116,7 +116,7 @@
     statusText.className = 'error';
     statusDetail.textContent = '未收到有效的授权 Token';
     spinner.style.display = 'none';
-    setTimeout(function() { window.location.href = '/admin/'; }, 3000);
+    setTimeout(function() { window.location.href = '/Mornikar/admin/'; }, 3000);
     return;
   }
 
@@ -172,7 +172,7 @@
 
     // 将 token 通过 URL 参数传递给 CMS 主页
     setTimeout(function() {
-      window.location.href = '/admin/?token=' + encodeURIComponent(token) +
+      window.location.href = '/Mornikar/admin/?token=' + encodeURIComponent(token) +
         '&scope=' + encodeURIComponent(scope) +
         '&token_type=' + encodeURIComponent(tokenType);
     }, 500);

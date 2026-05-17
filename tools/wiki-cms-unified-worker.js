@@ -96,12 +96,12 @@ export default {
 
         if (data.error) {
           // OAuth 失败，重定向回 CMS 并附带错误信息
-          const errorUrl = 'https://mornikar.github.io/admin/?oauth_error=' + encodeURIComponent(data.error_description || data.error);
+          const errorUrl = 'https://mornikar.github.io/Mornikar/admin/?oauth_error=' + encodeURIComponent(data.error_description || data.error);
           return Response.redirect(errorUrl, 301);
         }
 
         // 成功：整页重定向回 CMS，token 放在 URL 参数中
-        const cmsUrl = 'https://mornikar.github.io/admin/' +
+        const cmsUrl = 'https://mornikar.github.io/Mornikar/admin/' +
           '?token=' + encodeURIComponent(data.access_token) +
           '&scope=' + encodeURIComponent(data.scope || 'repo') +
           '&token_type=' + encodeURIComponent(data.token_type || 'bearer');
