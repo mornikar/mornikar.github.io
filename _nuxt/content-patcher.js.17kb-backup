@@ -1,0 +1,444 @@
+/**
+ * Content Patcher for Mornikar Portfolio
+ * 
+ * Loads site-config.json at runtime and:
+ * 1. Intercepts window.__NUXT__ before Vue hydration → replaces Storyblok data
+ * 2. Uses MutationObserver to replace DOM text after render
+ * 3. Handles meta tags (title, description, OG)
+ * 
+ * Usage: Include this script BEFORE any Nuxt scripts in index_original.html
+ */
+(function () {
+  'use strict';
+
+  var CONFIG_URL = '/site-config.json';
+  var config = null;
+  var patchApplied = false;
+
+  // ── Step 1: Intercept __NUXT__ setter ──
+  // Vue/Nuxt will set window.__NUXT__ during script parsing.
+  // We hook the property setter to patch data before hydration.
+  var _nuxtData = null;
+  var _nuxtPatched = false;
+
+  try {
+    Object.defineProperty(window, '__NUXT__', {
+      configurable: true,
+      enumerable: true,
+      get: function () { return _nuxtData; },
+      set: function (val) {
+        _nuxtData = val;
+        if (!_nuxtPatched && config) {
+          _nuxtPatched = true;
+          patchNuxtData(val);
+        }
+      }
+    });
+  } catch (e) {
+    // Fallback: if defineProperty fails, we'll patch via MutationObserver
+    console.warn('[content-patcher] Cannot intercept __NUXT__, will use DOM patching only');
+  }
+
+  // ── Step 2: Load config and apply patches ──
+  fetch(CONFIG_URL)
+    .then(function (r) { return r.json(); })
+    .then(function (cfg) {
+      config = cfg;
+
+      // If __NUXT__ was already set before our fetch completed, patch it now
+      if (_nuxtData && !_nuxtPatched) {
+        _nuxtPatched = true;
+        patchNuxtData(_nuxtData);
+      }
+
+      // Patch meta tags immediately
+      patchMetaTags();
+
+      // Start image replacement (runs after DOM is ready)
+      patchImages();
+
+      // Start DOM observer
+      startDOMObserver();
+    })
+    .catch(function (err) {
+      console.warn('[content-patcher] Failed to load config:', err);
+    });
+
+  // ── Patch __NUXT__ Storyblok data ──
+  function patchNuxtData(nuxt) {
+    if (!config) return;
+    try {
+      var homeKey = 'us-en/';
+      var homeData = nuxt.data && nuxt.data[homeKey];
+      if (!homeData || !homeData.content || !homeData.content.body) {
+        console.warn('[content-patcher] Homepage data not found in __NUXT__');
+        return;
+      }
+
+      var blocks = homeData.content.body;
+
+      // Block 0: HomeLanding
+      if (blocks[0] && config.landing) {
+        blocks[0].desc = config.landing.desc;
+        blocks[0].keep = config.landing.keep;
+        blocks[0].protect = config.landing.protect;
+        blocks[0].reimagine = config.landing.reimagine;
+      }
+
+      // Block 1: HomeStoryIntro
+      if (blocks[1] && config.storyIntro) {
+        blocks[1].title = config.storyIntro.title;
+        blocks[1].body = config.storyIntro.body;
+        if (config.storyIntro.video_caption) blocks[1].video_caption = config.storyIntro.video_caption;
+        if (config.storyIntro.character_caption) blocks[1].character_caption = config.storyIntro.character_caption;
+        if (config.storyIntro.image_caption_medium) blocks[1].image_caption_medium = config.storyIntro.image_caption_medium;
+      }
+
+      // Block 2: HomeStoryProject
+      if (blocks[2] && config.storyProject) {
+        if (config.storyProject.strapline_1) blocks[2].story_strapline_1 = config.storyProject.strapline_1;
+        if (config.storyProject.strapline_2) blocks[2].story_strapline_2 = config.storyProject.strapline_2;
+        if (config.storyProject.console_text_loading) blocks[2].console_text_loading = config.storyProject.console_text_loading;
+        if (config.storyProject.console_text_coordinates) blocks[2].console_text_coordinates = config.storyProject.console_text_coordinates;
+        if (config.storyProject.console_text_temperature) blocks[2].console_text_temperature = config.storyProject.console_text_temperature;
+      }
+
+      // Block 3: HomeCollectionIntro
+      if (blocks[3] && config.collection) {
+        blocks[3].Collection_Name = config.collection.name;
+        blocks[3].Collection_Size = config.collection.size;
+        blocks[3].Launch_Date = config.collection.launch_date;
+        blocks[3].Launch_Label = config.collection.launch_label;
+        blocks[3].Image_Caption_1 = config.collection.caption_1;
+        blocks[3].Image_Caption_2 = config.collection.caption_2;
+      }
+
+      // Block 4: HomeCollectionGallery
+      if (blocks[4] && config.collectionGallery) {
+        blocks[4].Gallery_Heading = config.collectionGallery.heading;
+        blocks[4].Gallery_Description = config.collectionGallery.description;
+        if (config.collectionGallery.console_text) blocks[4].Console_Text_Preceding_Description = config.collectionGallery.console_text;
+      }
+
+      // Block 5: HomeTableauxKeep
+      if (blocks[5] && config.tableaux && config.tableaux.keep) {
+        blocks[5].Tableaux_1_Description = config.tableaux.keep.description;
+        blocks[5].Tableaux_1_Console_Text = config.tableaux.keep.console_text;
+      }
+
+      // Block 6: HomeTableauxFactions
+      if (blocks[6] && config.tableaux && config.tableaux.factions) {
+        blocks[6].Tableaux_2_Description = config.tableaux.factions.description;
+        blocks[6].Tableaux_2_Console_Text = config.tableaux.factions.console_text;
+      }
+
+      // Block 7: HomeTableauxUniverse
+      if (blocks[7] && config.tableaux && config.tableaux.universe) {
+        blocks[7].Tableaux_3_Description = config.tableaux.universe.description;
+        blocks[7].Tableaux_3_Console_Text = config.tableaux.universe.console_text;
+      }
+
+      // Block 8: HomeLaunch
+      if (blocks[8] && config.launch) {
+        blocks[8].Launch_Day = config.launch.day;
+        blocks[8].Launch_Month = config.launch.month;
+        if (config.launch.cta_label) blocks[8].Home_Launch_CTA_Label = config.launch.cta_label;
+        if (config.launch.description) blocks[8].Home_Launch_Description = config.launch.description;
+        if (config.launch.console_text) blocks[8].Home_Launch_Console_Text = config.launch.console_text;
+        if (config.launch.link_caption_keep) blocks[8].Link_Caption_Keep = config.launch.link_caption_keep;
+        if (config.launch.link_caption_factions) blocks[8].Link_Caption_Factions = config.launch.link_caption_factions;
+        if (config.launch.link_caption_universe) blocks[8].Link_Caption_Universe = config.launch.link_caption_universe;
+      }
+
+      // Nav
+      var navData = nuxt.data['us-en/global/the-nav'];
+      if (navData && navData.content && config.nav) {
+        navData.content.buy_title = config.nav.buy_title;
+        navData.content.nav_title = config.nav.nav_title;
+        if (config.nav.social_title) navData.content.social_title = config.nav.social_title;
+        if (config.nav.items && navData.content.nav_items) {
+          config.nav.items.forEach(function (item, i) {
+            if (navData.content.nav_items[i]) {
+              navData.content.nav_items[i].label = item.label;
+            }
+          });
+        }
+      }
+
+      // Footer
+      var footerData = nuxt.data['us-en/global/the-footer'];
+      if (footerData && footerData.content && config.footer) {
+        footerData.content.nav_title = config.footer.nav_title;
+        footerData.content.social_title = config.footer.social_title;
+        footerData.content.press_title = config.footer.press_title;
+        footerData.content.press_desc = config.footer.press_desc;
+        footerData.content.press_kit_label = config.footer.press_kit_label;
+        footerData.content.copyright = config.footer.copyright;
+        if (config.footer.console) footerData.content.console = config.footer.console;
+        if (config.footer.press_email) footerData.content.press_email = config.footer.press_email;
+        if (config.footer.press_contact_us) footerData.content.press_contact_us = config.footer.press_contact_us;
+      }
+
+      // Pinia social links
+      if (nuxt.pinia && nuxt.pinia.app && config.social) {
+        if (config.social.twitter) nuxt.pinia.app.socialLinkTwitter = config.social.twitter;
+        if (config.social.instagram) nuxt.pinia.app.socialLinkInstagram = config.social.instagram;
+        if (config.social.discord) nuxt.pinia.app.socialLinkDiscord = config.social.discord;
+      }
+
+      console.log('[content-patcher] __NUXT__ data patched successfully');
+    } catch (e) {
+      console.error('[content-patcher] Error patching __NUXT__:', e);
+    }
+  }
+
+  // ── Patch meta tags ──
+  function patchMetaTags() {
+    if (!config || !config.site) return;
+    try {
+      // Title
+      var titleEl = document.querySelector('title');
+      if (titleEl) titleEl.textContent = config.site.title;
+
+      // Meta description
+      setMeta('name', 'description', config.site.description);
+      
+      // OG tags
+      setMeta('property', 'og:title', config.site.title);
+      setMeta('property', 'og:description', config.site.description);
+      setMeta('property', 'og:site_name', config.site.title);
+      if (config.site.url) setMeta('property', 'og:url', config.site.url);
+      if (config.site.ogImage) setMeta('property', 'og:image', config.site.ogImage);
+      
+      // Twitter tags
+      setMeta('name', 'twitter:title', config.site.title);
+      setMeta('name', 'twitter:description', config.site.description);
+      if (config.site.url) setMeta('name', 'twitter:url', config.site.url);
+      if (config.site.ogImage) setMeta('name', 'twitter:image', config.site.ogImage);
+
+      console.log('[content-patcher] Meta tags patched');
+    } catch (e) {
+      console.error('[content-patcher] Error patching meta tags:', e);
+    }
+  }
+
+  function setMeta(attr, val, content) {
+    var el = document.querySelector('meta[' + attr + '="' + val + '"]');
+    if (el) el.setAttribute('content', content);
+  }
+
+  // ── DOM MutationObserver ──
+  // Catches text that Vue renders into the DOM after hydration
+  function startDOMObserver() {
+    if (!config) return;
+
+    // Build a map of old text → new text for DOM replacement
+    var textMap = buildTextMap();
+    if (Object.keys(textMap).length === 0) return;
+
+    var observer = new MutationObserver(function (mutations) {
+      var hasNewNodes = false;
+      for (var i = 0; i < mutations.length; i++) {
+        if (mutations[i].addedNodes.length > 0) {
+          hasNewNodes = true;
+          break;
+        }
+      }
+      if (hasNewNodes) {
+        replaceDOMText(textMap);
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
+
+    // Also do an initial pass after a short delay (after Vue hydration)
+    setTimeout(function () {
+      replaceDOMText(textMap);
+    }, 2000);
+
+    // Second pass for slow-loading sections
+    setTimeout(function () {
+      replaceDOMText(textMap);
+    }, 5000);
+
+    console.log('[content-patcher] DOM observer started with', Object.keys(textMap).length, 'text replacements');
+  }
+
+  function buildTextMap() {
+    if (!config) return {};
+    var map = {};
+
+    // Landing
+    if (config.landing) {
+      addMap(map, 'KPR is a brand that focuses on collective narrative and empowering storytellers. Keepers is a living story, an uncharted world waiting to be explored, to be imagined.', config.landing.desc);
+    }
+
+    // Story Intro
+    if (config.storyIntro) {
+      addMap(map, 'A familiar world... Set on a different path.', config.storyIntro.title);
+      addMap(map, 'Isolated within the New Eden safe zone, you witness humanity struggling to avoid descending into chaos.', config.storyIntro.body);
+    }
+
+    // Story Project
+    if (config.storyProject) {
+      addMap(map, 'You are a Keeper: an agent of power and change in this world.', config.storyProject.strapline_1);
+      addMap(map, 'What will you do with this power? Will you choose to protect or destroy? To give or to take?', config.storyProject.strapline_2);
+    }
+
+    // Tableaux
+    if (config.tableaux) {
+      addMap(map, 'The last stronghold of all knowledge. The Keep is where all the value accrues. A place to wonder, protect, and fight for.', config.tableaux.keep.description);
+      addMap(map, 'One world, two factions. Divided in belief, united in purpose.', config.tableaux.factions.description);
+      addMap(map, 'The discovery of Kai, the world\'s primordial energy source, heralded mankind\'s Golden Age. Or so they believed.', config.tableaux.universe.description);
+    }
+
+    // Collection
+    if (config.collection) {
+      addMap(map, 'Initial Collection', config.collection.name);
+      addMap(map, 'Kai Crystal', config.collection.caption_1);
+      addMap(map, 'Windows to the Soul', config.collection.caption_2);
+    }
+
+    // Collection Gallery
+    if (config.collectionGallery) {
+      addMap(map, '10,000 unique digital collectibles.', config.collectionGallery.heading.trim());
+    }
+
+    // Launch
+    if (config.launch) {
+      addMap(map, 'What path will you forge as you become the Keeper of your destiny?', config.launch.description);
+    }
+
+    // Footer
+    if (config.footer) {
+      addMap(map, 'Discover More', config.footer.nav_title);
+      addMap(map, 'Join the Conversation', config.footer.social_title);
+      addMap(map, 'More Details', config.footer.press_title);
+      addMap(map, 'Want to learn more about how we collaborate with partners?', config.footer.press_desc);
+      addMap(map, 'Download Brand Book', config.footer.press_kit_label);
+      addMap(map, '© 2022', config.footer.copyright);
+    }
+
+    // Nav
+    if (config.nav) {
+      addMap(map, 'Buy On', config.nav.buy_title);
+    }
+
+    return map;
+  }
+
+  function addMap(map, oldText, newText) {
+    if (oldText && newText && oldText !== newText) {
+      map[oldText] = newText;
+    }
+  }
+
+  function replaceDOMText(textMap) {
+    var keys = Object.keys(textMap);
+    var replaced = 0;
+
+    // Walk all text nodes
+    var walker = document.createTreeWalker(
+      document.body,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false
+    );
+
+    var node;
+    while ((node = walker.nextNode())) {
+      var text = node.textContent;
+      for (var i = 0; i < keys.length; i++) {
+        if (text.indexOf(keys[i]) !== -1) {
+          node.textContent = text.split(keys[i]).join(textMap[keys[i]]);
+          replaced++;
+          break; // One replacement per node to avoid conflicts
+        }
+      }
+    }
+
+    // Also check placeholder/alt/title attributes
+    var attrElements = document.querySelectorAll('[placeholder], [alt], [title], [aria-label]');
+    attrElements.forEach(function (el) {
+      ['placeholder', 'alt', 'title', 'aria-label'].forEach(function (attr) {
+        var val = el.getAttribute(attr);
+        if (val) {
+          for (var i = 0; i < keys.length; i++) {
+            if (val.indexOf(keys[i]) !== -1) {
+              el.setAttribute(attr, val.split(keys[i]).join(textMap[keys[i]]));
+              replaced++;
+              break;
+            }
+          }
+        }
+      });
+    });
+
+    if (replaced > 0) {
+      console.log('[content-patcher] DOM text replaced:', replaced, 'nodes');
+    }
+  }
+
+  // ── Patch <img> src by selector (from site-config.json → images) ──
+  // Usage in site-config.json:
+  // {
+  //   "images": [
+  //     { "selector": ".homeStoryIntro_img", "src": "/images/my-hero.webp" },
+  //     { "selector": ".homeProjectIntro_img1", "src": "/images/my-project.webp" },
+  //     { "selector": "img[alt='character']", "src": "/images/my-character.webp" }
+  //   ]
+  // }
+  function patchImages() {
+    if (!config || !config.images || !Array.isArray(config.images)) return;
+    if (config.images.length === 0) return;
+
+    var attempts = 0;
+    var maxAttempts = 10;
+    var interval = 500;
+
+    function tryPatch() {
+      attempts++;
+      var replaced = 0;
+      config.images.forEach(function (img) {
+        if (!img.selector || !img.src) return;
+        var els;
+        try {
+          els = document.querySelectorAll(img.selector);
+        } catch (e) {
+          console.warn('[content-patcher] Invalid selector:', img.selector);
+          return;
+        }
+        els.forEach(function (el) {
+          // Only replace if src is different (avoid infinite loops)
+          if (el.tagName === 'IMG' && el.src !== img.src) {
+            el.src = img.src;
+            replaced++;
+          }
+          // Also handle CSS background-image on any element
+          if (img.backgroundImage && el.style) {
+            el.style.backgroundImage = 'url("' + img.src + '")';
+            replaced++;
+          }
+        });
+      });
+
+      if (replaced > 0) {
+        console.log('[content-patcher] Images patched:', replaced, '(attempt', attempts + ')');
+        return;
+      }
+
+      if (attempts < maxAttempts) {
+        setTimeout(tryPatch, interval);
+      } else {
+        console.log('[content-patcher] Image patch finished (no elements matched after', maxAttempts, 'attempts)');
+      }
+    }
+
+    // Start after short delay to let Vue hydrate
+    setTimeout(tryPatch, 1500);
+  }
+
+})();

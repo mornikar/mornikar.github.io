@@ -1,1 +1,0 @@
-{"base":{"cdnPath":"https://cdn.jsdelivr.net/gh/LuoTian001/live2d-widget-AIChat@main/","localPath":"/live2d/","homePath":"/"},"tools":["chat","hitokoto","express","switch-model","switch-texture","tts-toggle","tts-voice","photo"],"drag":{"enable":false,"direction":["x","y"]},"switchType":"order","chat":{"apiUrl":"https://dify-proxy.1548324254.workers.dev/chat/completions"}}
