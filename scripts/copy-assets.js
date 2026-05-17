@@ -127,7 +127,8 @@ for (const f of uniqueFiles) {
 
 const sections = Object.entries(groups).map(([group, files]) => {
     const rows = files.map(f =>
-        `| ${iconMap[f.ext] || '📄'} | [${f.name}](${f.url}) | ${f.sizeStr} |`
+        // 使用 encodeURI 预编码 URL，避免 Hexo marked 解析中文链接时出错
+        `| ${iconMap[f.ext] || '📄'} | [${f.name}](${encodeURI(f.url)}) | ${f.sizeStr} |`
     ).join('\n');
     return `### ${group}\n\n| 类型 | 文件名 | 大小 |\n|------|--------|------|\n${rows}`;
 }).join('\n\n---\n\n');
