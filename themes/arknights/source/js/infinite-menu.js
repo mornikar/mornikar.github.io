@@ -657,6 +657,12 @@ void main() {
   const mount = document.getElementById('infinite-menu-mount');
   if (!mount) return;
 
+  const siteRoot = (typeof config !== 'undefined' && config.root) ? config.root : '/';
+  const withSiteRoot = (path) => {
+    const root = siteRoot.endsWith('/') ? siteRoot : siteRoot + '/';
+    return root + String(path || '').replace(/^\/+/, '');
+  };
+
   // Read items from data attribute or use defaults
   let items = [];
   try {
@@ -666,12 +672,12 @@ void main() {
 
   if (!items.length) {
     items = [
-      { image: 'https://picsum.photos/seed/blog1/900/900?grayscale', link: '/', title: '首页', description: '返回博客主页' },
-      { image: 'https://picsum.photos/seed/blog2/900/900?grayscale', link: '/archives/', title: '归档', description: '浏览所有文章' },
-      { image: 'https://picsum.photos/seed/blog3/900/900?grayscale', link: '/categories/', title: '分类', description: '按分类查看' },
-      { image: 'https://picsum.photos/seed/blog4/900/900?grayscale', link: '/assets-archive/', title: '资源', description: '精选资源合集' },
-      { image: 'https://picsum.photos/seed/blog5/900/900?grayscale', link: '/login/', title: 'AI 助手', description: 'Wiki AI Mornikar' },
-      { image: 'https://picsum.photos/seed/blog6/900/900?grayscale', link: '/wiki-changelog/', title: '更新日志', description: '最新变更记录' },
+      { image: 'https://picsum.photos/seed/blog1/900/900?grayscale', link: withSiteRoot(''), title: '首页', description: '返回博客主页' },
+      { image: 'https://picsum.photos/seed/blog2/900/900?grayscale', link: withSiteRoot('archives/'), title: '归档', description: '浏览所有文章' },
+      { image: 'https://picsum.photos/seed/blog3/900/900?grayscale', link: withSiteRoot('categories/'), title: '分类', description: '按分类查看' },
+      { image: 'https://picsum.photos/seed/blog4/900/900?grayscale', link: withSiteRoot('assets-archive/'), title: '资源', description: '精选资源合集' },
+      { image: 'https://picsum.photos/seed/blog5/900/900?grayscale', link: withSiteRoot('login/'), title: 'AI 助手', description: 'Wiki AI Mornikar' },
+      { image: 'https://picsum.photos/seed/blog6/900/900?grayscale', link: withSiteRoot('wiki-changelog/'), title: '更新日志', description: '最新变更记录' },
     ];
   }
 

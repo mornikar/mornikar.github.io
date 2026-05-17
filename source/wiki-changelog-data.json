@@ -1,6 +1,13 @@
 {
   "entries": [
     {
+      "date": "2026-05-17",
+      "type": "snippets",
+      "title": "PDF嵌入Snippet",
+      "action": "→ AIGC",
+      "url": "/2026/04/18/AIGC笔记随笔/2026-04-18-PDF嵌入Snippet/"
+    },
+    {
       "date": "2026-04-24",
       "type": "concepts",
       "title": "AI模型优化训练方向",

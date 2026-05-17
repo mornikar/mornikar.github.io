@@ -932,7 +932,9 @@
   async function searchPagefind(query) {
     try {
       if (!pagefindInstance) {
-        const pf = await import('/pagefind/pagefind.js')
+        const root = (typeof config !== 'undefined' && config.root) ? config.root : '/'
+        const pagefindRoot = root.endsWith('/') ? root : root + '/'
+        const pf = await import(pagefindRoot + 'pagefind/pagefind.js')
         await pf.init()
         pagefindInstance = pf
       }

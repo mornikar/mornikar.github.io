@@ -1,4 +1,4 @@
----
+﻿---
 title: 系统架构
 ---
 # 📐 系统架构
@@ -269,7 +269,7 @@ https://mornikar.github.io
 | 版本 | 1.5.x |
 | 索引范围 | `public/` 目录 |
 | 索引时机 | CI 中自动构建 |
-| 访问地址 | `https://mornikar.github.io/pagefind/` |
+| 访问地址 | `https://mornikar.github.io/Mornikar/pagefind/` |
 
 ### 4.5 Giscus 评论系统
 
@@ -284,7 +284,7 @@ https://mornikar.github.io
 - 访客评论 → Giscus 前端 → GitHub API → 创建/更新 Discussion
 - 评论数据存储在仓库的 Discussions 中，无需独立数据库
 
-**详细配置**：参见 [Giscus 留言系统](/docs/GISCUS/)
+**详细配置**：参见 [Giscus 留言系统](/Mornikar/docs/GISCUS/)
 
 ---
 

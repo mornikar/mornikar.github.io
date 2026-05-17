@@ -54,7 +54,7 @@ source 分支（当前仓库）
 :|------|-----|
 | **职责** | GitHub Pages 托管的静态文件来源 |
 | **读取方式** | Settings → Pages → Source = `Deploy from a branch` → `gh-pages` |
-| **访问地址** | https://mornikar.github.io/ |
+| **访问地址** | https://mornikar.github.io/Mornikar/ |
 | **更新方式** | CI 通过 `peaceiris/actions-gh-pages@v4` 自动推送 |
 | **禁止** | 不手动推送；不在此分支开发 |
 
@@ -122,9 +122,9 @@ main 分支（项目文档）
 └──────────────┬───────────────────────────────┘
                ▼
 ┌──────────────────────────────────────────────┐
-│  https://mornikar.github.io                  │
+│  https://mornikar.github.io/Mornikar/        │
 │                                              │
-│  🌐 网站首页  📄 /docs/  🔍 /pagefind/       │
+│  🌐 网站首页  📄 /Mornikar/docs/  🔍 /Mornikar/pagefind/ │
 └──────────────────────────────────────────────┘
 ```
 

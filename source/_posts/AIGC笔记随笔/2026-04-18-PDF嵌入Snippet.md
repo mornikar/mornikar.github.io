@@ -96,7 +96,7 @@ hexo_path: source/_posts/AIGC笔记随笔/2026-04-18-PDF嵌入Snippet.md
 .wiki/raw/assets/
 ```
 
-转换后 Hexo 会把它放到博客的 `public/assets/` 目录，可直接通过 `/assets/xxx.pdf` 访问。
+转换后 Hexo 会把它放到博客的 `public/assets/` 目录，可直接通过 `/Mornikar/assets/xxx.pdf` 访问。
 
 ## 注意事项
 
@@ -108,6 +108,6 @@ hexo_path: source/_posts/AIGC笔记随笔/2026-04-18-PDF嵌入Snippet.md
 <h4 class="wiki-backlinks-title">🔗 反向链接</h4>
 <p class="wiki-backlinks-desc">以下页面引用了本文：</p>
 <ul class="wiki-backlinks-list">
-  <li><a href="/2026/04/24/LearningNote/2026-04-24-log/">log</a></li>
+  <li><a href="/2026/05/17/LearningNote/2026-05-17-log/">log</a></li>
 </ul>
 </div>

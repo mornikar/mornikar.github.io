@@ -108,7 +108,7 @@ title: Wiki AI 助手
 
 ## 📝 在线内容管理 CMS
 
-博客内容可通过在线 CMS 管理，访问 `/admin/` 即可打开。
+博客内容可通过在线 CMS 管理，访问 `/Mornikar/admin/` 即可打开。
 
 ### 登录方式
 

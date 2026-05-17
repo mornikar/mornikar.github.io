@@ -62,7 +62,7 @@ source 分支（当前仓库）
 :|------|-----|
 | **职责** | GitHub Pages 托管的静态文件来源 |
 | **读取方式** | Settings → Pages → Source = `Deploy from a branch` → `gh-pages` |
-| **访问地址** | https://mornikar.github.io/ |
+| **访问地址** | https://mornikar.github.io/Mornikar/ |
 | **更新方式** | CI 通过 `peaceiris/actions-gh-pages@v4` 自动推送 |
 | **禁止** | 不手动推送；不在此分支开发 |
 
@@ -138,11 +138,11 @@ main 分支（项目文档）
                │
                ▼
 ┌──────────────────────────────────────────────┐
-│  https://mornikar.github.io                  │
+│  https://mornikar.github.io/Mornikar/        │
 │                                              │
 │  🌐 网站首页                                  │
-│  📄 /docs/ 项目文档（HTML）                   │
-│  🔍 /pagefind/ 全文搜索                      │
+│  📄 /Mornikar/docs/ 项目文档（HTML）          │
+│  🔍 /Mornikar/pagefind/ 全文搜索             │
 └──────────────────────────────────────────────┘
 ```
 
@@ -245,13 +245,13 @@ push / schedule / dispatch
 
 | 文档 | 地址 |
 :|------|------|
-| 🚀 安装部署 | https://mornikar.github.io/docs/INSTALL/ |
-| 🌐 项目总览 | https://mornikar.github.io/docs/ |
-| 📐 系统架构 | https://mornikar.github.io/docs/PROJECT/ |
-| 🔧 维护指南 | https://mornikar.github.io/docs/MAINTENANCE/ |
-| 🔍 故障排查 | https://mornikar.github.io/docs/TROUBLESHOOTING/ |
-| 📋 迁移规范 | https://mornikar.github.io/docs/MIGRATION/ |
-| 🌲 分支说明 | https://mornikar.github.io/docs/BRANCHES/ |
+| 🚀 安装部署 | https://mornikar.github.io/Mornikar/docs/INSTALL/ |
+| 🌐 项目总览 | https://mornikar.github.io/Mornikar/docs/ |
+| 📐 系统架构 | https://mornikar.github.io/Mornikar/docs/PROJECT/ |
+| 🔧 维护指南 | https://mornikar.github.io/Mornikar/docs/MAINTENANCE/ |
+| 🔍 故障排查 | https://mornikar.github.io/Mornikar/docs/TROUBLESHOOTING/ |
+| 📋 迁移规范 | https://mornikar.github.io/Mornikar/docs/MIGRATION/ |
+| 🌲 分支说明 | https://mornikar.github.io/Mornikar/docs/BRANCHES/ |
 
 ---
 
@@ -260,8 +260,8 @@ push / schedule / dispatch
 | 资源 | 链接 |
 :|------|------|
 | GitHub 仓库 | https://github.com/mornikar/mornikar.github.io |
-| 网站主站 | https://mornikar.github.io/ |
-| 项目文档站 | https://mornikar.github.io/docs/ |
+| 网站主站 | https://mornikar.github.io/Mornikar/ |
+| 项目文档站 | https://mornikar.github.io/Mornikar/docs/ |
 | CI 构建历史 | https://github.com/mornikar/mornikar.github.io/actions |
 | Releases 下载 | https://github.com/mornikar/mornikar.github.io/releases |
 

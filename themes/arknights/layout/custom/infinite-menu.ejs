@@ -9,14 +9,14 @@
   <div id="infinite-menu-mount"
        data-scale="1.0"
        data-items='[
-    {"image":"https://picsum.photos/seed/home/900/900?grayscale","link":"/","title":"首页","description":"返回博客主页"},
-    {"image":"https://picsum.photos/seed/archive/900/900?grayscale","link":"/archives/","title":"归档","description":"浏览所有文章"},
-    {"image":"https://picsum.photos/seed/category/900/900?grayscale","link":"/categories/","title":"分类","description":"按分类查看"},
-    {"image":"https://picsum.photos/seed/resource/900/900?grayscale","link":"/assets-archive/","title":"资源","description":"精选资源合集"},
-    {"image":"https://picsum.photos/seed/ai/900/900?grayscale","link":"/login/","title":"AI 助手","description":"Wiki AI Mornikar"},
-    {"image":"https://picsum.photos/seed/changelog/900/900?grayscale","link":"/wiki-changelog/","title":"更新日志","description":"最新变更记录"},
-    {"image":"https://picsum.photos/seed/notes/900/900?grayscale","link":"/categories/%E7%AC%94%E8%AE%B0/","title":"笔记","description":"学习笔记集"},
-    {"image":"https://picsum.photos/seed/aigc/900/900?grayscale","link":"/categories/AIGC/","title":"AIGC","description":"AI 生成内容"}
+    {"image":"https://picsum.photos/seed/home/900/900?grayscale","link":"<%- url_for('/') %>","title":"首页","description":"返回博客主页"},
+    {"image":"https://picsum.photos/seed/archive/900/900?grayscale","link":"<%- url_for('/archives/') %>","title":"归档","description":"浏览所有文章"},
+    {"image":"https://picsum.photos/seed/category/900/900?grayscale","link":"<%- url_for('/categories/') %>","title":"分类","description":"按分类查看"},
+    {"image":"https://picsum.photos/seed/resource/900/900?grayscale","link":"<%- url_for('/assets-archive/') %>","title":"资源","description":"精选资源合集"},
+    {"image":"https://picsum.photos/seed/ai/900/900?grayscale","link":"<%- url_for('/login/') %>","title":"AI 助手","description":"Wiki AI Mornikar"},
+    {"image":"https://picsum.photos/seed/changelog/900/900?grayscale","link":"<%- url_for('/wiki-changelog/') %>","title":"更新日志","description":"最新变更记录"},
+    {"image":"https://picsum.photos/seed/notes/900/900?grayscale","link":"<%- url_for('/categories/%E7%AC%94%E8%AE%B0/') %>","title":"笔记","description":"学习笔记集"},
+    {"image":"https://picsum.photos/seed/aigc/900/900?grayscale","link":"<%- url_for('/categories/AIGC/') %>","title":"AIGC","description":"AI 生成内容"}
   ]'>
   </div>
 

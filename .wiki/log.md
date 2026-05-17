@@ -41,6 +41,7 @@
 > Append-only。每次 wiki-to-hexo.js 成功运行后自动追加记录。
 
 ## 2026
+- 2026-05-17 16:26:25 | snippets | [[PDF嵌入Snippet]](raw\snippets\PDF嵌入Snippet.md) → AIGC笔记随笔/
 - 2026-04-24 20:53:36 | concepts | [[AI模型优化训练方向]](concepts\AI模型优化训练方向.md) → LearningNote/
 - 2026-04-24 20:53:36 | concepts | [[RAG检索增强生成]](concepts\RAG检索增强生成.md) → LearningNote/
 - 2026-04-24 20:53:36 | entities | [[Hexo博客升级记录]](entities\Hexo博客升级记录.md) → LearningEssays/

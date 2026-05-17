@@ -1,9 +1,11 @@
----
+﻿---
 title: 迁移规范
 ---
 # 📋 迁移规范
 
 > 本文档定义 Wiki 格式标准、WikiLink 语法和 frontmatter 规范，是 Wiki 贡献者的核心参考手册。
+
+> 旧 Hexo 已迁移到 `/Mornikar/` 子路径；相关部署、CMS、Pagefind 和资产路径说明见 [Hexo 迁移到 /Mornikar/ 路径说明](/Mornikar/docs/MIGRATION/HEXO_MORNIKAR_PATH.html)。
 
 ---
 
@@ -281,7 +283,7 @@ categories: LearningNote            # ← 由目录映射
 
 ### 访问
 
-`https://mornikar.github.io/admin/`（GitHub OAuth 登录）
+`https://mornikar.github.io/Mornikar/admin/`（GitHub OAuth 登录）
 
 ### 集合分类
 

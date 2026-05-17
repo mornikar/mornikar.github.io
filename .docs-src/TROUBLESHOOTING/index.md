@@ -1,4 +1,4 @@
----
+﻿---
 title: 故障排查
 ---
 # 🔍 故障排查
@@ -108,7 +108,7 @@ hexo generate 2>&1
 **Step 5**：检查文章路径
 
 生成的 URL 应为 `/YYYY/MM/DD/标题/` 格式，如：
-`https://mornikar.github.io/2025/09/12/RAG检索增强生成/`
+`https://mornikar.github.io/Mornikar/2025/09/12/RAG检索增强生成/`
 
 ---
 
@@ -172,8 +172,8 @@ document.querySelector('.footer-credit a')?.innerHTML
 **Step 2**：检查 JS 文件是否存在
 
 访问以下 URL，确认返回 200：
-- `https://mornikar.github.io/js/wiki-chat.js`
-- `https://mornikar.github.io/js/wikilink.js`
+- `https://mornikar.github.io/Mornikar/js/wiki-chat.js`
+- `https://mornikar.github.io/Mornikar/js/wikilink.js`
 
 **Step 3**：检查 GitHub Pages 上的 JS 内容
 
@@ -188,7 +188,7 @@ fetch('/js/wiki-chat.js')
 
 **Step 4**：检查 CSS 文件
 
-访问 `https://mornikar.github.io/css/arknights.css`，确认包含 wiki-chat 相关样式。
+访问 `https://mornikar.github.io/Mornikar/css/arknights.css`，确认包含 wiki-chat 相关样式。
 
 ---
 
@@ -332,7 +332,7 @@ gh api repos/mornikar/mornikar.github.io/pages
 }
 ```
 
-如果显示 `gh-pages` 或其他分支，需要切换（见 [BRANCHES.md](/docs/BRANCHES/)）。
+如果显示 `gh-pages` 或其他分支，需要切换（见 [BRANCHES.md](/Mornikar/docs/BRANCHES/)）。
 
 **Step 2**：确认 CI 已成功推送
 
@@ -607,7 +607,7 @@ updated: 2026-04-25
 
 **Step 1**：确认 CMS 版本
 
-访问 `https://mornikar.github.io/admin/`，检查是否能看到 Wiki 集合（📚 Wiki 概念、✍️ Wiki 随笔等）。
+访问 `https://mornikar.github.io/Mornikar/admin/`，检查是否能看到 Wiki 集合（📚 Wiki 概念、✍️ Wiki 随笔等）。
 
 如果没有 Wiki 集合，说明 CMS 版本过旧。
 
@@ -630,7 +630,7 @@ v4.2 的 CMS 会根据集合类型自动选择保存逻辑：
 ## 16. PDF 资源未更新 / assets-archive 页面白色字无法打开
 
 **症状**：
-- 推送了 `.wiki/raw/assets/` 下的 PDF/图片文件后，`https://mornikar.github.io/assets-archive/` 页面显示白色字或链接无法打开
+- 推送了 `.wiki/raw/assets/` 下的 PDF/图片文件后，`https://mornikar.github.io/Mornikar/assets-archive/` 页面显示白色字或链接无法打开
 - 新文件（如"爱泼斯坦案"文件夹）没有出现在资源存档页面
 - 直接访问 PDF URL 返回 404
 
@@ -674,7 +674,7 @@ Get-Content source\assets-archive.md
 
 # 本地预览
 hexo server
-# 访问 http://localhost:4000/assets-archive/
+# 访问 http://localhost:4000/Mornikar/assets-archive/
 ```
 
 > ⚠️ **注意**：本地生成的 `public/assets/` 和 `source/assets-archive.md` 需要提交到 git，CI 才会重新构建并部署到线上。
@@ -700,8 +700,8 @@ CI 自动触发
     │   └─ 生成 source/assets-archive.md（存档页面）
     └─ 部署 public/ 到 GitHub Pages
     ↓
-https://mornikar.github.io/assets-archive/  # 在线资源存档
-https://mornikar.github.io/assets/XXX.pdf    # 直接访问 PDF
+https://mornikar.github.io/Mornikar/assets-archive/  # 在线资源存档
+https://mornikar.github.io/Mornikar/assets/XXX.pdf    # 直接访问 PDF
 ```
 
 ### 铁律
@@ -716,7 +716,7 @@ https://mornikar.github.io/assets/XXX.pdf    # 直接访问 PDF
 
 **症状**：
 - 资源存档页面中，包含中文字符的 PDF 链接显示为白色纯文本，无法点击
-- 例如：`[Jeffrey Epstein Part 12 of 12.pdf](/assets/爱泼斯坦案/Jeffrey Epstein Part 12 of 12.pdf)` 而不是 `<a href="/assets/...">Jeffrey Epstein Part 12 of 12.pdf</a>`
+- 例如：`[Jeffrey Epstein Part 12 of 12.pdf](/Mornikar/assets/爱泼斯坦案/Jeffrey Epstein Part 12 of 12.pdf)` 而不是 `<a href="/Mornikar/assets/...">Jeffrey Epstein Part 12 of 12.pdf</a>`
 
 **根本原因**：
 - `copy-assets.js` 生成 `assets-archive.md` 时，URL 中包含未编码的中文字符

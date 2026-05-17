@@ -183,7 +183,7 @@ async function handleUpload(req) {
       success: true,
       filename: safeName,
       path: targetPath,
-      url: '/images/wiki/' + safeName,
+      url: '/Mornikar/images/wiki/' + safeName,
       size: buffer.byteLength,
       download_url: result.content && result.content.download_url,
     });

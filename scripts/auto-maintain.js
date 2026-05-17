@@ -233,7 +233,11 @@ async function main() {
     }
 }
 
-main().catch(e => {
-    console.error('❌ Auto-maintain 失败:', e.message);
-    process.exit(1);
-});
+// Hexo 会自动 require scripts/ 下的 .js 文件。只有直接执行本文件时才运行维护流程，
+// 避免 hexo generate/server 误触发 git pull/commit/push。
+if (require.main === module) {
+    main().catch(e => {
+        console.error('❌ Auto-maintain 失败:', e.message);
+        process.exit(1);
+    });
+}

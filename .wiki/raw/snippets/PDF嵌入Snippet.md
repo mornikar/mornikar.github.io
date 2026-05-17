@@ -91,7 +91,7 @@ updated: 2026-04-18
 .wiki/raw/assets/
 ```
 
-转换后 Hexo 会把它放到博客的 `public/assets/` 目录，可直接通过 `/assets/xxx.pdf` 访问。
+转换后 Hexo 会把它放到博客的 `public/assets/` 目录，可直接通过 `/Mornikar/assets/xxx.pdf` 访问。
 
 ## 注意事项
 

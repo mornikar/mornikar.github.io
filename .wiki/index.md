@@ -19,14 +19,6 @@
 |------|------|----------|
 | Hexo博客升级记录 | Hexo, 博客, 开发 | 2025-09-12 |
 
-## 统计
-
-- concepts: 2
-- entities: 1
-- comparisons: 0
-- queries: 0
-- 总计: 3
-
 ## 最近更新
 
 - 2026-04-18: CI 故障修复，移除 hexo-renderer-stylus，解决 CSS 编译死循环；raw/ 目录重组；PDF.js 嵌入支持
@@ -39,84 +31,6 @@
 - [维护指南](/docs/MAINTENANCE/) — 日常使用流程、Dify 管理
 - [故障排查](/docs/TROUBLESHOOTING/) — 常见问题与解决方案
 - [迁移规范](/docs/MIGRATION/) — Wiki 格式规范、CI 部署说明
-
-## 统计
-
-- concepts: 2
-- entities: 1
-- comparisons: 0
-- queries: 0
-- 总计: 3
-
-## 统计
-
-- concepts: 2
-- entities: 1
-- comparisons: 0
-- queries: 0
-- 总计: 3
-
-## 统计
-
-- concepts: 2
-- entities: 1
-- comparisons: 0
-- queries: 0
-- 总计: 3
-
-## 统计
-
-- concepts: 2
-- entities: 1
-- 总计: 3
-
-## 统计
-
-- concepts: 2
-- entities: 1
-- 总计: 3
-
-## 统计
-
-- concepts: 2
-- entities: 1
-- 总计: 3
-
-## 统计
-
-- concepts: 2
-- entities: 1
-- 总计: 3
-
-## 统计
-
-- concepts: 2
-- entities: 1
-- 总计: 3
-
-## 统计
-
-- concepts: 2
-- entities: 1
-- 总计: 3
-
-## 统计
-
-- concepts: 2
-- entities: 1
-- 总计: 3
-
-## 统计
-
-- concepts: 2
-- entities: 1
-- 总计: 3
-
-## 统计
-
-- concepts: 2
-- entities: 1
-- 总计: 3
 
 ## 统计
 

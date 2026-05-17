@@ -180,7 +180,7 @@ Pagefind 在 `public/` 目录中建立静态全文索引，支持模糊搜索、
 
 ### 5.3 验证搜索
 
-1. 访问 https://mornikar.github.io/pagefind/
+1. 访问 https://mornikar.github.io/Mornikar/pagefind/
 2. 输入关键词测试搜索
 3. 确认 Wiki 文章能被检索到
 
@@ -218,7 +218,7 @@ Pagefind 在 `public/` 目录中建立静态全文索引，支持模糊搜索、
 | 部署方式 | `build_type=workflow`（Actions 原生，无 Jekyll） |
 | CI 触发条件 | push 到 `source` 分支 |
 | 网站地址 | https://mornikar.github.io |
-| 文档地址 | https://mornikar.github.io/docs/ |
+| 文档地址 | https://mornikar.github.io/Mornikar/docs/ |
 | CI 历史 | https://github.com/mornikar/mornikar.github.io/actions |
 
 ### 手动触发 CI
@@ -275,7 +275,7 @@ giscus:
 
 ### 9.1 访问方式
 
-访问 `https://mornikar.github.io/admin/` 进入自定义 CMS 面板（GitHub OAuth 登录）。
+访问 `https://mornikar.github.io/Mornikar/admin/` 进入自定义 CMS 面板（GitHub OAuth 登录）。
 
 ### 9.2 文章集合
 

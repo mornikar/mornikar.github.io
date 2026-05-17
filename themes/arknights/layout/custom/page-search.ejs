@@ -2,7 +2,7 @@
   <h1 style="color: var(--theme-color); margin-bottom: 1rem;">搜索</h1>
   <link href="https://cdn.jsdelivr.net/npm/pagefind@1.1.0/pagefind-ui.css" rel="stylesheet">
   <div id="search" class="pagefind-ui"></div>
-  <script src="https://cdn.jsdelivr.net/npm/pagefind@1.1.0/pagefind-ui.js" onerror="this.onerror=null; this.src='/pagefind/pagefind-ui.js';"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pagefind@1.1.0/pagefind-ui.js" onerror="this.onerror=null; this.src='<%- url_for('/pagefind/pagefind-ui.js') %>';"></script>
   <script>
     window.addEventListener('DOMContentLoaded', (event) => {
       if (typeof PagefindUI !== 'undefined') {

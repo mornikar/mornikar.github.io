@@ -1,4 +1,4 @@
----
+﻿---
 title: 项目总览
 ---
 # 🌐 LLM Wiki + Hexo 博客
@@ -11,14 +11,15 @@ title: 项目总览
 
 | 文档 | 说明 |
 |------|------|
-| [🚀 安装部署](/docs/INSTALL/) | **新用户必读**：从零部署自己的博客到 GitHub Pages |
-| [📐 系统架构](/docs/PROJECT/) | 目录结构、组件关系、部署流程 |
-| [🤖 AI 助手](/docs/AI_CHAT/) | Wiki AI 对话助手使用指南 |
-| [🔧 维护指南](/docs/MAINTENANCE/) | 日常使用、Wiki 编辑、Dify 同步 |
-| [💬 Giscus 留言](/docs/GISCUS/) | 基于 GitHub Discussions 的评论系统 |
-| [🔍 故障排查](/docs/TROUBLESHOOTING/) | 常见问题与解决方案 |
-| [📋 迁移规范](/docs/MIGRATION/) | Wiki 格式、WikiLink、frontmatter |
-| [🌲 分支说明](/docs/BRANCHES/) | source/main 分支关系、工作流程 |
+| [🚀 安装部署](/Mornikar/docs/INSTALL/) | **新用户必读**：从零部署自己的博客到 GitHub Pages |
+| [📐 系统架构](/Mornikar/docs/PROJECT/) | 目录结构、组件关系、部署流程 |
+| [🤖 AI 助手](/Mornikar/docs/AI_CHAT/) | Wiki AI 对话助手使用指南 |
+| [🔧 维护指南](/Mornikar/docs/MAINTENANCE/) | 日常使用、Wiki 编辑、Dify 同步 |
+| [💬 Giscus 留言](/Mornikar/docs/GISCUS/) | 基于 GitHub Discussions 的评论系统 |
+| [🔍 故障排查](/Mornikar/docs/TROUBLESHOOTING/) | 常见问题与解决方案 |
+| [📋 迁移规范](/Mornikar/docs/MIGRATION/) | Wiki 格式、WikiLink、frontmatter |
+| [🧭 Hexo 路径迁移](/Mornikar/docs/MIGRATION/HEXO_MORNIKAR_PATH.html) | 旧 Hexo 迁移到 `/Mornikar/` 的改动说明与复查清单 |
+| [🌲 分支说明](/Mornikar/docs/BRANCHES/) | source/main 分支关系、工作流程 |
 
 ---
 
@@ -127,7 +128,7 @@ wiki-sync.bat --dry-run
 | 服务 | 地址 |
 |------|------|
 | **博客主站** | https://mornikar.github.io |
-| **Wiki 文档** | https://mornikar.github.io/docs/ |
+| **Wiki 文档** | https://mornikar.github.io/Mornikar/docs/ |
 | **Dify 本地** | http://localhost/v1 |
 | **Tailscale 域名** | https://mornikar.tail7ee4f8.ts.net |
 | **GitHub 仓库** | https://github.com/mornikar/mornikar.github.io |

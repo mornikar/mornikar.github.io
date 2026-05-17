@@ -642,9 +642,9 @@ function main() {
 
     if (!DRY_RUN) {
         saveMeta(prevMeta);
+        updateIndex();
         if (converted.length > 0) {
             updateLog(converted);
-            updateIndex();
         }
     } else {
         if (converted.length > 0) {
@@ -939,15 +939,24 @@ function updateIndex() {
     let inStats = false;
 
     for (const line of lines) {
-        if (line.includes('## 统计')) { inStats = true; newLines.push(line); continue; }
+        if (line.trim() === '## 统计') {
+            inStats = true;
+            continue;
+        }
         if (inStats) {
-            if (line.trim() === '' || line.startsWith('#') || LAYER_DIRS.some(d => line.includes(d))) {
+            const trimmed = line.trim();
+            if (trimmed === '## 统计') {
+                continue;
+            }
+            if (/^##\s+/.test(trimmed)) {
                 inStats = false;
+                newLines.push(line);
             } else {
                 continue;
             }
+        } else {
+            newLines.push(line);
         }
-        newLines.push(line);
     }
 
     const statsBlock = [
