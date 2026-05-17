@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>授权回调 - Wiki CMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #000;
+      color: #FAFAFA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 16px;
+      letter-spacing: -0.01em;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Light beams background */
+    .light-beam {
+      position: fixed;
+      width: 200%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, rgba(59,130,246,.6) 20%, rgba(59,130,246,.9) 50%, rgba(59,130,246,.6) 80%, transparent 100%);
+      filter: blur(1px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .light-beam:nth-child(1) { top: 35%; left: -50%; }
+    .light-beam:nth-child(2) { top: 55%; left: -30%; opacity: .5; }
+    .light-glow {
+      position: fixed;
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(59,130,246,.12) 0%, transparent 70%);
+      top: 20%; left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .callback-card {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 40px;
+      background: rgba(17,17,17,.8);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.08);
+      max-width: 400px;
+      width: 100%;
+      box-shadow:
+        0 2.8px 2.2px rgba(0,0,0,.034),
+        0 6.7px 5.3px rgba(0,0,0,.048),
+        0 12.5px 10px rgba(0,0,0,.06),
+        0 22.3px 17.9px rgba(0,0,0,.072),
+        0 41.8px 33.4px rgba(0,0,0,.086),
+        0 100px 80px rgba(0,0,0,.12);
+    }
+    .callback-card h2 { margin: 0 0 12px; font-weight: 700; letter-spacing: -0.03em; }
+    .spinner {
+      display: inline-block;
+      width: 24px; height: 24px;
+      border: 3px solid rgba(255,255,255,.08);
+      border-top-color: #3B82F6;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      margin-bottom: 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error { color: #EF4444; }
+    .success { color: #22C55E; }
+    #status-detail { color: rgba(250,250,250,.4); font-size: 13px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+<div class="light-beam"></div>
+<div class="light-beam"></div>
+<div class="light-glow"></div>
+<div class="callback-card">
+  <div class="spinner" id="spinner"></div>
+  <h2 id="status-text">正在处理授权...</h2>
+  <p id="status-detail"></p>
+</div>
+
+<script>
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var token = params.get('token');
+  var scope = params.get('scope') || 'repo';
+  var tokenType = params.get('token_type') || 'bearer';
+  var oauthError = params.get('oauth_error');
+
+  var statusText = document.getElementById('status-text');
+  var statusDetail = document.getElementById('status-detail');
+  var spinner = document.getElementById('spinner');
+
+  // 如果有错误
+  if (oauthError) {
+    statusText.textContent = '授权失败';
+    statusText.className = 'error';
+    statusDetail.textContent = decodeURIComponent(oauthError);
+    spinner.style.display = 'none';
+    setTimeout(function() { window.location.href = '/admin/'; }, 3000);
+    return;
+  }
+
+  if (!token) {
+    statusText.textContent = '授权失败';
+    statusText.className = 'error';
+    statusDetail.textContent = '未收到有效的授权 Token';
+    spinner.style.display = 'none';
+    setTimeout(function() { window.location.href = '/admin/'; }, 3000);
+    return;
+  }
+
+  // Token 有效 — 保存到 localStorage
+  try {
+    localStorage.setItem('wiki-cms-token', token);
+    localStorage.setItem('wiki-cms-login-method', 'oauth');
+    localStorage.setItem('sveltia_cms_oauth', JSON.stringify({
+      token: token,
+      scope: scope,
+      token_type: tokenType,
+      timestamp: Date.now()
+    }));
+  } catch(e) {}
+
+  // 方案1：如果有 opener（popup 模式），用 postMessage 通知
+  if (window.opener) {
+    try {
+      // Decap CMS v3 / Sveltia CMS 标准格式
+      window.opener.postMessage({
+        type: 'oauth',
+        provider: 'github',
+        token: token,
+        scope: scope,
+        token_type: tokenType
+      }, 'https://mornikar.github.io');
+    } catch(e) {}
+
+    try {
+      // 兼容旧版 Decap CMS 格式
+      window.opener.postMessage(
+        'authorization:github:success:' + JSON.stringify({
+          token: token,
+          scope: scope,
+          token_type: tokenType
+        }),
+        '*'
+      );
+    } catch(e) {}
+
+    statusText.textContent = '授权成功！';
+    statusText.className = 'success';
+    statusDetail.textContent = '正在关闭窗口...';
+    spinner.style.display = 'none';
+    setTimeout(function() { window.close(); }, 1000);
+  } else {
+    // 方案2：没有 opener（整页跳转模式），直接重定向到 CMS 主页
+    // 自建 CMS v4 会在 URL 参数中读取 token
+    statusText.textContent = '授权成功！';
+    statusText.className = 'success';
+    statusDetail.textContent = '正在跳转到管理界面...';
+    spinner.style.display = 'none';
+
+    // 将 token 通过 URL 参数传递给 CMS 主页
+    setTimeout(function() {
+      window.location.href = '/admin/?token=' + encodeURIComponent(token) +
+        '&scope=' + encodeURIComponent(scope) +
+        '&token_type=' + encodeURIComponent(tokenType);
+    }, 500);
+  }
+})();
+</script>
+</body>
+</html>

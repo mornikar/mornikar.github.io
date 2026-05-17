@@ -1,0 +1,156 @@
+backend:
+  name: github
+  repo: mornikar/mornikar.github.io
+  branch: source
+
+# 媒体文件上传到 source/images/
+media_folder: source/images
+public_folder: /images
+
+# 站点部署地址
+site_url: https://mornikar.github.io
+
+# 启用 editorial workflow（AI 审阅闸门）
+publish_mode: editorial_workflow
+
+# 本地开发时可用（无需 OAuth）
+# local_backend: true
+
+collections:
+  # ====== Wiki 概念（可编辑、可创建）======
+  - name: wiki-concepts
+    label: "📚 Wiki 概念"
+    folder: ".wiki/concepts"
+    create: true
+    slug: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "标题", name: title, widget: string }
+      - { label: "类型", name: type, widget: hidden, default: "concepts" }
+      - { label: "标签", name: tags, widget: list, allow_add: true }
+      - { label: "摘要", name: summary, widget: text, required: false }
+      - { label: "创建日期", name: created, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "更新日期", name: updated, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "关联页面", name: related, widget: list, allow_add: true, required: false }
+      - { label: "别名", name: aliases, widget: list, required: false }
+      - { label: "来源", name: source, widget: string, required: false }
+      - { label: "已审阅", name: reviewed, widget: boolean, default: false, required: false }
+      - { label: "正文", name: body, widget: markdown }
+
+  # ====== Wiki 随笔（可编辑、可创建）======
+  - name: wiki-entities
+    label: "✍️ Wiki 随笔"
+    folder: ".wiki/entities"
+    create: true
+    slug: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "标题", name: title, widget: string }
+      - { label: "类型", name: type, widget: hidden, default: "entities" }
+      - { label: "标签", name: tags, widget: list, allow_add: true }
+      - { label: "摘要", name: summary, widget: text, required: false }
+      - { label: "创建日期", name: created, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "更新日期", name: updated, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "关联页面", name: related, widget: list, allow_add: true, required: false }
+      - { label: "别名", name: aliases, widget: list, required: false }
+      - { label: "来源", name: source, widget: string, required: false }
+      - { label: "已审阅", name: reviewed, widget: boolean, default: false, required: false }
+      - { label: "正文", name: body, widget: markdown }
+
+  # ====== 原始素材（可提交新素材）======
+  - name: wiki-raw-articles
+    label: "📥 原始素材·文章"
+    folder: ".wiki/raw/articles"
+    create: true
+    slug: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "标题", name: title, widget: string }
+      - { label: "标签", name: tags, widget: list, allow_add: true }
+      - { label: "来源", name: source, widget: string, required: false }
+      - { label: "正文", name: body, widget: markdown }
+
+  - name: wiki-raw-ml
+    label: "📥 原始素材·机器学习"
+    folder: ".wiki/raw/ML"
+    create: true
+    slug: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "标题", name: title, widget: string }
+      - { label: "标签", name: tags, widget: list, allow_add: true }
+      - { label: "正文", name: body, widget: markdown }
+
+  - name: wiki-raw-pm
+    label: "📥 原始素材·产品经理"
+    folder: ".wiki/raw/PM"
+    create: true
+    slug: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "标题", name: title, widget: string }
+      - { label: "标签", name: tags, widget: list, allow_add: true }
+      - { label: "正文", name: body, widget: markdown }
+
+  - name: wiki-raw-os
+    label: "📥 原始素材·云环境"
+    folder: ".wiki/raw/OS"
+    create: true
+    slug: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "标题", name: title, widget: string }
+      - { label: "标签", name: tags, widget: list, allow_add: true }
+      - { label: "正文", name: body, widget: markdown }
+
+  - name: wiki-raw-skills
+    label: "📥 原始素材·技能"
+    folder: ".wiki/raw/skills"
+    create: true
+    slug: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "标题", name: title, widget: string }
+      - { label: "标签", name: tags, widget: list, allow_add: true }
+      - { label: "正文", name: body, widget: markdown }
+
+  # ====== 审计反馈（只读 + 可更新状态）======
+  - name: wiki-audit
+    label: "🔍 审计反馈"
+    folder: ".wiki/audit"
+    create: false      # 不允许手动创建（由系统自动生成）
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "ID", name: id, widget: string }
+      - { label: "目标页面", name: target, widget: string }
+      - { label: "类型", name: type, widget: select, options: [quality, accuracy, completeness, outdated, duplicate, structure, dead_link] }
+      - { label: "严重度", name: severity, widget: select, options: [critical, major, minor, suggestion] }
+      - { label: "状态", name: status, widget: select, options: [open, in_progress, resolved, dismissed] }
+      - { label: "评论", name: comment, widget: text }
+      - { label: "建议操作", name: suggested_action, widget: select, options: [add_content, update, merge, split, delete, fix_link, recompile] }
+      - { label: "创建日期", name: created, widget: string }
+      - { label: "解决日期", name: resolved, widget: string, required: false }
+      - { label: "解决方式", name: resolved_by, widget: string, required: false }
+
+  # ====== 已发布文章（只读查看）======
+  - name: published
+    label: "🌐 已发布文章"
+    folder: "source/_posts"
+    create: false      # 不允许直接编辑（由 wiki-to-hexo 生成）
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - { label: "标题", name: title, widget: string }
+      - { label: "日期", name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD" }
+      - { label: "分类", name: categories, widget: list }
+      - { label: "标签", name: tags, widget: list }
+      - { label: "来源Wiki", name: wiki_source, widget: string, required: false }
+      - { label: "正文", name: body, widget: markdown }

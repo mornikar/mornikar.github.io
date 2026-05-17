@@ -1,0 +1,211 @@
+<!DOCTYPE html><html lang="zh-CN" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>LLMWiki_VS_RAG调研 | Mornikar's Blog</title><meta name="keywords" content="wiki, AI行业, LLM, RAG, AIGC"><meta name="description" content="🛠️ 传统 RAG vs LLM Wiki：全维度技术栈实现对比   技术维度 核心考量点 传统 RAG (动态运行时架构) LLM Wiki (静态编译期架构)    **1. 文档分块(Chunking)**​ 文本切分的语义完整性​ 机械切割 (Naive Splitting)依赖递归字符分隔或固定Token窗口强行切分。极易破坏表格、代码块和长逻辑链条的完整性。 语义重构 (Stru">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLMWiki_VS_RAG调研">
+<meta property="og:url" content="https://mornikar.github.io/2026/04/18/LearningEssays/2026-04-18-LLMWiki-VS-RAG%E8%B0%83%E7%A0%94/index.html">
+<meta property="og:site_name" content="Mornikar&#39;s Blog">
+<meta property="og:description" content="🛠️ 传统 RAG vs LLM Wiki：全维度技术栈实现对比   技术维度 核心考量点 传统 RAG (动态运行时架构) LLM Wiki (静态编译期架构)    **1. 文档分块(Chunking)**​ 文本切分的语义完整性​ 机械切割 (Naive Splitting)依赖递归字符分隔或固定Token窗口强行切分。极易破坏表格、代码块和长逻辑链条的完整性。 语义重构 (Stru">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-18T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-18T00:00:00.000Z">
+<meta property="article:author" content="Mornikar">
+<meta property="article:tag" content="wiki, AI行业, LLM, RAG, AIGC">
+<meta name="twitter:card" content="summary"><link rel="canonical" href="https://mornikar.github.io/2026/04/18/LearningEssays/2026-04-18-LLMWiki-VS-RAG%E8%B0%83%E7%A0%94/"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.woff2"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><meta name="page-config" content="{&quot;code_fold&quot;:null}"><script class="pjax-js">var config = {"root":"/","code_fold":false,"search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy"}};
+var page_config = {
+  code_fold: null
+};
+function updatePageConfig() {
+  var newPageConfig = document.querySelector('meta[name="page-config"]');
+  if (newPageConfig) {
+    page_config = JSON.parse(newPageConfig.content);
+  }
+}
+document.addEventListener('pjax:complete', function() { updatePageConfig(); });
+updatePageConfig();</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><script src="//unpkg.com/mermaid@11.12.2/dist/mermaid.min.js"></script><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.woff2") format('woff2');
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: 'confirm'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@11.12.2/dist/mermaid.esm.min.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><script class="pjax-js">reset= () => {window.giscusSettings = {
+ repo: 'mornikar/mornikar.github.io',
+ repoId: 'R_kgDOPto6vw',
+ category: 'Announcements',
+ categoryId: 'DIC_kwDOPto6v84C7YeI',
+ mapping: 'pathname',
+ strict: '0',
+ reactionsEnabled: '1',
+ emitMetadata: '1',
+ inputPosition: 'top',
+ lang: 'zh-CN',
+ crossorigin: 'anonymous' , loading: 'lazy'};window.giscusThemeConfig = { theme: 'preferred_color_scheme' };document.querySelector('.lg-container')?.remove()
+const postBg = document.querySelector('#post-bg');
+if (postBg) lightGallery(postBg, {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.vercount','meta[name=page-config]'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Mornikar's Blog" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/assets-archive/"><span class="navItemTitle">资源</span></a></li><li class="navItem"><a class="navBlock" href="/wiki-changelog/"><span class="navItemTitle">更新日志</span></a></li><li class="navItem"><a class="navBlock" href="/infinite-menu/"><span class="navItemTitle">∞导航</span></a></li></ol></nav></header><article><div id="post-bg"><!-- CMS 编辑按钮（对齐标题右上角）--><a class="cms-edit-btn" href="/admin/?edit=source%2F_posts%2FLearningEssays%2F2026-04-18-LLMWiki-VS-RAG%E8%B0%83%E7%A0%94.md" title="编辑此文章" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg></a><style>.cms-edit-btn {
+  position: absolute;
+  top: 22px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border: 1px solid rgba(34, 187, 255, 0.25);
+  border-radius: 6px;
+  color: rgba(34, 187, 255, 0.5);
+  text-decoration: none;
+  transition: all 0.2s;
+  background: rgba(34, 187, 255, 0.05);
+  z-index: 10;
+}
+.cms-edit-btn:hover {
+  color: #2bf;
+  border-color: #2bf;
+  background: rgba(34, 187, 255, 0.12);
+  transform: scale(1.1);
+}
+.cms-edit-btn svg {
+  width: 16px;
+  height: 16px;
+}</style><div id="post-title"><h1>LLMWiki_VS_RAG调研<!-- Phase 3: Wiki 来源标记--></h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2026-04-18T00:00:00.000Z" id="date"> 2026-04-18</time></div></span><br><span>Last Update: <div class="control"><time datetime="2026-04-18T00:00:00.000Z" id="updated"> 2026-04-18</time></div></span></div><hr><!-- Phase 3: Wiki 来源信息--></div><div id="post-content"><!-- 此文章来自 LLM Wiki: raw/articles/AI行业分析/LLMWiki_VS_RAG调研.md -->
+
+<h3 id="🛠️-传统-RAG-vs-LLM-Wiki：全维度技术栈实现对比"><a href="#🛠️-传统-RAG-vs-LLM-Wiki：全维度技术栈实现对比" class="headerlink" title="🛠️ 传统 RAG vs LLM Wiki：全维度技术栈实现对比"></a>🛠️ 传统 RAG vs LLM Wiki：全维度技术栈实现对比</h3><table>
+<thead>
+<tr>
+<th>技术维度</th>
+<th>核心考量点</th>
+<th>传统 RAG (动态运行时架构)</th>
+<th>LLM Wiki (静态编译期架构)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>**1. 文档分块<br>(Chunking)**​</td>
+<td><strong>文本切分的<br>语义完整性</strong>​</td>
+<td><strong>机械切割 (Naive Splitting)</strong><br>依赖递归字符分隔或固定Token窗口强行切分。极易破坏表格、代码块和长逻辑链条的完整性。</td>
+<td><strong>语义重构 (Structural Parsing)</strong><br>基于自然语言边界解析，并由LLM动态重写为逻辑自洽的Markdown卡片，保留完整的可读性与上下文。</td>
+</tr>
+<tr>
+<td>**2. 数据摄入<br>(Ingestion)**​</td>
+<td><strong>算力消耗的<br>时空置换</strong>​</td>
+<td><strong>“无脑”向量化 (Embarrassingly Parallel)</strong><br>摄入极轻，仅做向量编码。<strong>所有</strong>语义关联计算堆积到“用户查询时”，导致查询延迟高。</td>
+<td><strong>大模型驱动ETL (LLM-Powered ETL)</strong><br>摄入极重，调用LLM做实体抽取、消歧。<strong>空间换时间</strong>，预烧Token以降低查询期算力。</td>
+</tr>
+<tr>
+<td>**3. 交叉引用<br>(Cross-Ref)**​</td>
+<td><strong>关系推理的<br>效率与准确性</strong>​</td>
+<td><strong>临时暴力计算 (Post-Retrieval)</strong><br>块间天然孤立。依赖大模型在有限的Context Window里临时“盲猜”隐藏逻辑，易产生幻觉。</td>
+<td><strong>预置知识图谱 (Auto KG)</strong><br>编译期自动提取实体关系，生成双向链接(Backlinks)。查询时通过<strong>图遍历</strong>“顺藤摸瓜”，精准高效。</td>
+</tr>
+<tr>
+<td>**4. 知识归档<br>(Archiving)**​</td>
+<td><strong>资产沉淀与<br>复利效应</strong>​</td>
+<td><strong>无归档，仅有索引 (Index Only)</strong><br>RAG只存储原始碎块和向量。<strong>无法沉淀</strong>人类的推导、总结和洞察。知识库是静态的死数据。</td>
+<td><strong>结构化知识库 (Living Knowledge Base)</strong><br><strong>核心优势</strong>。LLM在摄入时会生成摘要、FAQ和洞见，并将其固化为Wiki页面。知识库随使用<strong>指数级增值</strong>。</td>
+</tr>
+<tr>
+<td>**5. 答案生成<br>(Generation)**​</td>
+<td><strong>结果的持久性<br>与复用性</strong>​</td>
+<td><strong>临时生成，即刻丢弃 (Stateless&#x2F;Ephemeral)</strong><br>每次对话结束后，大模型生成的优质答案<strong>直接丢弃</strong>。下次遇到同样问题，需重新检索、重新计算，造成算力浪费。</td>
+<td><strong>反馈闭环，自我进化 (Feedback Loop)</strong><br>可将对话中产生的<strong>优质问答对（QA）</strong>反向合并（Merge）入Wiki。一次计算，永久复用，形成“集体记忆”。</td>
+</tr>
+<tr>
+<td>**6. 存储与基建<br>(Infrastructure)**​</td>
+<td><strong>运维成本与<br>系统复杂度</strong>​</td>
+<td><strong>重型微服务 (Microservices Spaghetti)</strong><br>强依赖Vector DB、Embedding API及编排框架。分布式数据一致性难保，运维是“灾难级”。</td>
+<td><strong>极简本地化 (Local-first &amp; Git-based)</strong><br>无需数据库，纯文本Markdown + Git。像管理代码一样管理知识，<code>git pull</code>即部署，支持离线运行。</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="为什么“归档”和“丢弃”如此致命？"><a href="#为什么“归档”和“丢弃”如此致命？" class="headerlink" title="为什么“归档”和“丢弃”如此致命？"></a>为什么“归档”和“丢弃”如此致命？</h3><h4 id="1-RAG-的“西西弗斯陷阱”（The-Sisyphean-Trap）"><a href="#1-RAG-的“西西弗斯陷阱”（The-Sisyphean-Trap）" class="headerlink" title="1. RAG 的“西西弗斯陷阱”（The Sisyphean Trap）"></a>1. RAG 的“西西弗斯陷阱”（The Sisyphean Trap）</h4><p>在 RAG 体系下，你的团队每天都在做<strong>重复性劳动</strong>。</p>
+<ul>
+<li><p><strong>场景</strong>：用户问：“我们公司2024年的报销政策是什么？”</p>
+</li>
+<li><p><strong>RAG 的做法</strong>：检索3个PDF碎片 -&gt; 大模型拼凑答案 -&gt; 用户得到回复 -&gt; <strong>结束</strong>。</p>
+</li>
+<li><p><strong>问题</strong>：第二天另一个用户问一模一样的问题，系统还得重新检索、重新拼凑、重新消耗 Token。<strong>你永远在推石头上山，知识没有积累。</strong></p>
+</li>
+</ul>
+<h4 id="2-LLM-Wiki-的“复利效应”（Compounding-Returns）"><a href="#2-LLM-Wiki-的“复利效应”（Compounding-Returns）" class="headerlink" title="2. LLM Wiki 的“复利效应”（Compounding Returns）"></a>2. LLM Wiki 的“复利效应”（Compounding Returns）</h4><p>在 LLM Wiki 体系下，你的每一次交互都在<strong>建设数字资产</strong>。</p>
+<ul>
+<li><p><strong>场景</strong>：同上问题。</p>
+</li>
+<li><p><strong>LLM Wiki 的做法</strong>：</p>
+<ol>
+<li><p><strong>编译期</strong>：已将2024报销政策写成清晰的 Wiki 页面 <code>Policy_2024.md</code>。</p>
+</li>
+<li><p><strong>查询期</strong>：直接读取该页面，给出答案。</p>
+</li>
+<li><p><strong>归档期（杀手锏）</strong>：如果用户追问了一个 Wiki 里没有的细节（例如“海外出差补贴”），LLM 在回答后会自动生成一个新的 Wiki 页面 <code>Overseas_Travel_Allowance.md</code>，并链接回主政策页。</p>
+</li>
+</ol>
+</li>
+<li><p><strong>结果</strong>：<strong>你的知识库会自动生长，越来越聪明，运维成本越来越低。</strong></p>
+</li>
+</ul>
+<h3 id="🚀-架构选型"><a href="#🚀-架构选型" class="headerlink" title="🚀 架构选型"></a>🚀 架构选型</h3><ul>
+<li><p><strong>选 RAG 如果</strong>：你的数据是<strong>短暂且海量的</strong>（如实时新闻流、全网爬虫），你不需要保留中间的推导过程，只要最终答案。</p>
+</li>
+<li><p><strong>选 LLM Wiki 如果</strong>：你的数据是<strong>高价值的私有知识</strong>（如内部手册、技术文档、项目复盘），你希望团队的知识能够<strong>沉淀、传承和复用</strong>，且极度厌恶高昂的重复算力成本。</p>
+<div class="wiki-backlinks">
+<h4 class="wiki-backlinks-title">🔗 反向链接</h4>
+<p class="wiki-backlinks-desc">以下页面引用了本文：</p>
+<ul class="wiki-backlinks-list">
+<li><a href="/2026/05/17/LearningNote/2026-05-17-log/">log</a></li>
+</ul>
+</div></li>
+</ul>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2026/04/18/LearningEssays/2026-04-18-Dify%E7%A7%81%E6%9C%89%E5%8C%96%E9%83%A8%E7%BD%B2/">← Next Dify私有化部署</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2026/04/18/LearningEssays/2026-04-18-OpenClaw-+-LLM-%E7%94%B5%E5%95%86%E5%B9%B3%E5%8F%B0%E9%9B%86%E6%88%90%E6%8C%87%E5%8D%97/">OpenClaw + LLM 电商平台集成指南 Prev →</a></div></div></div><div id="comments"><div id="giscus"></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" onClick="tocControl.change()" title="To Catalog"><span class="tocBtnIconBar"></span><span class="tocBtnIconBar"></span><span class="tocBtnIconBar"></span></a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="Change Theme"></a><a onclick="BgmControl()"><svg id="bgm-control" viewBox="0 0 30 34" fill="currentColor" style="width: 24px; transition: transform .3s;margin-top: 4px"><path d="M25.998 23.422V11.29h3.999v12.132h-3.999zM19.497 6.234h4.001v22.243h-4.001V6.234zM12.998.867h4v32.978h-4V.867zm-6.5 5.367h4.001v22.243H6.498V6.234zm-6.5 5.056h4v12.132h-4V11.29z"></path></svg><audio id="bgm" src="/audio/bgm.mp3" loop crossorigin="anonymous"> </audio></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Mornikar's Blog" style="margin:0;border-radius:0;"></a><h1 id="Dr"><a href="/">Mornikar</a></h1><div id="description"><p>记录AI产品、技术学习与成长</p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9B%A0%EF%B8%8F-%E4%BC%A0%E7%BB%9F-RAG-vs-LLM-Wiki%EF%BC%9A%E5%85%A8%E7%BB%B4%E5%BA%A6%E6%8A%80%E6%9C%AF%E6%A0%88%E5%AE%9E%E7%8E%B0%E5%AF%B9%E6%AF%94"><span class="toc-number">1.</span> <span class="toc-text">🛠️ 传统 RAG vs LLM Wiki：全维度技术栈实现对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E2%80%9C%E5%BD%92%E6%A1%A3%E2%80%9D%E5%92%8C%E2%80%9C%E4%B8%A2%E5%BC%83%E2%80%9D%E5%A6%82%E6%AD%A4%E8%87%B4%E5%91%BD%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">为什么“归档”和“丢弃”如此致命？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-RAG-%E7%9A%84%E2%80%9C%E8%A5%BF%E8%A5%BF%E5%BC%97%E6%96%AF%E9%99%B7%E9%98%B1%E2%80%9D%EF%BC%88The-Sisyphean-Trap%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">1. RAG 的“西西弗斯陷阱”（The Sisyphean Trap）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-LLM-Wiki-%E7%9A%84%E2%80%9C%E5%A4%8D%E5%88%A9%E6%95%88%E5%BA%94%E2%80%9D%EF%BC%88Compounding-Returns%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">2. LLM Wiki 的“复利效应”（Compounding Returns）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9A%80-%E6%9E%B6%E6%9E%84%E9%80%89%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">🚀 架构选型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-number">3.1.</span> <span class="toc-text">🔗 反向链接</span></a></li></ol></li></ol></div></div><footer></footer></aside></main><canvas id="canvas-dust"></canvas><script defer src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script><script defer src="/js/wiki-chat.js"></script><script defer src="/js/wiki-tree.js"></script><script defer src="/live2d/live2d.js"></script></body></html>
